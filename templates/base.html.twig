@@ -3,17 +3,17 @@
 
 <!-- Mirrored from creativelayers.net/themes/voiture-html/page-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2024 13:40:03 GMT -->
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords"
-          content="auto, car, car dealer, car dealership, car listing, cars, classified, dealership, directory, listing, modern, motors, responsive">
+    <meta name="keywords" content="auto, car, car dealer, car dealership, car listing, cars, classified, dealership, directory, listing, modern, motors, responsive">
     <meta name="description" content="Voiture - Automotive & Car Dealer HTML Template">
     <meta name="CreativeLayers" content="ATFN">
-    <title> {% block title %} Voiture - Automotive & Car Dealer HTML Template {% endblock %} </title>
 
-    <!-- css file -->
+    <!-- Title -->
+    <title>{% block title %}Voiture - Automotive & Car Dealer HTML Template{% endblock %}</title>
+
+    <!-- CSS files -->
     {% block css %}
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -24,16 +24,17 @@
         <!-- Favicon -->
         <link href="{{ asset('images/favicon.ico') }}" sizes="128x128" rel="shortcut icon" type="image/x-icon"/>
         <link href="{{ asset('images/favicon.ico') }}" sizes="128x128" rel="shortcut icon"/>
-
     {% endblock %}
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://o...content-available-to-author-only...n.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://o...content-available-to-author-only...n.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     {% block head %} {% endblock %}
 </head>
+
 <body>
 {% block body %}
     <div class="wrapper">
@@ -55,6 +56,7 @@
                             </ul>
                         </div>
                     </div>
+                    
                     <div class="col-lg-4 col-xl-5">
                         <div class="header_top_social_widgets text-center text-md-end">
                             <ul class="m0">
@@ -452,7 +454,7 @@
         </div>
 
         <!-- Our Dashbord -->
-
+<section class="our-dashbord dashbord bgc-f9">
         <div class="our-dashbord dashbord bgc-f9">
             <div class="container-fluid">
 
@@ -583,8 +585,7 @@
             </div>
         </div>
     </div>
-
-    </div>
+  </div>
     </section>
 
     <div class="ed_menu_list">

@@ -18,7 +18,6 @@ class PartenairesType extends AbstractType
             ->add('telephone')
             ->add('email')
             ->add('logo')
-            ->add('points')
         ;
     }
 
