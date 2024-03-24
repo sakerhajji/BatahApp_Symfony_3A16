@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Partenaires{% endblock %}
+
+{% block pane %}
+    <h1>Create new Partenaires</h1>
+
+    {{ include('partenaires/_form.html.twig') }}
+
+    <a href="{{ path('app_partenaires_index') }}">back to list</a>
+{% endblock %}
