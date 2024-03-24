@@ -1,50 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Partenaires{% endblock %}
+{% block title %}Show Partenaire{% endblock %}
 
 {% block pane %}
-    <h1>Partenaires</h1>
+    <h1>Show Partenaire</h1>
+    <!-- Display Partenaire details here -->
+    <p>ID: {{ partenaire.idpartenaire }}</p>
+    <p>Nom: {{ partenaire.nom }}</p>
+    <p>Type: {{ partenaire.type }}</p>
+    <p>Adresse: {{ partenaire.adresse }}</p>
+    <p>Telephone: {{ partenaire.telephone }}</p>
+    <p>Email: {{ partenaire.email }}</p>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Idpartenaire</th>
-                <td>{{ partenaire.idpartenaire }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ partenaire.nom }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>{{ partenaire.type }}</td>
-            </tr>
-            <tr>
-                <th>Adresse</th>
-                <td>{{ partenaire.adresse }}</td>
-            </tr>
-            <tr>
-                <th>Telephone</th>
-                <td>{{ partenaire.telephone }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ partenaire.email }}</td>
-            </tr>
-            <tr>
-                <th>Logo</th>
-                <td>{{ partenaire.logo }}</td>
-            </tr>
-            <tr>
-                <th>Points</th>
-                <td>{{ partenaire.points }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <p>Logo: {{ partenaire.logo }}</p>
+    <p>Points: {{ partenaire.points }}</p>
 
-    <a href="{{ path('app_partenaires_index') }}">back to list</a>
-
-    <a href="{{ path('app_partenaires_edit', {'idpartenaire': partenaire.idpartenaire}) }}">edit</a>
-
-    {{ include('partenaires/_delete_form.html.twig') }}
+    <!-- Button to close modal -->
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"onclick="window.history.back();">Close</button>
 {% endblock %}
