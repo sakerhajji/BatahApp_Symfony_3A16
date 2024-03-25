@@ -56,7 +56,7 @@
                             </ul>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-4 col-xl-5">
                         <div class="header_top_social_widgets text-center text-md-end">
                             <ul class="m0">
@@ -281,38 +281,58 @@
                                 <div class="col-lg-12">
                                     <div class="sign_up_form">
                                         <p>Already have a profile? <a href="page-login.html">Sign in.</a></p>
-                                        <form action="#">
+                                        {# regitre fomulaire#}
+{#                                        <form action="{{ path('handle_form') }}" method="post">#}
+
+                                        <form action="{{ path('ajouter') }}" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label class="form-label">First Name</label>
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="first_name">
                                                     </div>
                                                 </div>
+
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label class="form-label">Last Name</label>
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="last_name">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12">
                                                     <div class="form-group">
                                                         <label class="form-label">Email</label>
-                                                        <input type="email" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="form-group mb20">
-                                                        <label class="form-label">Password</label>
-                                                        <input type="password" class="form-control">
+                                                        <input type="email" class="form-control" name="email">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-group mb20">
                                                         <label class="form-label">Confirm Password</label>
-                                                        <input type="password" class="form-control">
+                                                        <input type="date" class="form-control" name="date_de_naissance">
                                                     </div>
                                                 </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb20">
+                                                        <label class="form-label">Gender</label>
+                                                        <select class="form-control" name="gender">
+                                                            <option value="H">Homme</option>
+                                                            <option value="F">Femme</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb20">
+                                                        <label class="form-label">Password</label>
+                                                        <input type="password" class="form-control" name="password">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb20">
+                                                        <label class="form-label">Confirm Password</label>
+                                                        <input type="password" class="form-control" name="confirm_password">
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <button type="submit" class="btn btn-signup btn-thm mb0">Sign Up</button>
                                         </form>
@@ -454,138 +474,138 @@
         </div>
 
         <!-- Our Dashbord -->
-<section class="our-dashbord dashbord bgc-f9">
-        <div class="our-dashbord dashbord bgc-f9">
-            <div class="container-fluid">
+        <section class="our-dashbord dashbord bgc-f9">
+            <div class="our-dashbord dashbord bgc-f9">
+                <div class="container-fluid">
 
-                <div class="row">
+                    <div class="row">
 
-                    <div class="col-xxl-10 offset-xxl-2 dashboard_grid_space">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="extra-dashboard-menu dn-lg">
-                                    <div class="ed_menu_list">
-                                        <ul>
-                                            <li><a href="/home"><span class="flaticon-dashboard"></span>Dashboard</a>
-                                            </li>
-                                            <li><a href="{{ path('app_utilisateur_index') }}"><span
-                                                            class="flaticon-user-2"></span>Profile</a></li>
-                                            <li><a href="page-dashboard-listing.html"><span
-                                                            class="flaticon-list"></span>My Listing</a></li>
-                                            <li><a href="page-dashboard-favorites.html"><span
-                                                            class="flaticon-heart"></span>Favorites</a></li>
-                                            <li><a href="page-dashboard-add-listings.html"><span
-                                                            class="flaticon-plus"></span>Add Listing</a></li>
-                                            <li><a href="page-dashboard-messages.html"><span
-                                                            class="flaticon-message"></span>Messages</a></li>
-                                            <li><a href="{{ path('app_partenaires_index') }}"><span
-                                                            class="flaticon-list"></span>Partenaires</a></li>
-                                            <li><a href="page-login.html"><span
-                                                            class="flaticon-logout"></span>Logout</a></li>
-                                        </ul>
+                        <div class="col-xxl-10 offset-xxl-2 dashboard_grid_space">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="extra-dashboard-menu dn-lg">
+                                        <div class="ed_menu_list">
+                                            <ul>
+                                                <li><a href="/home"><span class="flaticon-dashboard"></span>Dashboard</a>
+                                                </li>
+                                                <li><a href="{{ path('app_utilisateur_index') }}"><span
+                                                                class="flaticon-user-2"></span>Profile</a></li>
+                                                <li><a href="page-dashboard-listing.html"><span
+                                                                class="flaticon-list"></span>My Listing</a></li>
+                                                <li><a href="page-dashboard-favorites.html"><span
+                                                                class="flaticon-heart"></span>Favorites</a></li>
+                                                <li><a href="page-dashboard-add-listings.html"><span
+                                                                class="flaticon-plus"></span>Add Listing</a></li>
+                                                <li><a href="page-dashboard-messages.html"><span
+                                                                class="flaticon-message"></span>Messages</a></li>
+                                                <li><a href="{{ path('app_partenaires_index') }}"><span
+                                                                class="flaticon-list"></span>Partenaires</a></li>
+                                                <li><a href="page-login.html"><span
+                                                                class="flaticon-logout"></span>Logout</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="dashboard_navigationbar dn db-lg mt50">
+                                        <div class="dropdown">
+                                            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars pr10"></i>
+                                                Dashboard Navigation
+                                            </button>
+                                            <ul id="myDropdown" class="dropdown-content">
+                                                <li><a class="active" href="page-dashboard.html"><span
+                                                                class="flaticon-dashboard"></span>Dashboard</a></li>
+                                                <li><a href="page-dashboard-profile.html"><span
+                                                                class="flaticon-user-2"></span>Profile</a></li>
+                                                <li><a href="page-dashboard-listing.html"><span
+                                                                class="flaticon-list"></span>My Listing</a></li>
+                                                <li><a href="page-dashboard-favorites.html"><span
+                                                                class="flaticon-heart"></span>Favorites</a></li>
+                                                <li><a href="page-dashboard-add-listings.html"><span
+                                                                class="flaticon-plus"></span>Add Listing</a></li>
+                                                <li><a href="page-dashboard-messages.html"><span
+                                                                class="flaticon-message"></span>Messages</a></li>
+                                                <li><a href="page-login.html"><span
+                                                                class="flaticon-logout"></span>Logout</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                {% block pane %}
+                                <div class="col-xl-8">
+                                    <div class="breadcrumb_content mb50">
+                                        <h2 class="breadcrumb_title">Hello, Cameron!</h2>
+                                        <p>Ready to jump back in!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="ff_one">
+                                        <div class="icon"><span class="flaticon-list"></span></div>
+                                        <div class="detais text-end">
+                                            <div class="timer">1260</div>
+                                            <p class="para">Total Listing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="ff_one style2">
+                                        <div class="icon"><span class="flaticon-message"></span></div>
+                                        <div class="detais text-end">
+                                            <div class="timer">74</div>
+                                            <p class="para">Messages</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="ff_one style3">
+                                        <div class="icon"><span class="flaticon-heart"></span></div>
+                                        <div class="detais text-end">
+                                            <div class="timer">20</div>
+                                            <p class="para">Favorites</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-lg-12 col-xl-7">
+                                    <div class="application_statics">
+                                        <h4>Your Profile Views</h4>
+                                        <div class="c_container"></div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-5">
+                                    <div class="recent_job_activity">
+                                        <h4 class="title">Recent Activities</h4>
+                                        <div class="grid d-block d-sm-flex">
+                                            <div class="icon blue"><span><img
+                                                            src="{{ asset('images/icon/briefcase-blue.svg') }}"
+                                                            alt="briefcase-blue.svg"></span></div>
+                                            <p class="mb0"><span class="heading-color">Wade Warren</span> add list for a car
+                                                <span class="color-blue">Audi a3 Sportback 2020</span></p>
+                                        </div>
+                                        <!-- Add more recent activities here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endblock %}
                         </div>
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="dashboard_navigationbar dn db-lg mt50">
-                                    <div class="dropdown">
-                                        <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars pr10"></i>
-                                            Dashboard Navigation
-                                        </button>
-                                        <ul id="myDropdown" class="dropdown-content">
-                                            <li><a class="active" href="page-dashboard.html"><span
-                                                            class="flaticon-dashboard"></span>Dashboard</a></li>
-                                            <li><a href="page-dashboard-profile.html"><span
-                                                            class="flaticon-user-2"></span>Profile</a></li>
-                                            <li><a href="page-dashboard-listing.html"><span
-                                                            class="flaticon-list"></span>My Listing</a></li>
-                                            <li><a href="page-dashboard-favorites.html"><span
-                                                            class="flaticon-heart"></span>Favorites</a></li>
-                                            <li><a href="page-dashboard-add-listings.html"><span
-                                                            class="flaticon-plus"></span>Add Listing</a></li>
-                                            <li><a href="page-dashboard-messages.html"><span
-                                                            class="flaticon-message"></span>Messages</a></li>
-                                            <li><a href="page-login.html"><span
-                                                            class="flaticon-logout"></span>Logout</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            {% block pane %}
-                            <div class="col-xl-8">
-                                <div class="breadcrumb_content mb50">
-                                    <h2 class="breadcrumb_title">Hello, Cameron!</h2>
-                                    <p>Ready to jump back in!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="ff_one">
-                                    <div class="icon"><span class="flaticon-list"></span></div>
-                                    <div class="detais text-end">
-                                        <div class="timer">1260</div>
-                                        <p class="para">Total Listing</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="ff_one style2">
-                                    <div class="icon"><span class="flaticon-message"></span></div>
-                                    <div class="detais text-end">
-                                        <div class="timer">74</div>
-                                        <p class="para">Messages</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="ff_one style3">
-                                    <div class="icon"><span class="flaticon-heart"></span></div>
-                                    <div class="detais text-end">
-                                        <div class="timer">20</div>
-                                        <p class="para">Favorites</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-lg-12 col-xl-7">
-                                <div class="application_statics">
-                                    <h4>Your Profile Views</h4>
-                                    <div class="c_container"></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-5">
-                                <div class="recent_job_activity">
-                                    <h4 class="title">Recent Activities</h4>
-                                    <div class="grid d-block d-sm-flex">
-                                        <div class="icon blue"><span><img
-                                                        src="{{ asset('images/icon/briefcase-blue.svg') }}"
-                                                        alt="briefcase-blue.svg"></span></div>
-                                        <p class="mb0"><span class="heading-color">Wade Warren</span> add list for a car
-                                            <span class="color-blue">Audi a3 Sportback 2020</span></p>
-                                    </div>
-                                    <!-- Add more recent activities here -->
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endblock %}
                     </div>
 
                 </div>
-
             </div>
-        </div>
+        </section>
     </div>
-  </div>
     </section>
 
     <div class="ed_menu_list">
