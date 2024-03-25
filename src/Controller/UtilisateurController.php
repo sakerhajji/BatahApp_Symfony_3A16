@@ -11,10 +11,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-//#[Route('/utilisateur')]
+#[Route('/utilisateur')]
 class UtilisateurController extends AbstractController
 {
-    #[Route('/utilisateur', name: 'app_utilisateur_index', methods: ['GET'])]
+
+    #[Route('/ajouter', name: 'ajouter', methods: ['POST'])]
+
+    public function ajouter(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Retrieve data from the request
+//        $data = $request->request->all();
+//
+//        $utilisateur =new Utilisateur();
+//        $utilisateur->setNomutilisateur($data['first_name']);
+//        $utilisateur->setPrenomutilisateur($data['last_name']);
+//        $utilisateur->setAdresseemail($data['email']);
+//        $utilisateur->setDatedenaissance(new \DateTime($data['date_de_naissance']));
+//        $utilisateur->setSexe($data['gender']);
+//        $utilisateur->setMotdepasse($data['password']);
+//
+//        // Instead of passing the user as a parameter, use the EntityManager to persist and flush
+//        $entityManager->persist($utilisateur);
+//        $entityManager->flush();
+//
+//        // Redirect or return a response
+        return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+
+    }
+
+    #[Route('/', name: 'app_utilisateur_index', methods: ['GET'])]
     public function index(UtilisateurRepository $utilisateurRepository): Response
     {
         return $this->render('utilisateur/index.html.twig', [
@@ -68,6 +93,7 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_utilisateur_delete', methods: ['POST'])]
     public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
     {
@@ -78,4 +104,10 @@ class UtilisateurController extends AbstractController
 
         return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+
+
+
 }

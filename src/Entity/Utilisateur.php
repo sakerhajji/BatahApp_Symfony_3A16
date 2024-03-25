@@ -76,6 +76,10 @@ class Utilisateur
     #[ORM\Column(name: "role", type: "string", length: 1, nullable: true, options: ["fixed" => true])]
     private ?string $role;
 
+    public function __construct()
+    {
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -131,9 +135,13 @@ class Utilisateur
         return $this->datedenaissance;
     }
 
-    public function setDatedenaissance(?\DateTimeInterface $datedenaissance): void
+    public function setDatedenaissance($datedenaissance): void
     {
-        $this->datedenaissance = $datedenaissance;
+        if (is_string($datedenaissance)) {
+            $this->datedenaissance = new \DateTime($datedenaissance);
+        } else {
+            $this->datedenaissance = $datedenaissance;
+        }
     }
 
     public function getAdresseemail(): ?string
