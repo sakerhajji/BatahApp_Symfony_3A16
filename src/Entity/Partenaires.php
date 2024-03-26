@@ -3,7 +3,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PartenairesRepository;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PartenairesRepository::class)]
 class Partenaires
 {
@@ -11,19 +11,24 @@ class Partenaires
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column(name: "idPartenaire", type: "integer", nullable: false)]
     private int $idpartenaire;
-
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide")]
+    #[Assert\Length(max: 20, maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères")]
     #[ORM\Column(name: "nom", type: "string", length: 20, nullable: false)]
     private string $nom;
-
+    #[Assert\NotBlank(message: "Le type ne peut pas être vide")]
+    #[Assert\Choice(choices: ["voiture", "maison", "terrain"], message: "Le type doit être voiture, maison ou terrain")]
     #[ORM\Column(name: "type", type: "string", length: 20, nullable: false)]
     private string $type;
-
+    #[Assert\NotBlank(message: "L'adresse ne peut pas être vide")]
+    #[Assert\Length(max: 20, maxMessage: "L'adresse ne peut pas dépasser {{ limit }} caractères")]
     #[ORM\Column(name: "adresse", type: "string", length: 20, nullable: false)]
     private string $adresse;
-
+    #[Assert\NotBlank(message: "Le téléphone ne peut pas être vide")]
+    #[Assert\Regex(pattern: "/^\d{8}$/", message: "Le téléphone doit être composé de 8 chiffres")]
     #[ORM\Column(name: "telephone", type: "integer", nullable: false)]
     private int $telephone;
-
+    #[Assert\NotBlank(message: "L'email ne peut pas être vide")]
+    #[Assert\Email(message: "L'email doit être valide")]
     #[ORM\Column(name: "email", type: "string", length: 50, nullable: false)]
     private string $email;
 

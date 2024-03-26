@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 #[Route('/partenaires')]
@@ -20,10 +20,23 @@ class PartenairesController extends AbstractController
     #[Route('/', name: 'app_partenaires_index', methods: ['GET'])]
     public function index(PartenairesRepository $PartenairesRepository): Response
     {
+        $partenaires = $PartenairesRepository->findAll();
+        $data = [];
+        foreach ($partenaires as $partenaire) {
+            $data[] = [
+                'nom' => $partenaire->getNom(),
+                'points' => $partenaire->getPoints(),
+            ];
+        }
+
+        // Rendre la vue Twig avec les données des partenaires
         return $this->render('partenaires/index.html.twig', [
-            'partenaires' => $PartenairesRepository->findAll(),
+            'partenaires' => $partenaires,
+            'partenairesJson' => json_encode($data),
         ]);
     }
+
+
 
     #[Route('/new', name: 'app_partenaires_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -39,10 +52,14 @@ class PartenairesController extends AbstractController
             return $this->redirectToRoute('app_partenaires_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('partenaires/new.html.twig', [
+        // Récupérer les erreurs de validation
+        $errors = $form->getErrors(true);
+
+        return $this->render('partenaires/new.html.twig', [
             'partenaire' => $partenaire,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
+
     }
 
     #[Route('/{idpartenaire}', name: 'app_partenaires_show', methods: ['GET'])]
@@ -66,11 +83,15 @@ class PartenairesController extends AbstractController
             return $this->redirectToRoute('app_partenaires_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('partenaires/edit.html.twig', [
+        // Récupérer les erreurs de validation
+        $errors = $form->getErrors(true);
+
+        return $this->render('partenaires/edit.html.twig', [
             'partenaire' => $partenaire,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/partenaires/{idpartenaire}', name: 'app_partenaires_delete', methods: ['POST'])]
     public function delete(Request $request, Partenaires $partenaire, EntityManagerInterface $entityManager): Response

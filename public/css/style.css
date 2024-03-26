@@ -12756,7 +12756,7 @@ letter-spacing: 0em;
 .ed_menu_list ul li a.active{
   background-color: #F5C34B;
   color: #1A3760;
-}
+}.chartjs-render-monitor
 .ed_menu_list ul li a:hover span,
 .ed_menu_list ul li a.active span{
   color: #1A3760;
@@ -23588,4 +23588,11 @@ input.quantity-num[type="number"]::-webkit-outer-spin-button {
 .sp6_single_slider .thumb{
   border-radius: 8px;
   overflow: hidden;
+}
+.is-invalid {
+  border-color: #dc3545; /* Rouge */
+}
+
+.is-valid {
+  border-color: #28a745; /* Vert */
 }
