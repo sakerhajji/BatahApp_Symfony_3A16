@@ -115,7 +115,7 @@ class Partenaires
 
     public function __toString(): string
     {
-        return "ID: {$this->idpartenaire}, Nom: {$this->nom}, Type: {$this->type}, Adresse: {$this->adresse}, Telephone: {$this->telephone}, Email: {$this->email}, Logo: {$this->logo}, Points: {$this->points}";
+        return "ID: {$this->idpartenaire}, Nom: {$this->nom}, Type: {$this->type}, Adresse: {$this->adresse}, Telephone: {$this->telephone}, EmailSender: {$this->email}, Logo: {$this->logo}, Points: {$this->points}";
     }
 }
 

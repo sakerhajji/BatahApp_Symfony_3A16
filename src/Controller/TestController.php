@@ -2,21 +2,24 @@
 
 namespace App\Controller;
 
+use App\Services\EmailSender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
 {
-    #[Route('/signUp', name: 'signUp')]
-    public function signUp(): Response
+    #[Route('/mail', name: 'mail')]
+    public function index(SessionInterface $session , MailerInterface $mailer): Response
     {
-        return $this->render('utilisateur/loginPage.html.twig');
+        $emailSender = new EmailSender();
+        $emailSender->sendEmail();
+        return $this->render('base.html.twig');
+
     }
 
-    #[Route('/home', name: 'app_test')]
-    public function index(): Response
-    {
-        return $this->render('base.html.twig');
-    }
+
+
 }

@@ -45,4 +45,27 @@ class UtilisateurRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function login(string $username, string $password): ?Utilisateur
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->where('u.adresseemail = :username') // Assuming 'adresseemail' is analogous to 'username'
+            ->setParameter('username', $username)
+            ->andWhere('u.motdepasse = :password') // Assuming 'motdepasse' is analogous to 'password'
+            ->setParameter('password', $password)
+            ->setMaxResults(1);
+
+        $user = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $user;
+    }
+
+    public function ForgetPassword(string $username): ?Utilisateur
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->where('u.adresseemail = :username')
+            ->setParameter('username', $username)
+            ->setMaxResults(1);
+        $user = $queryBuilder->getQuery()->getOneOrNullResult();
+        return $user;
+    }
 }

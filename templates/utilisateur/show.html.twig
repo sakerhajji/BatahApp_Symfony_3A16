@@ -2,13 +2,10 @@
 {% block title %}Utilisateur{% endblock %}
 
 {% block stylesheets %}
-
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
 {% endblock %}
-{% block pane %}
 
+{% block pane %}
     <h1 class="mb-4">Utilisateur</h1>
 
     <div class="table-responsive">
@@ -34,14 +31,12 @@
                 <th>Sexe</th>
                 <td>{{ utilisateur.sexe }}</td>
             </tr>
-
             </tbody>
         </table>
     </div>
 
-    <a href="{{ path('app_utilisateur_index') }}" class="btn btn-primary mb-3">Back to list</a>
-
-    <a href="{{ path('app_utilisateur_edit', {'id': utilisateur.id}) }}" class="btn btn-warning">Edit</a>
-
     {{ include('utilisateur/_delete_form.html.twig') }}
+
+    <a href="{{ path('app_utilisateur_index') }}" class="btn btn-primary mb-3">Back to list</a>
+    <a href="{{ path('app_utilisateur_edit', {'id': utilisateur.id}) }}" class="btn btn-warning">Edit</a>
 {% endblock %}

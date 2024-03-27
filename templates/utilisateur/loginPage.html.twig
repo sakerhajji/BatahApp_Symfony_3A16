@@ -8,17 +8,17 @@
                     <div class="login_form mt60-sm">
                         <h2 class="title">Sign in</h2>
                         <p>New to Cars.com? <a href="page-register.html">Sign up.</a> Are you a dealer?</p>
-                        <form action="#">
+                        <form action="{{ path('Login') }}" method="post">
                             <div class="mb-2 mr-sm-2">
                                 <label class="form-label">Username or email address  *</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="email">
                             </div>
                             <div class="form-group mb5">
                                 <label class="form-label">Password  *</label>
-                                <input type="password" class="form-control">
+                                <input type="password" class="form-control" name="password" >
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="exampleCheck3">
+                                <input type="checkbox" class="custom-control-input" id="exampleCheck3"  >
                                 <label class="custom-control-label" for="exampleCheck3">Remember me</label>
                                 <a class="btn-fpswd float-end" href="#">Lost your password?</a>
                             </div>
