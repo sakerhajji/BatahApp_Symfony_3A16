@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 #[Route('/utilisateur')]
 class UtilisateurController extends AbstractController
@@ -19,23 +20,79 @@ class UtilisateurController extends AbstractController
 
     public function ajouter(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Retrieve data from the request
-//        $data = $request->request->all();
-//
-//        $utilisateur =new Utilisateur();
-//        $utilisateur->setNomutilisateur($data['first_name']);
-//        $utilisateur->setPrenomutilisateur($data['last_name']);
-//        $utilisateur->setAdresseemail($data['email']);
-//        $utilisateur->setDatedenaissance(new \DateTime($data['date_de_naissance']));
-//        $utilisateur->setSexe($data['gender']);
-//        $utilisateur->setMotdepasse($data['password']);
-//
-//        // Instead of passing the user as a parameter, use the EntityManager to persist and flush
-//        $entityManager->persist($utilisateur);
-//        $entityManager->flush();
-//
-//        // Redirect or return a response
+
+        $data = $request->request->all();
+        $utilisateur =new Utilisateur();
+        $utilisateur->setNomutilisateur($data['first_name']);
+        $utilisateur->setPrenomutilisateur($data['last_name']);
+        $utilisateur->setAdresseemail($data['email']);
+        $utilisateur->setDatedenaissance(new \DateTime($data['date_de_naissance']));
+        $utilisateur->setSexe($data['gender']);
+        $utilisateur->setMotdepasse($data['password']);
+        // Instead of passing the user as a parameter, use the EntityManager to persist and flush
+        $entityManager->persist($utilisateur);
+        $entityManager->flush();
+
+        // Redirect or return a response
         return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+
+    }
+    #[Route('/Iscription', name: 'Iscription', methods: ['POST'])]
+
+    public function Iscription (Request $request, EntityManagerInterface $entityManager): Response
+    {
+
+        $data = $request->request->all();
+        $utilisateur =new Utilisateur();
+        $utilisateur->setNomutilisateur($data['first_name']);
+        $utilisateur->setPrenomutilisateur($data['last_name']);
+        $utilisateur->setAdresseemail($data['email']);
+        $utilisateur->setDatedenaissance(new \DateTime($data['date_de_naissance']));
+        $utilisateur->setSexe($data['gender']);
+        $utilisateur->setMotdepasse($data['password']);
+        // Instead of passing the user as a parameter, use the EntityManager to persist and flush
+        $entityManager->persist($utilisateur);
+        $entityManager->flush();
+
+        // Redirect or return a response
+        return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+
+    }
+    #[Route('/Login', name: 'Login', methods: ['POST'])]
+
+    public function Login (Request $request, EntityManagerInterface $entityManager , UtilisateurRepository $repository): Response
+    {
+
+        $data = $request->request->all();
+        $utilisateur =new Utilisateur();
+        $utilisateur->setAdresseemail($data['email']);
+        $utilisateur->setMotdepasse($data['password']);
+        $utilisateur=$repository->login($utilisateur->getAdresseemail(),$utilisateur->getMotdepasse()) ;
+     if($utilisateur != null)
+     return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+        else
+            dd("password or mail incorrect") ;
+
+
+    }
+    #[Route('/ForgetPassword', name: 'ForgetPassword', methods: ['POST'])]
+
+    public function ForgetPassword (Request $request, EntityManagerInterface $entityManager , UtilisateurRepository $repository , SessionInterface $session): Response
+    {
+
+        $data = $request->request->all();
+        $utilisateur =new Utilisateur();
+        $utilisateur->setAdresseemail($data['email']);
+        $utilisateur=$repository->ForgetPassword($utilisateur->getAdresseemail()) ;
+        if($utilisateur != null)
+            //return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+        {   $session->set('user',$utilisateur) ;
+            dd($session->get('user')) ;
+
+        }
+            else
+            dd("mail n'existe pas") ;
+
 
     }
 
