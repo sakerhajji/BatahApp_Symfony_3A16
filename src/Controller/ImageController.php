@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Image;
+
+class ImageController extends AbstractController
+{
+    #[Route('/image', name: 'app_image')]
+    public function index(): Response
+    {
+        return $this->render('image/index.html.twig', [
+            'controller_name' => 'ImageController',
+        ]);
+    }
+    #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]
+    public function uploadImage(Request $request): Response
+    {
+        // Handle image upload
+        $uploadedFile = $request->files->get('image');
+
+        if (!$uploadedFile) {
+            // Handle case when no image is uploaded
+            return new Response('No image uploaded', Response::HTTP_BAD_REQUEST);
+        }
+
+        // Move the uploaded file to the uploads directory
+        $destination = $this->getParameter('uploads_directory');
+        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+
+        try {
+            $uploadedFile->move(
+                $destination,
+                $newFilename
+            );
+        } catch (FileException $e) {
+            // Handle file upload error
+            return new Response('Error uploading file', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        // Create and persist the Image entity
+        $entityManager = $this->getDoctrine()->getManager();
+        $image = new Image();
+        $image->setUrl($newFilename); // Assuming you have a 'filename' property in your Image entity
+        $entityManager->persist($image);
+        $entityManager->flush();
+
+        return new Response('Image uploaded successfully', Response::HTTP_CREATED);
+    }
+}
