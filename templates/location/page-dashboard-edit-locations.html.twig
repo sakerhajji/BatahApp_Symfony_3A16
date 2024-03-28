@@ -45,6 +45,11 @@
                                 {{ form_errors(form.disponibilite) }}
                             </div>
                         </div>
+                        <div class="col-md-12 mb20">
+                        {{ form_label(form.imageFile, "Image") }}
+                        {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.imageFile) }}
+                    </div>
 
                         <div class="form-group">
                             {{ form_label(form.id, "Select User") }}

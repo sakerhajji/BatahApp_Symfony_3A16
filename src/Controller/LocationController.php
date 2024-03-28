@@ -132,17 +132,49 @@ class LocationController extends AbstractController
             throw $this->createNotFoundException('Location non trouvée');
         }
 
+        // Create a new form instance for the Location entity
         $form = $this->createForm(LocationType::class, $location);
 
-
+        // Handle the form submission
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle image upload
+            $imageFile = $form->get('imageFile')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads',
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle file upload error
+                }
+
+                // Remove old image if exists
+                $oldImage = $location->getImages()->first();
+                if ($oldImage) {
+                    $em->remove($oldImage);
+                }
+
+                // Create a new image entity
+                $image = new Image();
+                $image->setUrl('/uploads/' . $newFilename);
+                $image->setLocation($location);
+                $em->persist($image);
+            }
+
+            // Persist the changes to the database
             $em->flush();
 
             return $this->redirectToRoute('app_location_back_affiche');
         }
 
+        // Render the form template
         return $this->render('location/page-dashboard-edit-locations.html.twig', [
             'form' => $form->createView(),
         ]);

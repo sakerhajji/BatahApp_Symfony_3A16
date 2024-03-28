@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Show Encheres{% endblock %}
+  
+{% block pane %}
+    <div class="container mt-5">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>STATUS</th>
+                    <th>DATE DEBUT</th>
+                    <th>DATE FIN</th>
+                    <th>Nbr Participant</th>
+                    <th>PRIX MIN</th>
+                    <th>PRIX MAX</th>
+                    <th>PRIX ACTUELLE</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for encheres in event %}
+                    <tr>
+                        <td>{{ encheres.idEnchere }}</td>
+                        <td>{{ encheres.status }}</td>
+                        <td>{{ encheres.dateDebut | date('Y-m-d') }}</td>
+                        <td>{{ encheres.dateFin | date('Y-m-d') }}</td>
+                        <td>{{ encheres.nbrParticipants }}</td>
+                        <td>{{ encheres.prixMin }}</td>
+                        <td>{{ encheres.prixMax }}</td>
+                        <td>{{ encheres.prixActuelle }}</td>
+                        <td>
+                            <a href="#" class="btn btn-primary">Detail</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% for page in 1..totalPages %}
+                            <li class="page-item {% if page == currentPage %}active{% endif %}">
+                                <a class="page-link" href="{{ path('app_Affiche_enchere', {'page': page, 'search': searchQuery}) }}">{{ page }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+    <a href="{{ path('app_Add_enchere') }}" class="btn btn-primary">Ajouter nouveau enchere</a>
+</div>
+{% endblock %}

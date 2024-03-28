@@ -23,19 +23,19 @@
    <tr>
     <td class="align-middle pl20" scope="row">
     <div class="car-listing bdr_none d-flex mb0">
-        <div class="thumb w150">
-            {% set images = loca.getImages() %}
-            {% if images|length > 0 %}
-                <div class="image-gallery">
-                    {% for image in images %}
-                        <img class="img-fluid" src="{{ asset('uploads/' ~ image.url) }}" alt="Image">
-                    {% endfor %}
-                </div>
-            {% else %}
-                <!-- Provide a placeholder image if no image is available -->
-                <img class="img-fluid" src="{{ asset('path_to_placeholder_image') }}" alt="Placeholder Image">
-            {% endif %}
+    <div class="thumb w150">
+    {% set images = loca.getImages() %}
+    {% if images|length > 0 %}
+        <div class="image-gallery">
+            {% for image in images %}
+                <img class="img-fluid" src="{{ asset(image.url) }}" alt="Image">
+            {% endfor %}
         </div>
+    {% else %}
+        <!-- Provide a placeholder image if no image is available -->
+        <img class="img-fluid" src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
+    {% endif %}
+</div>
         <div class="details ms-1">
             <h6 class="title"><a href="page-car-single-v1.html">{{ loca.type }}</a></h6>
             <h5 class="price">${{ loca.prix }}</h5>

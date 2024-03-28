@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Product{% endblock %}
+{% block pane %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4">Add Event</h1>
+            {{ form_start(f, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-3">
+                {{ form_label(f.dateDebut, "dateDebut") }}
+                {{ form_widget(f.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.dateDebut) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.dateFin, "dateFin") }}
+                {{ form_widget(f.dateFin, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.dateFin) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.status, "status") }}
+                {{ form_widget(f.status,{'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.status) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.prixMin, "prixMin") }}
+                {{ form_widget(f.prixMin, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.prixMin) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.prixMax, "prixMax") }}
+                {{ form_widget(f.prixMax, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.prixMax) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.prixActuelle, "prixActuelle") }}
+                {{ form_widget(f.prixActuelle, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.prixActuelle) }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form_label(f.nbrParticipants, "nbrParticipants") }}
+                {{ form_widget(f.nbrParticipants, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.nbrParticipants) }}
+            </div>
+
+        
+            <div class="mb-3">
+                {{ form_label(f.produit, "produit") }}
+                {{ form_widget(f.produit, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.produit) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+            <a href="{{ path('app_Affiche_enchere') }}" class="btn btn-secondary">Back to list</a>
+
+            {{ form_end(f) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

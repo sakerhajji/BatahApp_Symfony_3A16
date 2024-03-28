@@ -20,10 +20,6 @@ class Image
     #[ORM\JoinColumn(name: "idProduits", referencedColumnName: "idProduit")]
     private ?Produits $produits;
 
-    #[ORM\ManyToOne(targetEntity: Location::class)]
-    #[ORM\JoinColumn(name: "idLocations", referencedColumnName: "idLocation")]
-    private ?Location $locations;
-
     #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: "images")]
     #[ORM\JoinColumn(name: "idLocations", referencedColumnName: "idLocation")]
     private ?Location $location;
@@ -58,15 +54,7 @@ class Image
         $this->produits = $produits;
     }
 
-    public function getLocations(): ?Location
-    {
-        return $this->locations;
-    }
 
-    public function setLocations(?Location $locations): void
-    {
-        $this->locations = $locations;
-    }
 
     public function getLocation(): ?Location
     {

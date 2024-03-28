@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Image;
+use App\Entity\Location;
 
 class ImageController extends AbstractController
 {
@@ -18,8 +19,8 @@ class ImageController extends AbstractController
             'controller_name' => 'ImageController',
         ]);
     }
-    #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]
-    public function uploadImage(Request $request): Response
+    #[Route('/upload-image/{locationId}', name: 'upload_image', methods: ['POST'])]
+    public function uploadImage(Request $request, int $locationId): Response
     {
         // Handle image upload
         $uploadedFile = $request->files->get('image');
@@ -48,6 +49,17 @@ class ImageController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $image = new Image();
         $image->setUrl($newFilename); // Assuming you have a 'filename' property in your Image entity
+
+        // Find the associated Location entity
+        $location = $entityManager->getRepository(Location::class)->find($locationId);
+        if (!$location) {
+            return new Response('Location not found', Response::HTTP_NOT_FOUND);
+        }
+
+        // Associate the image with the location
+        $image->setLocation($location);
+
+        // Persist the Image entity
         $entityManager->persist($image);
         $entityManager->flush();
 
