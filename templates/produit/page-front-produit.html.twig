@@ -3,60 +3,74 @@
 {% block title %}HOME{% endblock %}
 {% block pane %}
 
-    <section class="home-one mt10 mt70-992 p0 bdrs16 bdrs0-md ovh">
+<style>
+  .slide-one {
+      background-size: cover; /* Assure que l'image couvre entièrement le conteneur */
+      background-position: center; /* Centre l'image horizontalement et verticalement */
+      height: 750px; /* Définissez la hauteur souhaitée pour toutes les images */
+  }
+  .banner-title {
+    font-size: 100px; /* Taille de la police pour le titre */
+    color: #E0115F ; /* Couleur du texte pour le titre */
+}
+
+.banner_top_title {
+    font-size: 70px; /* Taille de la police pour le sous-titre */
+    color: #D3D3D3  ; /* Couleur du texte pour le sous-titre */
+}
+</style>
+
+<section class="home-one mt10 mt70-992 p0 bdrs16 bdrs0-md ovh">
     <div class="container-fluid p0">
-      <div class="row">
-        <div class="col-xl-12">
-          <div class="main-banner-wrapper home2_main_slider mb30-md">
-            <div class="banner-style-one owl-theme owl-carousel dots_none" id="product-carousel">
-              {% for prod in products %}
-              <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getphoto()) }}'); height: 750px;">
-                <div class="container">
-                  <div class="row home-content-home2-style">
-                    <div class="col-lg-12 p0">
-                      <h2 class="banner-title"><small>2021</small><br>{{ prod.getlabelle() }}</h2>
-                      <h3 class="banner_top_title text-thm">
-                        <span class="animated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>
-                        <span>${{ prod.getprix() }}</span><small class="text-white">/ Month</small>
-                      </h3>
-                      <a href="{{ path('app_details', {'idp': prod.getidproduit()}) }}" class="btn banner-btn">Learn More</a>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="main-banner-wrapper home2_main_slider mb30-md">
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            {% for prod in products %}
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></button>
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-inner">
+                            {% for prod in products %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getphoto()) }}');">
+                                    <div class="container">
+                                        <div class="row home-content-home2-style">
+                                            <div class="col-lg-12 p0">
+                                                <h2 class="banner-title"><small>2021</small><br>{{ prod.getlabelle() }}</h2>
+                                                <h3 class="banner_top_title text-thm">
+                                                    <span class="animated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>
+                                                    <span>${{ prod.getprix() }}</span><small class="text-white">/ Month</small>
+                                                </h3>
+                                                <a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}" class="btn banner-btn">Learn More</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-caption d-none d-md-block">
+                                    <!-- Ajoutez ici les légendes des slides si nécessaire -->
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
-                  </div>
                 </div>
-              </div>
-              {% endfor %}
             </div>
-            <div class="carousel-btn-block banner-carousel-btn">
-              <button class="carousel-btn left-btn" onclick="prevSlide()"><i class="flaticon-left-arrow left"></i></button>
-              <button class="carousel-btn right-btn" onclick="nextSlide()"><i class="flaticon-right-arrow right"></i></button>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
+</section>
+
   
-  <script>
-    // Initialize Owl Carousel
-    $("#product-carousel").owlCarousel({
-      items: 1,
-      loop: true,
-      autoplay: true,
-      autoplayTimeout: 5000,
-      autoplayHoverPause: true,
-      nav: false
-    });
-  
-    // Function to navigate to the previous slide
-    function prevSlide() {
-      $("#product-carousel").trigger('prev.owl.carousel');
-    }
-  
-    // Function to navigate to the next slide
-    function nextSlide() {
-      $("#product-carousel").trigger('next.owl.carousel');
-    }
-  </script>
 
 
     <!-- How It Works -->
@@ -331,11 +345,67 @@
                 <button class="nav-link" id="nav-hotels-tab" data-bs-toggle="tab" data-bs-target="#nav-hotels" role="tab" aria-controls="nav-hotels" aria-selected="false">Used Cars</button>
               </div>
               <!-- Tab panes -->
-            
+                    <style>
+                    .fixed-size-image {
+        width: 350px; /* par exemple, ajustez cette valeur en fonction de la taille souhaitée */
+        height: 200px; /* par exemple, ajustez cette valeur en fonction de la taille souhaitée */
+      }
+              </style>
   <div class="tab-content col-lg-12" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
       <div class="row">
-        {% for prod in products %}
+      {% for prod in products %}
+      <div class="col-sm-6 col-xl-6">
+        <div class="car-listing list_style">
+            <div class="thumb">
+              <div class="tag">FEATURED</div>
+              <img class="fixed-size-image" src="{{ asset('uploads/' ~ prod.getphoto()) }}" alt="{{ prod.getlabelle() }}">
+
+              <div class="thmb_cntnt2">
+                <ul class="mb0">
+                  <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                  <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                </ul>
+              </div>
+              <div class="thmb_cntnt3">
+                <ul class="mb0">
+                  <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                  <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="details">
+              <div class="wrapper">
+                <h5 class="price">${{ prod.getprix() }}</h5>
+                <h6 class="title"><a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}">{{ prod.getlabelle() }}</a></h6>
+                <div class="listign_review">
+                  <ul class="mb0">
+                    <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                    <li class="list-inline-item"><a href="#">4.7</a></li>
+                    <li class="list-inline-item">(684 reviews)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="listing_footer">
+                <ul class="mb0">
+                  <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
+                  <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
+                  <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="tab-pane fade" id="nav-shopping" role="tabpanel" aria-labelledby="nav-shopping-tab">
+    <div class="row">
+      {% for prod in newCars %}
         <div class="col-sm-6 col-xl-6">
           <div class="car-listing list_style">
             <div class="thumb">
@@ -357,7 +427,7 @@
             <div class="details">
               <div class="wrapper">
                 <h5 class="price">${{ prod.getprix() }}</h5>
-                <h6 class="title"><a href="{{ path('app_details', {'idp': prod.getidproduit()}) }}">{{ prod.getlabelle() }}</a></h6>
+                <h6 class="title"><a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}">{{ prod.getlabelle() }}</a></h6>
                 <div class="listign_review">
                   <ul class="mb0">
                     <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>

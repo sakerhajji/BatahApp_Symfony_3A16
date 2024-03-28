@@ -236,10 +236,12 @@
             </div>
           </div>
           <div class="user_profile_location">
-            <h4 class="title">Location</h4>
-            <div class="property_sp_map mb40">
-              <div class="h400 bdrs8" id="map-canvas"></div>
-            </div>
+    <h4 class="title">Location</h4>
+    <div class="property_sp_map mb40">
+        <!-- Utilisation de l'iframe avec le lien de la localisation du produit -->
+        <iframe width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ product.localisation }}"></iframe>
+    </div>
+</div>
             <div class="upl_content d-block d-md-flex">
               <p class="float-start fn-sm mb20-sm"><span class="fas fa-map-marker-alt pr10 vam"></span>3891
                 Ranchview Dr. Richardson, California 62639</p>

@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ProduitsType extends AbstractType
 {
@@ -24,6 +25,9 @@ class ProduitsType extends AbstractType
                 ],
                 'label' => 'Type',
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('description')
             ->add('prix')

@@ -105,7 +105,7 @@ class LocationController extends AbstractController
         $em->flush();
         return $this->redirectToRoute('app_location_back_affiche');
     }
-    #[Route('/details/{idl}', name: 'app_details')]
+    #[Route('/detailsLocation/{idl}', name: 'app_details_location')]
     public function details(LocationRepository $lr, $idl): Response
     {
         $location = $lr->find($idl);
@@ -116,13 +116,13 @@ class LocationController extends AbstractController
 
         ]);
     }
-    #[Route('/detail', name: 'app_detail')]
+    #[Route('/detailLocation', name: 'app_detail_location')]
     public function detail(): Response
     {
         return $this->render('produit/page-car-single-v1.html.twig');
     }
 
-    #[Route('/modifier/{idl}', name: 'app_modifier_location')]
+    #[Route('/modifierLocation/{idl}', name: 'app_modifier_location')]
     public function editLocation(ManagerRegistry $em, Request $request, LocationRepository $lr, $idl): Response
     {
         $em = $em->getManager();

@@ -14,29 +14,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+
 use Knp\Snappy\Pdf;
 
 class ProduitController extends AbstractController
 {
-    #[Route('/details/{idp}', name: 'app_details')]
-    public function details(ProduitsRepository $pr, $idp): Response
-    {
 
-        $product = $pr->find($idp);
 
-        return $this->render('produit/page-front-details-produit.html.twig', ['product' => $product]);
-    }
-    #[Route('/detail', name: 'app_detail')]
-    public function detail(): Response
-    {
-        return $this->render('produit/page-front-details-produit.html.twig');
-    }
+    /************************************************************************************************************************************************* */
+    /**************************************************************CRUD-PRODUCT*********************************************************************************** */
 
-    #[Route('/az', name: 'app_afficahge_produits')]
-    public function index(ProduitsRepository $pr): Response
-    {
-        return $this->render('produit/page-front-produit.html.twig', ['products' => $pr->findAll()]);
-    }
 
     #[Route('/ajout', name: 'app_produit')]
     public function addprod(ManagerRegistry $em, Request $request): Response
@@ -63,6 +50,7 @@ class ProduitController extends AbstractController
                 $prod->setPhoto($newFilename);
             }
 
+
             $em->persist($prod);
             $em->flush();
 
@@ -82,13 +70,7 @@ class ProduitController extends AbstractController
         return $this->redirectToRoute('app_back_affiche');
     }
 
-    #[Route('/produitback', name: 'app_back_affiche')]
-    public function showprodback(ManagerRegistry $em, ProduitsRepository $pr): Response
-    {
-
-        return $this->render('produit/page-dashboard-listing.html.twig', ['products' => $pr->findAll()]);
-    }
-    #[Route('/modifier/{idp}', name: 'app_modifier_produit')]
+    #[Route('/modifierProduit/{idp}', name: 'app_modifier_produit')]
     public function editprod(ManagerRegistry $em, Request $request, ProduitsRepository $pr, $idp): Response
     {
         $em = $em->getManager();
@@ -122,5 +104,81 @@ class ProduitController extends AbstractController
             'form' => $form->createView(),
             'photo_path' => $produit->getPhoto() ? '/uploads/' . $produit->getPhoto() : null,
         ]);
+    }
+    #[Route('/produitback', name: 'app_back_affiche')]
+    public function showprodback(Request $request, ProduitsRepository $pr): Response
+    {
+        $currentPage = $request->query->getInt('page', 1);
+        $itemsPerPage = 5;
+        $offset = ($currentPage - 1) * $itemsPerPage;
+
+        $searchQuery = $request->query->get('search', '');
+
+        if ($searchQuery !== '') {
+            $products = $pr->findBySearchQuery($searchQuery, $itemsPerPage, $offset);
+            $totalItems = count($products);
+        } else {
+            $products = $pr->findBy([], null, $itemsPerPage, $offset);
+            $totalItems = $pr->count([]);
+        }
+
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        return $this->render('produit/page-dashboard-listing.html.twig', [
+            'products' => $products,
+            'searchQuery' => $searchQuery,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+        ]);
+    }
+
+
+    #[Route('/detailsProduit/{idp}', name: 'app_details_produit')]
+    public function details(ProduitsRepository $pr, $idp): Response
+    {
+
+        $product = $pr->find($idp);
+
+        return $this->render('produit/page-front-details-produit.html.twig', ['product' => $product]);
+    }
+    #[Route('/detail', name: 'app_detail_produit')]
+    public function detail(): Response
+    {
+        return $this->render('produit/page-front-details-produit.html.twig');
+    }
+
+    #[Route('/az', name: 'app_afficahge_produits')]
+    public function index(ProduitsRepository $pr): Response
+    {
+        $allProducts = $pr->findAll();
+        $newCars =  $newCars = array_reverse($allProducts); // Inverser l'ordre des produits pour simuler un tri par date d'ajout décroissante
+        //$otherProducts = array_slice($allProducts, 0, count($allProducts) - count($newCars)); // Produits restants
+
+        return $this->render('produit/page-front-produit.html.twig',  [
+            'products' => $allProducts, // Produits pour nav-home
+            'newCars' => $newCars, // Produits pour nav-shopping
+        ]);
+    }
+    /************************************************************************************************************************************************* */
+    /************************************************************************************************************************************************* */
+    #[Route('/generate-pdf', name: 'app_generate')]
+    public function generatePdf(Pdf $pdf): Response
+    {
+        // Fetch all produits from your repository
+        $produits = $this->getDoctrine()->getRepository(Produits::class)->findAll();
+
+        // Render the produits to HTML (assuming you have a 'pdf_produits.html.twig' template)
+        $html = $this->renderView('produit/pdf_produits.html.twig', [
+            'produits' => $produits,
+        ]);
+
+        // Generate PDF
+        $filename = 'produits_' . date('Ymd_His') . '.pdf';
+        $response = new Response($pdf->getOutputFromHtml($html), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ]);
+
+        return $response;
     }
 }

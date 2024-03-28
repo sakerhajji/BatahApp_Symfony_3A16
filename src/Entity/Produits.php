@@ -37,9 +37,11 @@ class Produits
     #[ORM\Column(name: "localisation", type: "string", length: 255, nullable: false)]
     private string $localisation;
 
+
     #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
     #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "id")]
     private Utilisateur $idUtilisateur;
+
 
     public function getIdProduit(): ?int
     {
