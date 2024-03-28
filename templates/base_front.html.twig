@@ -84,13 +84,8 @@
             <li> <a href="#"><span class="title">Home</span></a>
               <!-- Level Two-->
               <ul>
-                <li><a href="index.html">Home V1</a></li>
+                <li><a href="{{ path('app_afficahge_produits') }}">Home Product</a></li>
                 <li><a href="index2.html">Home V2</a></li>
-                <li><a href="index3.html">Home V3</a></li>
-                <li><a href="index4.html">Home V4</a></li>
-                <li><a href="index5.html">Home V5</a></li>
-                <li><a href="index6.html">Home V6</a></li>
-                <li><a href="index7.html">Home V7</a></li>
               </ul>
             </li>
             <li> <a href="#"><span class="title">Explore</span></a>
@@ -163,7 +158,7 @@
             <li> <a href="#"><span class="title">Pages</span></a>
               <ul>
                 <li><a href="page-about.html">About Us</a></li>
-                <li><a href="page-calculator.html">Calculator</a></li>
+                <li><a href="{{ path('app_calculator') }}">Calculator</a></li>
                 <li><a href="page-compare.html">Compare</a></li>
                 <li><a href="page-contact.html">Contact</a></li>
                 <li><a href="page-error.html">404 Page</a></li>
@@ -1860,6 +1855,7 @@
       </div>
     </section>
     {% endblock %}
+    {% block footer %}
     <!-- Our Popular Listing -->
     <section class="popular-listing pb80 pt0">
       <div class="container">
@@ -2331,6 +2327,7 @@
     </section>
     <a class="scrollToHome" href="#"><i class="fas fa-arrow-up"></i></a>
   </div>
+  {% endblock %}
   <!-- Wrapper End -->
   {% block js %}
   <script src="js/jquery-3.6.0.js"></script>

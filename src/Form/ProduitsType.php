@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class ProduitsType extends AbstractType
 {
@@ -40,7 +41,13 @@ class ProduitsType extends AbstractType
                 'label' => 'Statut',
                 'required' => true,
             ])
-            ->add('periodeGarantie')
+            ->add('periodeGarantie', IntegerType::class, [
+                'label' => 'Warranty Period (months)',
+                'attr' => [
+                    'placeholder' => 'Enter warranty period in months',
+                    'min' => 1, // Minimum value allowed
+                ],
+            ])
             ->add('photo', FileType::class, [
                 'label' => 'Event Image',
                 'required' => false,

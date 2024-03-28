@@ -33,6 +33,10 @@
                         </div>
                         <div class="carousel-inner">
                             {% for prod in products %}
+                             {# Calcul du prix mensuel #}
+    {% set prix_total = prod.prix %}
+    {% set duree = 36 %} {# supposons une période de paiement de 36 mois #}
+    {% set prix_mensuel = prix_total / duree %}
                             <div class="carousel-item {% if loop.first %}active{% endif %}">
                                 <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getphoto()) }}');">
                                     <div class="container">
@@ -41,8 +45,9 @@
                                                 <h2 class="banner-title"><small>2021</small><br>{{ prod.getlabelle() }}</h2>
                                                 <h3 class="banner_top_title text-thm">
                                                     <span class="animated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>
-                                                    <span>${{ prod.getprix() }}</span><small class="text-white">/ Month</small>
-                                                </h3>
+                                                  <span>PRIX: ${{ prod.getprix()|number_format(0, '.', ',') }}</span><small class="text-white"></small>
+                                                  </h3>
+                                                <p><span style="font-size: 50px; color: red;">Monthly payment: {{ prix_mensuel|number_format(0, '.', ',') }} TND</span></p>
                                                 <a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}" class="btn banner-btn">Learn More</a>
                                                 
                                             </div>

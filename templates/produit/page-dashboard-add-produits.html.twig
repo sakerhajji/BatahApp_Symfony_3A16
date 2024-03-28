@@ -52,7 +52,7 @@
                       <div class="mb-3">
                       {{ form_label(form.photo, "Photo", {'class': 'form-label'}) }}
                       {{ form_widget(form.photo, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
-                      <img id="imagePreview" src="{{ asset('path_to_your_images_directory/' ~ form.photo.vars.value) }}" alt="Preview" class="preview-image" style="max-width: 200px; display: block; margin-top: 10px;">
+                      <img id="imagePreview" src="#" alt="Preview" class="preview-image" style="max-width: 200px; display: none; margin-top: 10px;">
                       {{ form_errors(form.photo) }}
                   </div>
                   
@@ -78,6 +78,25 @@
         </div>
     </div>
 </section>
+<script>
+    function previewImage(input) {
+        var preview = document.getElementById('imagePreview');
+        var file = input.files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "#";
+            preview.style.display = 'none';
+        }
+    }
+</script>
 
 <script>
     function updateMap(input) {

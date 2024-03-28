@@ -44,12 +44,12 @@
                     </div>
                             <div>
                                 <h6 class="mb-0">{{ prod.labelle }}</h6>
-                                <span class="text-muted">${{ prod.prix }}</span>
-                            </div>
+                            <span class="text-muted">{{ prod.prix | number_format(0, '.', ',') }} TND</span>
+                        </div>
                         </div>
                     </td>
                     <td>{{ prod.description }}</td>
-                    <td>{{ prod.periodeGarantie }}</td>
+                    <td>{{ prod.periodeGarantie }} months</td>
                     <td>{{ prod.type }}</td>
                     <td>{{ prod.status ? 'Actif' : 'Inactif' }}</td>
                     <td>

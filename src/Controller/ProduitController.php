@@ -13,9 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 use Knp\Snappy\Pdf;
+use App\Form\CalculatorType;
 
 class ProduitController extends AbstractController
 {
@@ -180,5 +181,36 @@ class ProduitController extends AbstractController
         ]);
 
         return $response;
+    }
+
+    #[Route('/calculator', name: 'app_calculator')]
+    public function calculator(Request $request): Response
+    {
+        $form = $this->createForm(CalculatorType::class); // Use CalculatorType form type
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $vehiclePrice = $data['vehiclePrice'];
+            $interestRate = $data['interestRate'] / 100; // Convert percentage to decimal
+            $period = $data['period'];
+            $downPayment = $data['downPayment'];
+
+            // Calculate the loan payment
+            $loanAmount = $vehiclePrice - $downPayment;
+            $monthlyInterestRate = $interestRate / 12;
+            $monthlyPayment = ($loanAmount * $monthlyInterestRate) / (1 - pow(1 + $monthlyInterestRate, -$period));
+
+            return $this->render('produit/page-calculator.html.twig', [
+                'form' => $form->createView(),
+                'monthlyPayment' => $monthlyPayment,
+            ]);
+        }
+
+        return $this->render('produit/page-calculator.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
