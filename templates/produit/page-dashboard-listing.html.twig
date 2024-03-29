@@ -27,6 +27,7 @@
                     <th scope="col">Période de Garantie</th>
                     <th scope="col">Type</th>
                     <th scope="col">Statut</th>
+                <th scope="col">Localisation</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -52,9 +53,10 @@
                     <td>{{ prod.periodeGarantie }} months</td>
                     <td>{{ prod.type }}</td>
                     <td>{{ prod.status ? 'Actif' : 'Inactif' }}</td>
-                    <td>
+                    <td>{{ prod.localisation }}</td>
+                        <td>
                         <div class="d-flex">
-                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2"><i class="fas fa-eye"></i></a>
+                            <a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2"><i class="fas fa-eye"></i></a>
                             <a href="{{ path('app_modifier_produit', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier" class="me-2"><i class="fas fa-edit"></i></a>
                             <a href="{{ path('app_supprimer', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer"><i class="fas fa-trash"></i></a>
                         </div>

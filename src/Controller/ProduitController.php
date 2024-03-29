@@ -122,6 +122,21 @@ class ProduitController extends AbstractController
             $products = $pr->findBy([], null, $itemsPerPage, $offset);
             $totalItems = $pr->count([]);
         }
+        // Manipulation de l'URL pour extraire la partie souhaitée
+        foreach ($products as &$product) {
+            $url = $product->getLocalisation();
+            $start_pos = strpos($url, '?q=');
+            $end_pos = strpos($url, '&t');
+
+            // Extraire la sous-chaîne entre ces deux positions
+            if ($start_pos !== false && $end_pos !== false) {
+                $localisation = substr($url, $start_pos + strlen('?q='), $end_pos - $start_pos - strlen('?q='));
+            } else {
+                // Gérer le cas où "?q=" ou "&t" n'est pas trouvé
+                $localisation = ''; // Ou toute autre valeur par défaut que vous souhaitez utiliser
+            }
+            $product->setlocalisation($localisation); // Mettre à jour l'attribut localisation avec la partie extraite
+        }
 
         $totalPages = ceil($totalItems / $itemsPerPage);
 
