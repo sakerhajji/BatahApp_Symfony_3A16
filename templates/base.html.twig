@@ -95,6 +95,7 @@
                         <img class="logo2 img-fluid" src="{{ asset('images/header-logo2.svg') }}"
                              alt="header-logo2.svg">
                     </a>
+                
                     <!-- Responsive Menu Structure-->
                     <ul id="respMenu" class="ace-responsive-menu menu_list_custom_code wa text-end"
                         data-menu-style="horizontal">
@@ -195,29 +196,34 @@
                                             class="badge">2</sup></span></a></li>
                         <li><a class="notification" href="#"><span class="body-color flaticon-bell fz16"></span></a>
                         </li>
+
+                        {#  session admin #}
                         <li class="user_setting">
-                            <div class="dropdown">
-                                <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}"
-                                         alt="e1.png">
-                                    <span class="dn-1366"> Jerome Bell <span
-                                                class="fas fa-angle-down ml5"></span></span>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <div class="user_set_header">
-                                        <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
-                                        <p>Jerome Bell <br><span class="address">alitufan@gmail.com</span></p>
-                                    </div>
-                                    <div class="user_setting_content">
-                                        <a class="dropdown-item active" href="#">My Profile</a>
-                                        <a class="dropdown-item" href="#">Messages</a>
-                                        <a class="dropdown-item" href="#">My Listing</a>
-                                        <a class="dropdown-item" href="#">Help</a>
-                                        <a class="dropdown-item" href="#">Log out</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+    <div class="dropdown">
+        <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
+        {% if app.session.get('user').avatar %}
+              {#  <img class="rounded-circle mr10" src="{{ asset('users/' ~ app.session.get('user').avatar) }}" alt="User Avatar"> #}
+                <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png')  }}" alt="User Avatar">
+            {% else %}
+                <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}" alt="Default Avatar">
+            {% endif %}  <span class="dn-1366"> {{ app.session.get('user').nomutilisateur }} <span class="fas fa-angle-down ml5"></span></span>
+        </a>
+        <div class="dropdown-menu">
+            <div class="user_set_header">
+                <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
+                <p>{{ app.session.get('user').nomutilisateur }} <br><span class="address">{{ app.session.get('user').adresseemail }}</span></p>
+            </div>
+            
+            <div class="user_setting_content">
+                <a class="dropdown-item active" href="#">My Profile</a>
+                <a class="dropdown-item" href="#">Messages</a>
+                <a class="dropdown-item" href="#">My Listing</a>
+                <a class="dropdown-item" href="#">Help</a>
+            <a class="dropdown-item" href="{{ path('app_main') }}">Log out</a>
+            </div>
+        </div>
+    </div>
+</li>
                     </ul>
                 </div>
             </nav>
@@ -636,3 +642,4 @@
 
 <!-- Mirrored from creativelayers.net/themes/voiture-html/page-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2024 13:40:05 GMT -->
 </html>
+<style>

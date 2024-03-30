@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Entity\Utilisateur;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\ArticleRepository;
 use App\Repository\BasketRepository;
@@ -30,16 +30,22 @@ class PanierController extends AbstractController
     {
         $session =  $request->getSession();
         $connectedUser = $session->get('user');
+
+        // If user is not logged in, redirect to login page
         if ($connectedUser == null) {
             return $this->redirectToRoute("app_login");
         }
-        $basketData = $basketService->getCartItems($connectedUser->getIdUser());
+
+        // Fetch cart items for the connected user
+        $basketData = $basketService->getCartItems($connectedUser->getId());
         $basketItemsCount = count($basketData);
 
+        // Calculate total price of items in the cart
         $totalPrice = array_reduce($basketData, function ($total, $product) {
-            return $total + $product->getIdArticle()->getArtprix();
+            return $total + $product->getIdProduit()->getPrix();
         }, 0);
 
+        // Render the panier.html.twig template with necessary data
         return $this->render('panier/panier.html.twig', [
             'controller_name' => 'PanierController',
             'basketData' => $basketData,
@@ -50,25 +56,28 @@ class PanierController extends AbstractController
     }
 
 
-    #[Route('/addToBasket/{idArticle}', name: 'app_addToBasket')]
-    public function addToBasket(Request $request, $idArticle, BasketService $basketService, UtilisateurRepository $userRep, ProduitsRepository $articleRep): Response
+    #[Route('/addToBasket/{idp}', name: 'app_addToBasket')]
+    public function addToBasket(Request $request, $idp, BasketService $basketService, UtilisateurRepository $userRep, ProduitsRepository $pr): Response
     {
         $session =  $request->getSession();
         $connectedUser = $session->get('user');
-        $connectedUser = $userRep->find($connectedUser->getIdUser());
+        $connectedUser = $userRep->find($connectedUser->getId());
 
-        $basketService->addToCart($connectedUser->getId(), $idArticle, $userRep, $articleRep);
+        $basketService->addToCart($connectedUser->getId(), $idp, $userRep, $pr);
 
         // add flash message
         $this->addFlash('command_ajoute', 'Article ajouté au panier');
 
-        return $this->redirectToRoute('display_prod_front');
+        return $this->redirectToRoute('app_afficahge_produits');
     }
 
-    #[Route('/removeFromBasket/{idArticle}', name: 'app_removeFromBasket')]
-    public function removeFromBasket($idArticle, BasketService $basketService, BasketRepository $basketRep): Response
+    #[Route('/removeFromBasket/{idp}', name: 'app_removeFromBasket')]
+    public function removeFromBasket($idp, BasketService $basketService, BasketRepository $basketRep): Response
     {
-        $basketService->removeFromCart($idArticle, $basketRep);
+        // Remove the selected article from the user's basket
+        $basketService->removeFromCart($idp, $basketRep);
+
+        // Redirect back to the cart page
         return $this->redirectToRoute('app_panier');
     }
 }

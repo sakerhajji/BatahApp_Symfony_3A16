@@ -14,13 +14,34 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 use Knp\Snappy\Pdf;
 use App\Form\CalculatorType;
+use App\Repository\BasketRepository;
+use App\Repository\UtilisateurRepository;
+use Dompdf\Dompdf;
+use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ProduitController extends AbstractController
 {
+    private $session;
 
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
+    #[Route('/home', name: 'app_home')]
+    public function home(): Response
+    {
+
+        return $this->render('home/home.html.twig');
+    }
 
     /************************************************************************************************************************************************* */
     /**************************************************************CRUD-PRODUCT*********************************************************************************** */
@@ -109,6 +130,7 @@ class ProduitController extends AbstractController
     #[Route('/produitback', name: 'app_back_affiche')]
     public function showprodback(Request $request, ProduitsRepository $pr): Response
     {
+        $user = $this->getUser();
         $currentPage = $request->query->getInt('page', 1);
         $itemsPerPage = 5;
         $offset = ($currentPage - 1) * $itemsPerPage;
@@ -164,6 +186,66 @@ class ProduitController extends AbstractController
     }
 
     #[Route('/az', name: 'app_afficahge_produits')]
+    public function index(Request $request, PaginatorInterface $paginator, UtilisateurRepository $userRep, BasketRepository $basketRep, ProduitsRepository $pr): Response
+    {
+
+        $session =  $request->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $connectedUser = $this->session->get('user');
+
+
+        $user = $userRep->find($connectedUser->getId());
+
+        $existingArticles = [];
+        $basketItems = $basketRep->findBy(['idClient' => $user]);
+        $basketItemsCount = count($basketItems);
+        $em = $this->getDoctrine()->getManager()->getRepository(Produits::class);
+
+        $repository = $this->getDoctrine()->getRepository(Produits::class)->findAll();
+
+
+        // Loop through each basket item
+        foreach ($basketItems as $basketItem) {
+            $articleId = $basketItem->getIdProduit()->getIdProduit();
+
+            // Check if the article ID exists in the list of articles
+            foreach ($repository as $article) {
+                if ($article->getIdProduit() === $articleId) {
+                    // Add the existing article to the list of existing articles
+                    $existingArticles[] = $article->getIdProduit();
+                    break;
+                }
+            }
+        }
+
+
+        $pagination = $paginator->paginate(
+            $repository,
+            $request->query->getInt('page', 1), // Current page number
+            50 // Number of items per page
+        );
+        $basketItemsCount = count($basketItems);
+
+        $allProducts = $pr->findAll();
+        $newCars =  $newCars = array_reverse($allProducts); // Inverser l'ordre des produits pour simuler un tri par date d'ajout décroissante
+        //$otherProducts = array_slice($allProducts, 0, count($allProducts) - count($newCars)); // Produits restants
+
+        return $this->render('produit/indexfront.html.twig', [
+            'listS' => $pagination,
+            'existingArticles' => $existingArticles,
+            'basketItemsCount' => $basketItemsCount,
+            'products' => $allProducts, // Produits pour nav-home
+            'newCars' => $newCars, // Produits pour nav-shopping
+        ]);
+    }
+
+
+    /*
+#[Route('/az', name: 'app_afficahge_produits')]
     public function index(ProduitsRepository $pr): Response
     {
         $allProducts = $pr->findAll();
@@ -175,6 +257,13 @@ class ProduitController extends AbstractController
             'newCars' => $newCars, // Produits pour nav-shopping
         ]);
     }
+*/
+
+
+
+
+
+
     /************************************************************************************************************************************************* */
     /************************************************************************************************************************************************* */
     #[Route('/generate-pdf', name: 'app_generate')]
@@ -226,6 +315,211 @@ class ProduitController extends AbstractController
 
         return $this->render('produit/page-calculator.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+
+
+
+
+    #[Route('/detailProduit/front/{idp}', name: 'detailProduitFront')]
+    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp)
+    {
+        $session =  $req->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $prod = $em->getRepository(Produits::class)->find($idp);
+
+
+        return $this->render('produit/detailProduitFront.html.twig', array(
+            'id' => $prod->getIdProduit(),
+            'name' => $prod->getLabelle(),
+            'prix' => $prod->getPrix(),
+            'artdispo' => $prod->getStatus(),
+            'description' => $prod->getDescription(),
+            'image' => $prod->getPhoto(),
+            'pg' => $prod->getPeriodeGarantie()
+
+        ));
+    }
+
+
+
+
+    #[Route('/exportExcel', name: 'exportExcel')]
+    public function exportExcel(Request $request)
+    {
+        $session =  $request->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Add headers to the sheet
+        $sheet->setCellValue('A1', 'labelle');
+        $sheet->setCellValue('B1', 'prix');
+        $sheet->setCellValue('C1', 'status');
+        $sheet->setCellValue('D1', 'periodegarantie');
+        $sheet->setCellValue('E1', 'description');
+
+        // Get the products from the database
+        $products = $this->getDoctrine()->getRepository(Produits::class)->findAll();
+
+        // Add the products to the sheet
+        $row = 2;
+        foreach ($products as $product) {
+            $sheet->setCellValue('A' . $row, $product->getLabelle());
+            $sheet->setCellValue('B' . $row, $product->getPrix());
+            $sheet->setCellValue('C' . $row, $product->getStatus());
+            $sheet->setCellValue('D' . $row, $product->getPeriodeGarantie());
+            $sheet->setCellValue('E' . $row, $product->getDescription());
+            $row++;
+        }
+
+
+        // Create the Excel file
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'services.xlsx';
+        $writer->save($filename);
+
+        // Return the Excel file as a response
+        return $this->file($filename);
+    }
+
+
+
+    /**
+     * @Route("/ajax_search/", name="ajax_search")
+     */
+    public function chercherArticles(Request $request, EntityManagerInterface $entityManager)
+    {
+        $session =  $request->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $requestString = $request->get('q');
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $query = $queryBuilder
+            ->select('P')
+            ->from('App\Entity\Produits', 'P')
+            ->where('P.labelle LIKE :str')
+            ->setParameter('str', '%' . $requestString . '%')
+            ->getQuery();
+
+        $products = $query->getResult();
+        if (!$products) {
+            $result['products']['error'] = "Produits non trouvé :( ";
+        } else {
+            $result['products'] = $this->getRealEntities($products);
+        }
+        return new Response(json_encode($result));
+    }
+
+
+    // LES  attributs
+    public function getRealEntities($products)
+    {
+        foreach ($products as $products) {
+            $realEntities[$products->getLabelle()] = [$products->getPhoto(), $products->getStatus(), $products->getLabelle(), $products->getPrix()];
+        }
+        return $realEntities;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    #[Route('/exportpdf', name: 'exportpdf')]
+    public function exportToPdf(\App\Repository\ProduitsRepository $repository): Response
+    {
+        // Récupérer les données de réservation depuis votre base de données
+        $Services = $repository->findAll();
+
+        // Créer le tableau de données pour le PDF
+        $tableData = [];
+        foreach ($Services as $Services) {
+            $tableData[] = [
+                'name' => $Services->getLabelle(),
+                'prix' => $Services->getPrix(),
+                'status' => $Services->getStatus(),
+                'description' => $Services->getDescription(),
+                'periodeGarentie' => $Services->getPeriodeGarantie(),
+                'User' => $Services->getIdUtilisateur()->getNomutilisateur() . ' ' . $Services->getIdUtilisateur()->getPrenomutilisateur(),
+                'mail' => $Services->getIdUtilisateur()->getAdresseemail()
+            ];
+        }
+
+        // Créer le PDF avec Dompdf
+        $dompdf = new Dompdf();
+        $html = $this->renderView('produit/export-pdf.html.twig', [
+            'tableData' => $tableData,
+        ]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        // Envoyer le PDF au navigateur
+        $response = new Response($dompdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="articles.pdf"',
+        ]);
+        return $response;
+    }
+
+
+
+
+
+
+
+    #[Route('/produit/tricroi', name: 'tri', methods: ['GET', 'POST'])]
+    public function triCroissant(\App\Repository\ProduitsRepository $pr): Response
+    {
+        $produit = $pr->findAllSorted();
+
+        return $this->render('produit/index.html.twig', [
+            'listS' => $produit,
+        ]);
+    }
+
+    #[Route('/produit/tridesc', name: 'trid', methods: ['GET', 'POST'])]
+    public function triDescroissant(\App\Repository\ProduitsRepository $pr): Response
+    {
+        $produit = $pr->findAllSorted1();
+
+        return $this->render('article/index.html.twig', [
+            'listS' => $produit,
+        ]);
+    }
+
+    #[Route('/produit/search', name: 'search2', methods: ['GET', 'POST'])]
+    public function search2(Request $request, \App\Repository\ProduitsRepository $repo): Response
+    {
+        $query = $request->query->get('query');
+        $prodid = $request->query->get('prodid');
+        $prodlabelle = $request->query->get('prodlabelle');
+
+        $produit = $repo->advancedSearch($query, $prodid, $prodlabelle);
+
+        return $this->render('produit/index.html.twig', [
+            'listS' => $produit,
         ]);
     }
 }

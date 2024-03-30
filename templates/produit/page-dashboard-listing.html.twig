@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Show Produits{% endblock %}
-  
+
 {% block pane %}
 <div class="d-flex justify-content-between align-items-center mb-3">
 <h1>PRODUCT</h1>
 <div class="d-flex">
 <form method="get" action="{{ path('app_back_affiche') }}" class="mb-3">
 <div class="input-group">
-    <input type="text" class="form-control" placeholder="Rechercher un produit" name="search" value="{{ searchQuery }}">
+    <input type="text" class="form-control" placeholder="Rechercher un produit" name="search" value="#">
     <button class="btn btn-outline-primary" type="submit">Rechercher</button>
 </div>
 </form>
@@ -80,4 +80,6 @@
 <div class="text-center mt-4">
     <a href="{{ path('app_produit') }}" class="btn btn-primary">Ajouter un produit</a>
 </div>
+
+   
 {% endblock %}

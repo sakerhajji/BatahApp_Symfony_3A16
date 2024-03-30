@@ -19,10 +19,10 @@ class BasketService
         $this->entityManager = $entityManager;
     }
 
-    public function addToCart($userId, $articleId, UtilisateurRepository $userRep, ProduitsRepository $articleRep)
+    public function addToCart($userId, $prodId, UtilisateurRepository $userRep, ProduitsRepository $pr)
     {
         $user = $userRep->find($userId);
-        $article = $articleRep->find($articleId);
+        $article = $pr->find($prodId);
 
         $panier = new Basket();
         $panier->setIdClient($user);

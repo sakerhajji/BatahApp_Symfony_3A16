@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BasketRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Monolog\Handler\Curl\Util;
 
 #[ORM\Entity(repositoryClass: BasketRepository::class)]
 /**
@@ -28,14 +29,17 @@ class Basket
     #[ORM\Column(name: "remise", type: "string", length: 255, nullable: false)]
     private string $remise;
 
-    #[ORM\Column(name: "date_ajout", type: "date", nullable: false)]
+    #[ORM\Column(name: "date_ajout", type: "datetime", nullable: false)]
     private \DateTime $dateAjout;
 
-    #[ORM\Column(name: "id_client", type: "integer", nullable: true)]
-    private ?int $idClient;
+    #[ORM\ManyToOne(targetEntity: "Utilisateur")]
+    #[ORM\JoinColumn(name: "id_client", referencedColumnName: "id")]
+    private $idClient;
 
-    #[ORM\Column(name: "id_produit", type: "integer", nullable: true)]
-    private ?int $idProduit;
+
+    #[ORM\ManyToOne(targetEntity: "Produits")]
+    #[ORM\JoinColumn(name: "id_produit", referencedColumnName: "idProduit")]
+    private $idProduit;
 
     public function getIdbasket(): int
     {
@@ -62,28 +66,32 @@ class Basket
         return $this->dateAjout;
     }
 
-    public function setDateAjout(\DateTime $dateAjout): void
+    public function setDateAjout(\DateTimeInterface $dateAjout): self
     {
         $this->dateAjout = $dateAjout;
+
+        return $this;
     }
 
-    public function getIdClient(): ?int
+    public function getIdClient(): ?Utilisateur
     {
         return $this->idClient;
     }
 
-    public function setIdClient(?int $idClient): void
+    public function setIdClient(?Utilisateur $idClient): self
     {
         $this->idClient = $idClient;
+        return $this;
     }
 
-    public function getIdProduit(): ?int
+    public function getIdProduit(): ?Produits
     {
         return $this->idProduit;
     }
 
-    public function setIdProduit(?int $idProduit): void
+    public function setIdProduit(?Produits $idProduit): self
     {
         $this->idProduit = $idProduit;
+        return $this;
     }
 }

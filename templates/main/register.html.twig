@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Battah{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ form_label(f, 'Inscription', {'label_attr': {'class': 'h4'}}) }}</div>
+                <div class="card-body">
+                    {{ form_start(f, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="form-group">
+                        {{ form_label(f.nomutilisateur, 'Nom :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.nomutilisateur, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+                        {{ form_errors(f.nomutilisateur, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.prenomutilisateur, 'Prénom :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.prenomutilisateur, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+                        {{ form_errors(f.prenomutilisateur, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.sexe, 'Sexe :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.sexe, {'attr': {'class': 'form-control', 'placeholder': 'Votre sexe'}}) }}
+                        {{ form_errors(f.sexe, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.datedenaissance, 'Date de Naissance :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.datedenaissance, {'attr': {'class': 'form-control', 'placeholder': 'Votre date de naissance'}}) }}
+                        {{ form_errors(f.datedenaissance, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.adresseemail, 'Adresse Email :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.adresseemail, {'attr': {'class': 'form-control', 'placeholder': 'Votre adresse email'}}) }}
+                        {{ form_errors(f.adresseemail, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.motdepasse, 'Mot de Passe :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.motdepasse, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe'}}) }}
+                        {{ form_errors(f.motdepasse, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.adressepostale, 'Adresse Postale :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.adressepostale, {'attr': {'class': 'form-control', 'placeholder': 'Votre adresse postale'}}) }}
+                        {{ form_errors(f.adressepostale, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.numerotelephone, 'Numéro de Téléphone :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.numerotelephone, {'attr': {'class': 'form-control', 'placeholder': 'Votre numéro de téléphone'}}) }}
+                        {{ form_errors(f.numerotelephone, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.numerocin, 'Numéro CIN :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.numerocin, {'attr': {'class': 'form-control', 'placeholder': 'Votre numéro CIN'}}) }}
+                        {{ form_errors(f.numerocin, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.pays, 'Pays :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.pays, {'attr': {'class': 'form-control', 'placeholder': 'Votre pays'}}) }}
+                        {{ form_errors(f.pays, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.nbrproduitachat, 'Nombre de Produits Achetés :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.nbrproduitachat, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de produits achetés'}}) }}
+                        {{ form_errors(f.nbrproduitachat, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.nbrproduitvendu, 'Nombre de Produits Vendus :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.nbrproduitvendu, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de produits vendus'}}) }}
+                        {{ form_errors(f.nbrproduitvendu, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.nbrproduit, 'Nombre de Produits :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.nbrproduit, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de produits'}}) }}
+                        {{ form_errors(f.nbrproduit, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.nbrpoint, 'Nombre de Points :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.nbrpoint, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de points'}}) }}
+                        {{ form_errors(f.nbrpoint, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.languepreferree, 'Langue Préférée :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.languepreferree, {'attr': {'class': 'form-control', 'placeholder': 'Votre langue préférée'}}) }}
+                        {{ form_errors(f.languepreferree, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.evaluationutilisateur, 'Évaluation de l\'Utilisateur :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.evaluationutilisateur, {'attr': {'class': 'form-control', 'placeholder': 'Évaluation de l\'utilisateur'}}) }}
+                        {{ form_errors(f.evaluationutilisateur, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.statutverificationcompte, 'Statut de Vérification du Compte :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.statutverificationcompte, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(f.statutverificationcompte, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.avatar, 'Avatar :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.avatar, {'attr': {'class': 'form-control', 'placeholder': 'URL de votre avatar'}}) }}
+                        {{ form_errors(f.avatar, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.dateinscription, 'Date d\'Inscription :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.dateinscription, {'attr': {'class': 'form-control', 'placeholder': 'Date d\'inscription'}}) }}
+                        {{ form_errors(f.dateinscription, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(f.role, 'Rôle :', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                        {{ form_widget(f.role, {'attr': {'class': 'form-control', 'placeholder': 'Rôle de l\'utilisateur'}}) }}
+                        {{ form_errors(f.role, {'attr': {'class': 'text-danger'}}) }}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                    {{ form_end(f) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

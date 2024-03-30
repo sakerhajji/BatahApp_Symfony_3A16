@@ -397,9 +397,9 @@
               </div>
               <div class="listing_footer">
                 <ul class="mb0">
-                  <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
-                  <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
-                  <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
+               
+                 
+                <li class="add-to-cart"><a href="{{ path('app_addToBasket', {'idArticle': prod.getIdProduit()} ) }}"><span class="fas fa-shopping-cart me-2"></span>Add to Cart</a></li> 
                 </ul>
               </div>
             </div>
@@ -446,11 +446,11 @@
                 </div>
               </div>
               <div class="listing_footer">
-                <ul class="mb0">
-                  <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span>77362</a></li>
-                  <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span>Diesel</a></li>
-                  <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span>Automatic</a></li>
-                </ul>
+              <ul class="mb0">
+                 
+              <a href="{{ path('app_addToBasket', {'idArticle': prod.getIdProduit()} ) }}" class="add-to-cart">
+            <i class="fa fa-shopping-cart fa-2x"></i>
+        </a> </ul>
               </div>
             </div>
           </div>
@@ -472,4 +472,25 @@
       </div>
     </section>
   
+
+
+    <script>
+      document.querySelectorAll('.add-to-cart').forEach(item => {
+          item.addEventListener('click', event => {
+              const cartIcon = item.querySelector('.fa-shopping-cart');
+              if (cartIcon.classList.contains('green')) {
+                  cartIcon.classList.remove('green');
+              } else {
+                  cartIcon.classList.add('green');
+              }
+          });
+      });
+  </script>
+<style>
+  .green {
+  color: green;
+}
+</style>
 {% endblock %}
+
+{% block footer %} {% endblock %}
