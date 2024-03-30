@@ -36,7 +36,7 @@ class Location
 
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="location", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="location", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $images;
 

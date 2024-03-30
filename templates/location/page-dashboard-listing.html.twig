@@ -11,11 +11,12 @@
                     <table class="table">
                         <thead class="table-light">
                             <tr class="thead_row">
-                                <th class="thead_title pl20" scope="col">Labelle</th>
-                                <th class="thead_title" scope="col">Description</th>
-                                <th class="thead_title" scope="col">PeriodeGarentie</th>
+                                <th class="thead_title pl20" scope="col">Photo de la location et son prix </th>
                                 <th class="thead_title" scope="col">Type</th>
-                                
+                                <th class="thead_title" scope="col">Description</th>
+                             
+                                <th class="thead_title" scope="col">Adresse</th>
+                                <th class="thead_title" scope="col">Utilisateur</th>
                                 <th class="thead_title" scope="col">Action</th>
                             </tr>
                         </thead>
@@ -23,28 +24,29 @@
    <tr>
     <td class="align-middle pl20" scope="row">
     <div class="car-listing bdr_none d-flex mb0">
-        <div class="thumb w150">
-            {% set images = loca.getImages() %}
-            {% if images|length > 0 %}
-                <div class="image-gallery">
-                    {% for image in images %}
-                        <img class="img-fluid" src="{{ asset('uploads/' ~ image.url) }}" alt="Image">
-                    {% endfor %}
-                </div>
-            {% else %}
-                <!-- Provide a placeholder image if no image is available -->
-                <img class="img-fluid" src="{{ asset('path_to_placeholder_image') }}" alt="Placeholder Image">
-            {% endif %}
-        </div>
+    <div class="thumb w150">
+        {% set images = imagesByLocation[loca.getIdLocation()] %}
+        {% if images is not empty %}
+            <div class="image-gallery">
+                {% for image in images %}
+                    <img class="img-fluid" src="{{ asset(image.getUrl()) }}" alt="Image">
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Provide a placeholder image if no image is available -->
+            <img class="img-fluid" src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
+        {% endif %}
+</div>
         <div class="details ms-1">
             <h6 class="title"><a href="page-car-single-v1.html">{{ loca.type }}</a></h6>
             <h5 class="price">${{ loca.prix }}</h5>
         </div>
     </div>
-</td>
+</td>   <td class="align-middle">{{ loca.type }}</td>
         <td class="align-middle">{{ loca.description }}</td>
-        <td class="align-middle">2020</td>
-        <td class="align-middle">{{ loca.type }}</td>
+        <td class="align-middle">{{ loca.adresse }}</td>
+        <td class="align-middle">{{ loca.id.nomutilisateur ~ ' ' ~ loca.id.prenomutilisateur }}</td>
+     
         <td class="editing_list align-middle">
             <!-- Your actions buttons -->
         </td>
@@ -54,11 +56,32 @@
                     <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="View"><span class="flaticon-view"></span></a>
                 </li>
                 <li class="list-inline-item mb-1">
-                    <a href="{{ path('app_modifier_location', {'idl': loca.getIdLocation()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span class="flaticon-trash"></span></a>
+                    <a href="{{ path('app_modifier_location', {'idl': loca.getIdLocation()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>
                 </li>
                 <li class="list-inline-item mb-1">
-                    <a href="{{ path('app_supprimer_location', {'idl': loca.getIdLocation()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span class="flaticon-trash"></span></a>
+                    <a href="#" class="delete-location" data-bs-toggle="modal" data-bs-target="#deleteModal{{ loca.getIdLocation() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span class="flaticon-trash"></span></a>
                 </li>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{ loca.getIdLocation() }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ loca.getIdLocation() }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ loca.getIdLocation() }}">Confirmation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous sûr de vouloir supprimer cette location ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <a href="{{ path('app_supprimer_location', {'idl': loca.getIdLocation()}) }}" class="btn btn-danger">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
             </ul>
         </td>
     </tr>
@@ -72,6 +95,6 @@
 </div>
 
 <div class="text-center mt-4">
-    <a href="{{ path('app_ajout_location') }}" class="btn btn-primary">Ajouter un location</a>
+    <a href="{{ path('app_ajout_location') }}" class="btn btn-primary">Ajouter Location</a>
 </div>
 {% endblock %}

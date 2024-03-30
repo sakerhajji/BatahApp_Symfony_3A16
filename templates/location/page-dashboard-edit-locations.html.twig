@@ -45,6 +45,11 @@
                                 {{ form_errors(form.disponibilite) }}
                             </div>
                         </div>
+                        <div class="col-md-12 mb20">
+                        {{ form_label(form.imageFile, "Image") }}
+                        {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.imageFile) }}
+                    </div>
 
                         <div class="form-group">
                             {{ form_label(form.id, "Select User") }}
@@ -52,9 +57,28 @@
                         </div>
 
                         <div class="col-md-12 mb20">
-                            <button type="submit" class="btn btn-primary">Ajouter un produit</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editLocationModal">Modifier Location</button>
                         </div>
-
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="editLocationModal" tabindex="-1" aria-labelledby="editLocationModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editLocationModalLabel">Confirmation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Êtes-vous sûr de vouloir modifier cette location ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         {{ form_end(form) }}
 
                     </div>
