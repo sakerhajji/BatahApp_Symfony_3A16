@@ -504,7 +504,7 @@ class ProduitController extends AbstractController
     {
         $produit = $pr->findAllSorted1();
 
-        return $this->render('article/index.html.twig', [
+        return $this->render('produit/index.html.twig', [
             'listS' => $produit,
         ]);
     }
@@ -515,11 +515,52 @@ class ProduitController extends AbstractController
         $query = $request->query->get('query');
         $prodid = $request->query->get('prodid');
         $prodlabelle = $request->query->get('prodlabelle');
+        $prodstatus = $request->query->get('prodstatus');
 
-        $produit = $repo->advancedSearch($query, $prodid, $prodlabelle);
+        $produit = $repo->advancedSearch($query, $prodid, $prodlabelle, $prodstatus);
 
         return $this->render('produit/index.html.twig', [
             'listS' => $produit,
+        ]);
+    }
+
+    // stat
+    #[Route('/dashboard/stat', name: 'stat', methods: ['POST', 'GET'])]
+    public function VoitureStatistics(\App\Repository\ProduitsRepository $repo, Request $request): Response
+    {
+        $session = $request->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        // Calcul du total des produits
+        $total = $repo->countByType('voiture') +
+            $repo->countByType('maison') +
+            $repo->countByType('terrain');
+
+        // Vérification si le total est différent de zéro avant de calculer les pourcentages
+        if ($total != 0) {
+            // Calcul des nombres de produits par type
+            $voitureCount = $repo->countByType('voiture');
+            $maisonCount = $repo->countByType('maison');
+            $terrainCount = $repo->countByType('terrain');
+
+            // Calcul des pourcentages
+            $voiturePercentage = round(($voitureCount / $total) * 100);
+            $maisonPercentage = round(($maisonCount / $total) * 100);
+            $terrainPercentage = round(($terrainCount / $total) * 100);
+        } else {
+            // Si le total est égal à zéro, les pourcentages seront également égaux à zéro
+            $voiturePercentage = 0;
+            $maisonPercentage = 0;
+            $terrainPercentage = 0;
+        }
+
+        return $this->render('produit/stat.html.twig', [
+            'voiturePercentage' => $voiturePercentage,
+            'maisonPercentage' => $maisonPercentage,
+            'terrainPercentage' => $terrainPercentage,
         ]);
     }
 }

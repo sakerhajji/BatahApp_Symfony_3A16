@@ -70,6 +70,58 @@ class ProduitsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    public function findAllSorted(): array
+    {
+        $queryBuilder = $this->createQueryBuilder('cl')
+            ->orderBy('cl.prix', 'ASC');
 
+        return $queryBuilder->getQuery()->getResult();
+    }
+    public function findAllSorted1(): array
+    {
+        $queryBuilder = $this->createQueryBuilder('cl')
+            ->orderBy('cl.prix', 'DESC');
 
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function advancedSearch($query, $idProduit, $labelle, $status)
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        if ($query) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->like('c.idProduit', ':query'),
+                $qb->expr()->like('c.labelle', ':query'),
+                $qb->expr()->like('c.status', ':query'),
+
+            ))
+                ->setParameter('query', '%' . $query . '%');
+        }
+
+        if ($idProduit) {
+            $qb->andWhere('c.idProduit = :idProduit')
+                ->setParameter('idProduit', $idProduit);
+        }
+
+        if ($labelle) {
+            $qb->andWhere('c.labelle = :labelle')
+                ->setParameter('labelle', $labelle);
+        }
+
+        if ($status) {
+            $qb->andWhere('c.status = :status')
+                ->setParameter('status', $status);
+        }
+    }
+
+    public function countByType($type)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('COUNT(r.type)')
+            ->where('r.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

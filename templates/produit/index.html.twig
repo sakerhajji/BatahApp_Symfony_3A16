@@ -1,29 +1,22 @@
-{% extends 'baseBackCommand.html.twig' %}
 
-{% block title %}Hello ArticleController!{% endblock %}
+{% extends 'base.html.twig' %}
+{% block title %}Show Product{% endblock %}
 
-{% block body %}
+{% block pane %}
 
     <main id="main" class="main">
 
 
 
         <div class="pagetitle">
-            <h1>Les Articles</h1>
+            <h1>Les Produits</h1>
             <form class="search-form d-flex align-items-center" method="GET" action="{{ path ('search2') }}">
                 <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+            <button class="btn btn-outline-primary" type="submit">Rechercher</button>
             </form>
 
 
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item">Tables</li>
-                    <li class="breadcrumb-item active">General</li>
-                </ol>
-
-            </nav>
+           
         </div><!-- End Page Title -->
 
         <section class="section">
@@ -49,8 +42,8 @@
 
                         <div class="card-body">
 
-                            <h5 class="card-title">List Articles</h5>
-                            <a href="{{ path('ajouterArticle') }}">
+                            <h5 class="card-title">List Produits</h5>
+                            <a href="{{ path('app_produit') }}">
                                 <button type="button" style="float: right;padding: 10px;" class="btn btn-outline-info">Ajouter</button>
 
                             </a>
@@ -59,13 +52,14 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th scope="col">ArtLib</th>
-                                    <th scope="col">ArtDispo</th>
-                                    <th scope="col">ArtImage</th>
+                                    <th scope="col">Labelle</th>
+                                     <th scope="col">Type</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Photo</th>
 
-                                    <th scope="col">ArtPrix</th>
-                                    <th scope="col">Categorie</th>
-                                    <th scope="col">QrCode</th>
+                                    <th scope="col">Prix</th>
+                                    <th scope="col">Période de Garantie</th>
+                                   
 
                                     <th scope="col">Modifier</th>
                                     <th scope="col">Supprimer</th>
@@ -77,7 +71,7 @@
                                     <td>
                                         {% if listS | length == 0 %}
 
-                                            <p style="text-align: center">Articles vides</p>
+                                            <p style="text-align: center">Produits vides</p>
 
                                         {% endif %}
 
@@ -92,26 +86,26 @@
 
                                     <tr>
 
-                                        <td>{{p.artlib}}</td>
-                                        <td>{{ p.artdispo }}</td>
+                                        <td>{{p.labelle}}</td>
+                                        <td>{{p.type}}</td>
+                                        <td>{{ p.status }}</td>
 
 
-                                        <td><img  style="width: 75px; height: 55px; padding: 5px;" src="{{ asset('uploads/'~p.artimg) }}"/></td>
-                                        <td>{{p.artprix}}</td>
-                                        <td>{{p.catlib}}</td>
-                                        <td><img  style="width: 75px; height: 55px; padding: 5px;" src="{{ asset('uploads/'~p.qrcode) }}"/></td>
-
+                                        <td><img  style="width: 75px; height: 55px; padding: 5px;" src="{{ asset('uploads/'~p.photo) }}"/></td>
+                                        <td>{{ p.prix | number_format(0, '.', ',') }} TND</td>
+                                        <td>{{p.periodegarantie}}</td>
+                                        
                                         <td>
-                                            <a href="{{ path('modifierArticle',{artid:p.artid}) }}">
+                                            <a href="{{ path('app_modifier_produit', {'idp': p.idProduit}) }}">
                                                 <button type="button" class="btn btn-outline-success">Modifier</button></a></td>
 
 
                                         <td>
-                                            <a href="javascript:void(0)" onclick="if(confirm('Voulez vraiement supprimer ?')){window.location='{{ path('suppressionArticle', {'artid': p.artid }) }}';}">
+                                            <a href="javascript:void(0)" onclick="if(confirm('Voulez vraiement supprimer ?')){window.location='{{ path('app_supprimer', {'idp': p.idProduit}) }}';}">
 
                                                 <button type="button" class="btn btn-outline-danger">Supprimer</button>
                                             </a></td>
-                                        <td><a href="{{ path('detailArticle',{artid:p.artid}) }}">
+                                        <td><a href="{{ path('app_details_produit', {'idp': p.getidproduit()}) }}">
                                                 <button type="button" class="btn btn-outline-dark">Detail</button>
                                             </a></td>                                    </tr>
 
@@ -129,16 +123,16 @@
                             <a href="{{ path('exportpdf') }}">
                                 <button type="button" style="float: right;padding: 10px;" class="btn btn-outline-info">Export to PDF</button>
                             </a>
-                                <a href="{{ path('stat') }}">
+                                <a href="#">
                                     <button type="button" style="float: left;padding: 10px; margin-right: 10px;" class="btn btn-outline-info">statistique</button>
                                 </a>
                                 <a href="{{ path('tri') }}">
                                     <button type="button" style="float: left;padding: 10px;margin-right: 10px;" class="btn btn-outline-info">tri croissant</button>
                                 </a>
 
-                            <a href="{{ path('trid') }}">
-                                <button type="button" style="float: left;padding: 10px;" class="btn btn-outline-info">tri decroissant</button>
-                            </a>
+                                <a href="{{ path('stat') }}">
+                                    <button type="button" style="float: left;padding: 10px; margin-right: 10px;" class="btn btn-outline-info">statistique</button>
+                                </a>
                         </div>
 
                     </div>
