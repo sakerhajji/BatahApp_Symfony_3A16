@@ -1,8 +1,273 @@
 {% extends 'base_front.html.twig' %}
 
 {% block title %}HOME{% endblock %}
-{% block pane %}
 
+{% block pane %}
+<style>
+    .slide-one {
+        background-size: cover;
+        background-position: center;
+        height: 500px; /* Adjusted height value */
+    }
+    .banner-title {
+        font-size: 80px; /* Reduced font size for better readability */
+        color: #E0115F;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Added text shadow for better contrast */
+    }
+
+    .banner_top_title {
+        font-size: 50px;
+        color: #D3D3D3;
+    }
+
+    .carousel-caption {
+        background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background for caption */
+        padding: 20px; /* Increased padding for better spacing */
+        border-radius: 10px; /* Rounded corners for caption */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.6); /* Dark background for carousel control icons */
+        border-radius: 50%; /* Rounded shape for control icons */
+    }
+
+    .carousel-control-prev-icon::before,
+    .carousel-control-next-icon::before {
+        color: #fff; /* White color for control icons */
+    }
+
+    .album {
+        padding: 30px; /* Increased padding for album section */
+    }
+
+    .sidebar-search {
+        margin-top: -27px;
+    }
+
+    .widget_input {
+        width: 100%; /* Full width for search input */
+        background: #fff; /* White background for input */
+        border: none; /* Removed border for input */
+        border-radius: 5px; /* Added border radius for input */
+        padding: 10px; /* Added padding for input */
+    }
+
+    .nav {
+        margin-top: 20px; /* Increased margin for navigation */
+    }
+
+    .nav-second-level {
+        padding-left: 20px; /* Added padding for sub-navigation */
+    }
+
+    .errorLi {
+        color: #ff0000; /* Red color for error message */
+    }
+
+    .alert {
+        position: fixed;
+        top: 65px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        margin: 10px;
+        padding: 8px 25px;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .alert-success {
+        background-color: #2ecc71; /* Green color for success alert */
+        color: #fff; /* White text color for success alert */
+    }
+
+    .ser_110_thumb {
+        position: relative; /* Added relative positioning */
+        overflow: hidden; /* Hidden overflow for thumbnail */
+    }
+
+    .ser_110_thumb img {
+        transition: transform 0.3s ease; /* Smooth transition effect */
+    }
+
+    .ser_110_thumb:hover img {
+        transform: scale(1.1); /* Increased scale on hover for thumbnail */
+    }
+    .container2 {
+        position: relative;
+        width: 100%;
+        height: 500px; /* Ajustez la hauteur selon vos besoins */
+    }
+    
+    .background-image2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80%;
+        background-image:  url('/uploads/Untitled-design.jpg'); /* Remplacez par le chemin de votre image */
+        background-size: contain;
+        background-position: center;
+    }
+    
+    
+    .blinking-text2 {
+        animation: blink 1s infinite; /* Animation de clignotement */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white; /* Couleur du texte */
+        background-color: black; /* Ajout d'un arrière-plan noir */
+        padding: 10px; /* Ajout de rembourrage pour améliorer la lisibilité */
+    }
+    
+    @keyframes blink {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+    
+
+    .comment-section {
+    margin-top: 20px;
+}
+
+.comment-section h3, .rating-section h4 {
+    margin-bottom: 10px;
+}
+
+.stars {
+    color: #ffd700; /* Couleur des étoiles */
+}
+
+.stars i {
+    font-size: 20px; /* Taille des étoiles */
+    margin-right: 5px; /* Espacement entre les étoiles */
+}
+
+.ser_title098 {
+    text-align: center; /* Centrer le texte */
+    margin-top: 15px; /* Marge supplémentaire au-dessus */
+}
+
+.ser_title098 a {
+    color: #333; /* Couleur du lien */
+    text-decoration: none; /* Supprimer la soulignement du lien */
+}
+
+.ser_title098 a:hover {
+    color: #E0115F; /* Couleur du lien au survol */
+}
+
+.product-card {
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-text {
+    color: #777;
+}
+
+.comment-section {
+    margin-top: 20px;
+}
+
+.stars {
+    color: #ffd700; /* Couleur des étoiles */
+}
+
+.stars i {
+    font-size: 20px; /* Taille des étoiles */
+    margin-right: 5px; /* Espacement entre les étoiles */
+}
+
+
+.btn-details {
+    background-color: #E0115F;
+    border-color: #E0115F;
+}
+
+.btn-details:hover {
+    background-color: #C6004D;
+    border-color: #C6004D;
+}
+
+    
+</style>
+
+
+
+<section class="home-one mt-5 mt-md-5 p-0">
+<section class="home-one mt-5 mt-md-5 p-0">
+    <div class="container2">
+        <div class="background-image2">
+            <div class="blinking-text2">
+                <h1>VENDRE VOTRE VOITURE D'OCCASION N'A JAMAIS ÉTÉ AUSSI FACILE.</h1>
+            </div>
+        </div>
+    </div>
+</section>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="main-banner-wrapper home2_main_slider mb-3">
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for prod in products %}
+                            {# Calcul du prix mensuel #}
+                            {% set prix_total = prod.prix %}
+                            {% set duree = 36 %} {# supposons une période de paiement de 36 mois #}
+                            {% set prix_mensuel = prix_total / duree %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getphoto()) }}');">
+                                    <div class="container">
+                                        <div class="row home-content-home2-style">
+                                            <div class="col-lg-12 p-0">
+                                                <h2 class="banner-title text-white"><small>{{ prod.gettype() }}</small><br>{{ prod.getlabelle() }}</h2>
+                                                <h3 class="banner_top_title text-thm">
+                                                    <span class="animated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>
+                                                    <span style="color: #E0115F; background-color: #ffffff; padding: 5px 10px; border-radius: 5px;">
+                                                PRIX: {{ prod.getprix()|number_format(0, '.', ',') }}DT</span><small class="text-white"></small>
+                                            </h3>
+                                                <p><span style="font-size: 30px; color: #ffffff;">Monthly payment: {{ prix_mensuel|number_format(0, '.', ',') }} TND</span></p>
+                                                <a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}" class="btn banner-btn">Learn More</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-caption d-none d-md-block">
+                                    <!-- Ajoutez ici les légendes des slides si nécessaire -->
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
     <section class="min-sec">
         <div class="container">
 
@@ -34,66 +299,55 @@
 
                 <div class="row justify-content-center">
 
-                    <div class="row">
-                        <!-- Single Item -->
-                        {% for p in listS %}
-                            <div class="col-lg-4 col-md-6 col-sm-12" style="transform: scale(0.8); margin-top: -60px;">
-                                <div class="ser_110">
-                                    <div class="ser_110_thumb">
-                                        <a href=href="{{ path('detailProduitFront', {'idp': p.getidproduit()}) }}" class="ser_100_link">
-                                            <img src="{{ asset('uploads/'~p.photo) }}" class="img-fluid" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="ser_110_footer bott">
-                                        <div class="_110_foot_left">
-
-
-                                            <div class="text-center">
-                                                <div class="ser_title098">
-                                                    <h4 class="_ser_title"><a href="{{ path('detailProduitFront', {'idp': p.getidproduit()}) }}">{{ p.labelle }}</a></h4>
-                                                </div>
-                                                <div class="_oi0po"><i class="fa fa-bolt"></i>From <strong class="theme-cl">{{ p.prix }} DT</strong></div>
-                                                <div class="ser_110_caption">
-                                                    {#
-                                                    <div class="ser_rev098">
-                                                        {% for i in range(0, p.note) %}
-                                                            <i class="fa fa-star filled"></i>
-                                                        {% endfor %}
-                                                        {% for i in range(0, 5 - p.note) %}
-                                                            <i class="fa fa-star"></i>
-                                                        {% endfor %}
-                                                    </div>
-                                                     #}
-                                                </div>
-
-
-                                                <a href="#" class="ser_100_link">Noter</a>
-
-                                                {% if p.getIdProduit() in existingArticles %}
-                                                    <img  src="{{asset('assets/images/basketChecked.png')}}" alt="exist in cart" width="54px" style="position: absolute; top: 0 ; right: 0; margin-top: 15px; margin-right: 15px;">
-                                                {% else %}
-                                                    <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
-                                                        <img  src="{{asset('assets/images/basket2.png')}}" alt="add to cart" width="52px" style="position: absolute; top: 0 ; right: 0; margin-top: 15px; margin-right: 15px;">
-                                                    </a>
-                                                {% endif %}
-
-
-                                            </div>
-
+                <div class="row">
+                <!-- Single Item -->
+                {% for p in listS %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="{{ asset('uploads/'~p.photo) }}" class="card-img-top" alt="{{ p.labelle }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ p.labelle }}</h5>
+                            <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
+                            <a href="{{ path('detailProduitFront', {'idp': p.getidproduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
+           
+                            <div class="comment-section">
+                                <h6 class="mt-3">Commentaires et évaluations</h6>
+                                <form action="{{ path('submit_comment_and_rating', {'id_produit': p.getIdProduit()}) }}" method="POST">
+                                    <div class="form-group">
+                                        <label for="rating">Évaluation du produit:</label>
+                                        <div class="stars" id="ratingStars">
+                                            <!-- Add code for 5-star rating -->
+                                            <i class="fas fa-star" data-rating="1"></i>
+                                            <i class="fas fa-star" data-rating="2"></i>
+                                            <i class="fas fa-star" data-rating="3"></i>
+                                            <i class="fas fa-star" data-rating="4"></i>
+                                            <i class="fas fa-star" data-rating="5"></i>
                                         </div>
-
+                                        <input name="rating" id="rating" value="0" type="hidden">
                                     </div>
-
-
-
-                                </div>
+                                    <div class="form-group">
+                                        <label for="comment">Commentaire:</label>
+                                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Soumettre</button>
+                                </form>
                             </div>
-
-                        {% endfor %}
-
-
+                        </div>
+                        <div class="card-footer text-center">
+                            {% if p.getIdProduit() in existingArticles %}
+                            <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
+                            {% else %}
+                            <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
+                                <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
+                            </a>
+                            {% endif %}
+                            
+                        </div>
                     </div>
-
+                </div>
+                {% endfor %}
+            </div>
+            
     </section>
     {% for flash_message in app.session.flashbag.get('success') %}
         <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 65px; left: 50%; transform: translateX(-50%); z-index: 9999; margin: 10px; padding: 8px 25px; border-radius: 4px; background-color: #2ecc71; color: #fff; font-size: 16px; ">
@@ -125,46 +379,43 @@
     <!-- jQuery is necessary -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function() {
-            var searchRequest = null;
-            $("#search").keyup(function() {
-                var minlength = 3;
-                var that = this;
-                var value = $(this).val(); // elyyktbo fi input 7atito fi var var
-                var entitySelector = $("#entitiesNav").html('');
-                if (value.length >= minlength ) {
-                    if (searchRequest != null)
-                        searchRequest.abort();
-                    searchRequest = $.ajax({
-                        type: "GET",
-                        url: "#",
-                        data: {
-                            'q' : value
-                        },
-                        dataType: "text",
-                        success: function(msg){
-                            //we need to check if the value is the same
-                            if (value==$(that).val()) {
-                                var result = JSON.parse(msg);
-                                $.each(result, function(key, arr) {
-                                    $.each(arr, function(id, value) {
-                                        if (key == 'products') {
-                                            if (id != 'error') {
-
-                                                x= document.getElementById("containerr");
-                                                entitySelector.append('<div style="display: table;width:100%;padding: 15px"><span style="text-align: center">'+value[2]+'</span><br/><a href="/show_products_cat/'+id+'">'+'<img src="/uploads/'+value[0]+'" style="width: 150px; height: 150px"/>'+'</a></div>');
-                                            } else {
-                                                entitySelector.append('<li class="errorLi">'+value+'</li>');
-                                            }
-                                        }
-                                    });
-                                });
-                            }
+        
+    jQuery(document).ready(function() {
+        var searchRequest = null;
+        $("#search").keyup(function() {
+            var minlength = 3;
+            var that = this;
+            var value = $(this).val();
+            var entitySelector = $("#entitiesNav").html('');
+            if (value.length >= minlength ) {
+                if (searchRequest != null)
+                    searchRequest.abort();
+                searchRequest = $.ajax({
+                    type: "GET",
+                    url: "{{ path('ajax_search') }}", // Remplacez 'votre_endpoint_de_recherche' par l'URL de votre endpoint de recherche
+                    data: {
+                        'q' : value
+                    },
+                    dataType: "json", // Changez le type de données attendu à JSON
+                    success: function(response){
+                        // Vérifiez si la réponse contient des données
+                        if (response && response.products) {
+                            $.each(response.products, function(id, product) {
+                                // Ajoutez les éléments de produit à votre HTML
+                                entitySelector.append('<div style="display: table;width:100%;padding: 15px"><span style="text-align: center">'+product[3]+'</span><br/><a href="/detailProduit/front/'+product[0]+'">'+'<img src="/uploads/'+product[1]+'" style="width: 150px; height: 150px"/>'+'</a></div>');
+                            });
+                             } else {
+                            // Gérez les cas où aucune donnée n'est renvoyée
+                            entitySelector.append('<li class="errorLi">Aucun résultat trouvé</li>');
                         }
-                    });
-                }
-            });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error); // Affichez les erreurs dans la console
+                    }
+                });
+            }
         });
+    });
     </script>
 
 
@@ -180,11 +431,35 @@
                 $("h1").slideToggle();
             });
         });
+
+
+         // JavaScript for rating functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.stars i');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.dataset.rating;
+            document.getElementById('rating').value = rating;
+            highlightStars(rating);
+        });
+    });
+
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            if (star.dataset.rating <= rating) {
+                star.classList.add('rated');
+            } else {
+                star.classList.remove('rated');
+            }
+        });
+    }
+});
     </script>
     
-    {#
+    
     {{ knp_pagination_render(listS, 'bootstrap_4_pagination.html.twig') }}
-#}
+
 
   
 {% endblock %}

@@ -6,9 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur
+class Utilisateur implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
@@ -339,5 +340,40 @@ class Utilisateur
     public function __toString()
     {
         return $this->getId();
+    }
+
+
+
+    public function getUserIdentifier()
+    {
+    }
+    public function getPassword(): ?string
+    {
+        return $this->motdepasse; // Assuming your password property is named 'password'
+    }
+
+    // Implement other methods required by UserInterface
+    public function getSalt()
+    {
+        // Not needed if you're using bcrypt or a modern hashing algorithm
+    }
+
+    public function getUsername()
+    {
+        // You can return any unique identifier for the user, for example, the email
+        return $this->adresseemail;
+    }
+
+    public function getRoles()
+    {
+        // You can define custom logic here to determine user roles
+        // For simplicity, let's return the role stored in the entity
+        return [$this->role];
+    }
+
+    public function eraseCredentials()
+    {
+        // If you store any sensitive data on the user, clear it here
+        // This method is called after the user is authenticated
     }
 }

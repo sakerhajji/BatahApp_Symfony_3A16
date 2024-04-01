@@ -3,33 +3,45 @@
 {% block title %}Battah - Login{% endblock %}
 
 {% block body %}
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<h2 class="text-center mb-5">Login</h2>
-
+	<!-- Our SigIn -->
+<section class="our-log bgc-f9">
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 col-lg-6 col-xl-5">
+			<div class="login_form mt60-sm">
+				<h2 class="title">Sign in</h2>
+				<p>New to Cars.com? <a href={{path('app_ajouter')}}>Sign up.</a> Are you a dealer?</p>
 				{{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-				<div class="form-group">
-					{{ form_label(form.adresseemail, 'Email', {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-					<div class="col-sm-10">
-						{{ form_widget(form.adresseemail, {'attr': {'class': 'form-control'}}) }}
-						{{ form_errors(form.adresseemail) }}
-					</div>
+				<div class="mb-2 mr-sm-2">
+					{{ form_label(form.adresseemail, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+					{{ form_widget(form.adresseemail, {'attr': {'class': 'form-control'}}) }}
+					{{ form_errors(form.adresseemail) }}
 				</div>
-				<div class="form-group">
-					{{ form_label(form.motdepasse, 'Password', {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-					<div class="col-sm-10">
-						{{ form_widget(form.motdepasse, {'attr': {'class': 'form-control'}}) }}
-						{{ form_errors(form.motdepasse) }}
-					</div>
+				<div class="form-group mb5">
+					{{ form_label(form.motdepasse, 'Password', {'label_attr': {'class': 'form-label'}}) }}
+					{{ form_widget(form.motdepasse, {'attr': {'class': 'form-control'}}) }}
+					{{ form_errors(form.motdepasse) }}
 				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						{{ form_widget(form.Login, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
-					</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="exampleCheck3">
+					<label class="custom-control-label" for="exampleCheck3">Remember me</label>
+					<a class="btn-fpswd float-end" href="#">Lost your password?</a>
 				</div>
+				<button type="submit" class="btn btn-log btn-thm mt5">Sign in</button>
 				{{ form_end(form) }}
 			</div>
 		</div>
+		<div class="col-md-6 col-lg-5 offset-xl-1 col-xl-5 offset-xl-2">
+			<div class="login_with">
+				<h2 class="title">Connect With Social</h2>
+				<div class="social_btn">
+					<a class="btn btn_fb" href="#"><span class="fab fa-facebook-f"></span>Log In via Facebook</a><br>
+					<a class="btn btn_google" href="#"><span class="fab fa-google"></span>Log In via Google+</a>
+				</div>
+			</div>
+		</div>
 	</div>
+</div>
+</section>
+
 {% endblock %}

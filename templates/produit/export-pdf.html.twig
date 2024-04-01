@@ -58,6 +58,7 @@
 <table>
     <thead>
     <tr>
+    <th>Photo</th>
         <th>Nom Produit</th>
         <th>Prix</th>
         <th>Produit Disponibilite</th>
@@ -72,6 +73,7 @@
     <tbody>
     {% for row in tableData %}
         <tr>
+        <td><img src="{{ row.image_path }}" alt="Product Image" width="100"></td>
             <td>{{ row.name }}</td>
             <td>{{ row.prix }}</td>
             <td>{{ row.status }}</td>

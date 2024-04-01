@@ -8,7 +8,7 @@
 <div class="d-flex">
 <form method="get" action="{{ path('app_back_affiche') }}" class="mb-3">
 <div class="input-group">
-    <input type="text" class="form-control" placeholder="Rechercher un produit" name="search" value="#">
+    <input type="text" class="form-control" placeholder="Rechercher un produit" name="search" >
     <button class="btn btn-outline-primary" type="submit">Rechercher</button>
 </div>
 </form>
@@ -55,16 +55,24 @@
                     <td>{{ prod.status ? 'Actif' : 'Inactif' }}</td>
                     <td>{{ prod.localisation }}</td>
                         <td>
-                        <div class="d-flex">
-                            <a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2"><i class="fas fa-eye"></i></a>
-                            <a href="{{ path('app_modifier_produit', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier" class="me-2"><i class="fas fa-edit"></i></a>
-                            <a href="{{ path('app_supprimer', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer"><i class="fas fa-trash"></i></a>
-                        </div>
+                            <div class="d-flex button-group">
+                        <a href="{{ path('app_details_produit', {'idp': prod.idProduit()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2 btn btn-custom"><i class="fas fa-eye"></i></a>
+                        <a href="{{ path('app_modifier_produit', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier" class="me-2 btn btn-custom"><i class="fas fa-edit"></i></a>
+                    {#    <a href="{{ path('app_supprimer', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer" class="btn btn-custom"><i class="fas fa-trash"></i></a>  #}
+                   
+<a href="{{ path('app_supprimer', {'idp': prod.idProduit}) }}" onclick="showDeleteMessage()" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer" class="btn btn-custom"><i class="fas fa-trash"></i> Supprimer</a>
+<div id="floatingMessage" class="floating-message alert alert-danger" style="display: none;">Le produit a été supprimé avec succès.</div>
+
+
+                    </div>
+                    
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+
 
         <a href="{{ path('exportExcel') }}">
             <button type="button" style="float: right;padding: 10px;margin-left: 10px;" class="btn btn-outline-secondary">Exporter Excel</button>
@@ -96,6 +104,58 @@
 <div class="text-center mt-4">
     <a href="{{ path('app_produit') }}" class="btn btn-primary">Ajouter un produit</a>
 </div>
+
+
+<script>
+    
+
+    function showDeleteMessage() {
+        var floatingMessage = document.getElementById("floatingMessage");
+        floatingMessage.style.display = "block";
+        setTimeout(function() {
+            floatingMessage.style.display = "none";
+        }, 3000); // Masquer le message après 3 secondes (3000 millisecondes)
+    }
+</script>
+
+<style>
+    .btn-custom {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border: 1px solid #007bff; /* couleur de la bordure */
+        border-radius: 10px; /* bordure arrondie */
+        padding: 12px 24px; /* padding des boutons */
+        margin: 0 5px;
+        color: #007bff; /* couleur du texte */
+        background-color: transparent; /* couleur de fond transparente */
+        transition: background-color 0.3s ease, color 0.3s ease; /* transition de couleur */
+        font-size: 18px; /* taille de la police */
+    }
+    
+    .btn-custom:hover {
+        background-color: #007bff; /* couleur de fond au survol */
+        color: #fff; /* couleur du texte au survol */
+    }
+    
+    .btn-custom i {
+        margin-right: 10px; /* espace entre l'icône et le texte */
+    }
+    
+
+    .floating-message {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 300px;
+    text-align: center;
+}
+
+
+</style>
 
    
 {% endblock %}

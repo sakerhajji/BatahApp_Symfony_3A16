@@ -23,7 +23,7 @@ class ProduitsRepository extends ServiceEntityRepository
     public function findBySearchQuery(string $searchQuery, int $limit = null, int $offset = null): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.labelle LIKE :query OR p.description LIKE :query')
+            ->andWhere('p.labelle LIKE :query OR p.type LIKE :query')
             ->setParameter('query', '%' . $searchQuery . '%')
             ->setMaxResults($limit)
             ->setFirstResult($offset)

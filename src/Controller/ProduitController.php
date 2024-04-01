@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Produits;
+
+use App\Entity\Ratings;
+
 use App\Form\ProduitsType;
+use App\Form\RatingsType;
 use App\Repository\ProduitsRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,6 +31,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+use Symfony\Component\Security\Core\Security;
+
 class ProduitController extends AbstractController
 {
     private $session;
@@ -48,16 +54,34 @@ class ProduitController extends AbstractController
 
 
     #[Route('/ajout', name: 'app_produit')]
-    public function addprod(ManagerRegistry $em, Request $request): Response
+    public function addprod(ManagerRegistry $em, Request $request, Security $security): Response
     {
         $em = $em->getManager();
 
         $prod = new Produits();
+
+        /*
+        // Get the current user from the security context
+        $connectedUser = $security->getUser();
+        // Set the current user as the idUtilisateur for the new Produits object
+        $prod->setIdUtilisateur($connectedUser);
+*/
+
         $form = $this->createForm(ProduitsType::class, $prod);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $localisation = $prod->getLocalisation();
+            // Construire la valeur de "localisation" avec le préfixe et le suffixe requis
+            $formattedLocalisation = "https://maps.google.com/maps?q=" . urlencode($localisation) . "&t=&z=13&ie=UTF8&iwloc=&output=embed";
+            // Définir la valeur formatée dans l'entité
+            $prod->setLocalisation($formattedLocalisation);
+
+
+
             // Vérifiez si une image a été téléchargée
             $uploadedFile = $form->get('photo')->getData();
             if ($uploadedFile) {
@@ -86,9 +110,16 @@ class ProduitController extends AbstractController
     {
 
         $prod = $pr->find($idp);
+
+
         $em = $em->getManager();
         $em->remove($prod);
         $em->flush();
+        // Ajouter un message flash pour informer l'utilisateur que l'article a été supprimé
+        $this->addFlash(
+            'noticedelete',
+            'L\'article a été supprimé avec succès.'
+        );
         return $this->redirectToRoute('app_back_affiche');
     }
 
@@ -108,6 +139,13 @@ class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $localisation = $produit->getLocalisation();
+            // Construire la valeur de "localisation" avec le préfixe et le suffixe requis
+            $formattedLocalisation = "https://maps.google.com/maps?q=" . urlencode($localisation) . "&t=&z=13&ie=UTF8&iwloc=&output=embed";
+            // Définir la valeur formatée dans l'entité
+            $produit->setLocalisation($formattedLocalisation);
+
             // Handle image upload
             $photoFile = $form->get('photo')->getData();
 
@@ -244,9 +282,9 @@ class ProduitController extends AbstractController
     }
 
 
-    /*
-#[Route('/az', name: 'app_afficahge_produits')]
-    public function index(ProduitsRepository $pr): Response
+
+    #[Route('/az2', name: 'app_afficahge_produits2')]
+    public function index2(ProduitsRepository $pr): Response
     {
         $allProducts = $pr->findAll();
         $newCars =  $newCars = array_reverse($allProducts); // Inverser l'ordre des produits pour simuler un tri par date d'ajout décroissante
@@ -257,7 +295,7 @@ class ProduitController extends AbstractController
             'newCars' => $newCars, // Produits pour nav-shopping
         ]);
     }
-*/
+
 
 
 
@@ -334,6 +372,14 @@ class ProduitController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $prod = $em->getRepository(Produits::class)->find($idp);
 
+        // Get the localisation
+        $localisation = $prod->getLocalisation();
+        // Check if localisation is null
+        if ($localisation === null) {
+            // Set a default value or handle the null case as needed
+            $localisation = "No GPS coordinates available";
+        }
+
 
         return $this->render('produit/detailProduitFront.html.twig', array(
             'id' => $prod->getIdProduit(),
@@ -342,8 +388,9 @@ class ProduitController extends AbstractController
             'artdispo' => $prod->getStatus(),
             'description' => $prod->getDescription(),
             'image' => $prod->getPhoto(),
-            'pg' => $prod->getPeriodeGarantie()
-
+            'pg' => $prod->getPeriodeGarantie(),
+            'gps' => $localisation,
+            'video' => $video = $prod->getVideo(), // Add the 'video' attribute to pass the video URL to the Twig template
         ));
     }
 
@@ -430,7 +477,7 @@ class ProduitController extends AbstractController
     public function getRealEntities($products)
     {
         foreach ($products as $products) {
-            $realEntities[$products->getLabelle()] = [$products->getPhoto(), $products->getStatus(), $products->getLabelle(), $products->getPrix()];
+            $realEntities[$products->getLabelle()] = [$products->getIdProduit(), $products->getPhoto(), $products->getStatus(), $products->getLabelle(), $products->getPrix()];
         }
         return $realEntities;
     }
@@ -455,7 +502,9 @@ class ProduitController extends AbstractController
         // Créer le tableau de données pour le PDF
         $tableData = [];
         foreach ($Services as $Services) {
+            $imagePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $Services->getPhoto();
             $tableData[] = [
+                'image_path' => $imagePath,
                 'name' => $Services->getLabelle(),
                 'prix' => $Services->getPrix(),
                 'status' => $Services->getStatus(),
@@ -463,6 +512,7 @@ class ProduitController extends AbstractController
                 'periodeGarentie' => $Services->getPeriodeGarantie(),
                 'User' => $Services->getIdUtilisateur()->getNomutilisateur() . ' ' . $Services->getIdUtilisateur()->getPrenomutilisateur(),
                 'mail' => $Services->getIdUtilisateur()->getAdresseemail()
+
             ];
         }
 
@@ -562,5 +612,206 @@ class ProduitController extends AbstractController
             'maisonPercentage' => $maisonPercentage,
             'terrainPercentage' => $terrainPercentage,
         ]);
+    }
+
+
+
+    /************************************************************************************************************************************************* */
+    /*******************************************************rating ****************************************************************************************** */
+
+    #[Route('/submit/comment-and-rating/{id_produit}', name: 'submit_comment_and_rating', methods: ['POST'])]
+    public function submitCommentAndRating(Request $request, int $id_produit): Response
+    {
+        // Récupérer la note et le commentaire soumis depuis la requête
+        $rating = $request->request->get('rating');
+        $commentaire = $request->request->get('comment');
+
+        // Récupérer le produit correspondant à l'ID
+        $produit = $this->getDoctrine()->getRepository(Produits::class)->find($id_produit);
+
+        // Vérifier si le produit existe
+        if (!$produit) {
+            throw $this->createNotFoundException('Le produit n\'existe pas.');
+        }
+
+        // Créer une nouvelle instance de l'entité Ratings
+        $ratingEntity = new Ratings();
+        $ratingEntity->setRating($rating);
+        $ratingEntity->setProduit($produit);
+        $ratingEntity->setCommentaire($commentaire); // Setter pour le commentaire
+
+        // Enregistrer l'évaluation dans la base de données
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($ratingEntity);
+        $entityManager->flush();
+
+        // Rediriger ou renvoyer une réponse appropriée
+        return $this->redirectToRoute('produit/indexfront.html.twig');
+    }
+
+
+
+
+    /**
+     * @Route("/submit_rating/{id_produit}", name="submit_rating")
+     */
+    public function submitRating(Request $request, EntityManagerInterface $entityManager, int $id_produit): Response
+    {
+        $rating = new Ratings();
+        $form = $this->createForm(RatingsType::class, $rating);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Set the product and user for the rating
+            $rating->setProduit($this->getDoctrine()->getRepository(Produits::class)->find($id_produit));
+            $rating->setUser($this->getUser());
+
+            $entityManager->persist($rating);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_details', ['id' => $id_produit]);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $product = $entityManager->getRepository(Produits::class)->find($id_produit);
+
+        return $this->render('produit/indexfront.html.twig', [
+            'product' => $product,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/show/{id}", name="product_details")
+     */
+    public function show(int $id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $product = $entityManager->getRepository(Produits::class)->find($id);
+
+        // Calculate average rating
+        $averageRating = $this->calculateAverageRating($product);
+
+        return $this->render('produit/indexfront.html.twig', [
+            'product' => $product,
+            'averageRating' => $averageRating,
+        ]);
+    }
+
+    /**
+     * Calculate average rating for a product.
+     */
+    private function calculateAverageRating(Produits $product): float
+    {
+        $ratings = $product->getRatings();
+
+        if (count($ratings) === 0) {
+            return 0.0;
+        }
+
+        $totalRating = 0;
+        foreach ($ratings as $rating) {
+            $totalRating += $rating->getRating();
+        }
+
+        return $totalRating / count($ratings);
+    }
+
+    #[Route('/noterService/{artid}/{note}', name: 'noterService')]
+    public function noterService(Request $request, $artid, $note): Response
+    {
+        $session =  $request->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $Services = $this->getDoctrine()->getManager()->getRepository(Produits::class)->find($artid);
+
+        $form = $this->createForm(ProduitsType::class, $Services);
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $fileUpload = $form->get('photo')->getData();
+            $fileName = md5(uniqid()) . '.' . $fileUpload->guessExtension();
+
+            $fileUpload->move($this->getParameter('kernel.project_dir') . '/public/uploads', $fileName);
+
+            $Services->setServImg($fileName);
+            $Services->setNote($note);
+
+
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($Services);
+            $em->flush();
+            $this->addFlash(
+                'notice',
+                'Produit a été bien noté '
+            );
+
+            return $this->redirectToRoute('display_prod_front');
+        }
+
+        return $this->render(
+            'article/modifierArticle.html.twig',
+            ['f' => $form->createView()]
+        );
+    }
+
+
+    /**
+     * @Route("/articles/{id}/note", name="service_note")
+     */
+    public function addNoteToService(Request $request, Produits $service)
+    {
+        $session =  $request->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $note = $request->request->get('note');
+
+        if ($note) {
+            $service->setNote($note);
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Note added successfully!');
+        } else {
+            $this->addFlash('error', 'Note value is required!');
+        }
+
+        return $this->redirectToRoute('display_prod_front');
+    }
+
+    #[Route('/getNoterArticlePage/{artid}', name: 'getNoterArticlePage')]
+    public function getNoterServicePage(\Symfony\Component\HttpFoundation\Request $req, $artid)
+    {
+        $session =  $req->getSession();
+        $usersession = $session->get('user');
+        if ($usersession == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $Services = $em->getRepository(Article::class)->find($artid);
+
+
+        return $this->render('article/getNoterArticlePage.html.twig', array(
+            'Id' => $Services->getArtid(),
+            'name' => $Services->getArtlib(),
+            'prix' => $Services->getArtprix(),
+            'artdispo' => $Services->getArtdispo(),
+            'description' => $Services->getArtdesc(),
+            'image' => $Services->getArtimg(),
+            'catlib' => $Services->getCatlib(),
+            'User' => $Services->getId()->getNom() . ' ' . $Services->getId()->getPrenom(),
+            'mail' => $Services->getId()->getMail()
+
+
+        ));
     }
 }

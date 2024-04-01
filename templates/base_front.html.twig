@@ -20,9 +20,7 @@
   {% endblock %}
   <!-- Title -->
   <title>{% block title %}Voiture - Automotive & Car Dealer HTML Template{% endblock %}</title>
-  <!-- Favicon -->
-  <link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
-  <link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -75,17 +73,55 @@
               <span class="icon-bar"></span>
             </button>
           </div>
-          <a href="index.html" class="navbar_brand float-start dn-md">
-            <img class="logo1 img-fluid" src="images/header-logo2.svg" alt="header-logo2.png">
-            <img class="logo2 img-fluid" src="images/header-logo2.svg" alt="header-logo2.svg">
-          </a>
-          <!-- Responsive Menu Structure-->
+          <a href="#" class="navbar_brand float-start dn-md" id="logo-container">
+          <div class="logo-container">
+              <img class="logo img-fluid" src="{{ asset('uploads/logo.png') }}" alt="Logo">
+              <span class="brand-text">batah</span>
+          </div>
+      </a>
+<style>
+  .logo-container {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out; /* Add smooth transition */
+}
+
+.logo {
+    width: 100px; /* Adjust the size as needed */
+    height: auto;
+    margin-right: 10px; /* Adjust the spacing between the logo and text */
+}
+
+.brand-text {
+    font-size: 14px; /* Adjust the font size as needed */
+    color: #FF5733; /* Attractive color for the text */
+    font-weight: bold; /* Make the text bold */
+}
+
+#logo-container:hover .logo-container {
+    transform: rotate(360deg); /* Rotate the logo 360 degrees on hover */
+}
+
+
+</style>
+<script>
+  const logoContainer = document.getElementById('logo-container');
+
+logoContainer.addEventListener('mouseenter', () => {
+    logoContainer.classList.add('rotate-logo');
+});
+
+logoContainer.addEventListener('mouseleave', () => {
+    logoContainer.classList.remove('rotate-logo');
+});
+</script>
+<!-- Responsive Menu Structure-->
           <ul id="respMenu" class="ace-responsive-menu menu_list_custom_code wa text-end" data-menu-style="horizontal">
             <li> <a href="#"><span class="title">Home</span></a>
               <!-- Level Two-->
               <ul>
                 <li><a href="{{ path('app_afficahge_produits') }}">Home Product</a></li>
-                <li><a href="index2.html">Home V2</a></li>
+                <li><a href="{{ path('app_afficahge_produits2') }}">Home Product2</a></li>
               </ul>
             </li>
             <li> <a href="#"><span class="title">Explore</span></a>
@@ -99,7 +135,7 @@
                     <li><a href="page-dashboard-favorites.html">Favorites</a></li>
                     <li><a href="{{ path('app_produit') }}">Add Vehicule</a></li>
                     <li><a href="page-dashboard-messages.html">Messages</a></li>
-                    <li><a href="page-login.html">Logout</a></li>
+                    <li><a href="{{ path('app_main') }}">Logout</a></li>
                   </ul>
                 </li>
                 <li><a href="page-user-profile.html">User Profile</a></li>
@@ -169,41 +205,16 @@
                 <li><a href="page-service.html">Service</a></li>
                 <li><a href="page-terms.html">Terms and Conditions</a></li>
                 <li><a href="page-ui-element.html">UI Elements</a></li>
+                </ul>
+                  <li>
+                    <a style="margin-left: 10px; margin-right: 5px; transform: scale(1.4);" class="btn btn-square rounded-circle bg-light text-primary me-0" href="{{ path('app_panier') }}">
+                        <img src="{{ asset('assets/images/panier.png') }}" width="35px;">
+                      {% block basket %}  <span class='badge badge-warning badge2' id='lblCartCount'>{{ basketItemsCount }}</span> {% endblock %}
+                    </a>
+                </li>
               </ul>
-            </li>
-            <li class="add_listing"><a href="{{ path('app_produit') }}">+ Add Listing</a></li>
-            {#  session admin #}
-            <li class="user_setting">
-    <div class="dropdown">
-        <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-        {% if app.session.get('user').avatar %}
-              {#  <img class="rounded-circle mr10" src="{{ asset('users/' ~ app.session.get('user').avatar) }}" alt="User Avatar"> #}
-                <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png')  }}" alt="User Avatar">
-            {% else %}
-                <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}" alt="Default Avatar">
-            {% endif %}  <span class="dn-1366"> {{ app.session.get('user').nomutilisateur }} <span class="fas fa-angle-down ml5"></span></span>
-        </a>
-        <div class="dropdown-menu">
-            <div class="user_set_header">
-                <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
-                <p>{{ app.session.get('user').nomutilisateur }} <br><span class="address">{{ app.session.get('user').adresseemail }}</span></p>
-            </div>
-            
-            <div class="user_setting_content">
-                <a class="dropdown-item active" href="#">My Profile</a>
-                <a class="dropdown-item" href="#">Messages</a>
-                <a class="dropdown-item" href="#">My Listing</a>
-                <a class="dropdown-item" href="#">Help</a>
-                <a class="dropdown-item" href="{{ path('app_main') }}">Log out</a>
-            </div>
-        </div>
-    </div>
-</li>
-
-            <li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
-         
-            </ul>
-        </div>
+    
+              
       </nav>
     </header>
     <!-- Modal -->

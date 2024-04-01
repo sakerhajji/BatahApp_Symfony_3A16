@@ -10,6 +10,7 @@ use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Form\LoginType;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class MainController extends AbstractController
 {
@@ -48,11 +49,10 @@ class MainController extends AbstractController
             }
         }
 
-        return $this->render('main/login.html.twig', [
+        return $this->render('home/login.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-
     #[Route('/register', name: 'app_ajouter')]
     public function indexAjouter(Request $request): Response
     {
@@ -71,5 +71,11 @@ class MainController extends AbstractController
         return $this->render('main/register.html.twig', [
             'f' => $form->createView()
         ]);
+    }
+
+    #[Route('/login_failure', name: 'login_failure')]
+    public function loginFailure(): Response
+    {
+        return $this->render('main/login_failure.html.twig');
     }
 }

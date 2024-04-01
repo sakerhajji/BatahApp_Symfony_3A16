@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ProduitsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ProduitsRepository::class)]
 class Produits
@@ -34,6 +36,10 @@ class Produits
     #[ORM\Column(name: "photo", type: "string", length: 255, nullable: false)]
     private string $photo;
 
+    #[ORM\Column(name: "video", type: "string", length: 250, nullable: true)]
+    private ?string $video;
+
+
     #[ORM\Column(name: "localisation", type: "string", length: 255, nullable: false)]
     private string $localisation;
 
@@ -41,6 +47,19 @@ class Produits
     #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
     #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "id")]
     private Utilisateur $idUtilisateur;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Encheres::class, mappedBy="idProduit")
+     */
+    private $encheres;
+
+    /**
+     * @return Collection|Encheres[]|null
+     */
+    public function getEncheres(): ?Collection
+    {
+        return $this->encheres;
+    }
 
 
     public function getIdProduit(): ?int
@@ -128,6 +147,18 @@ class Produits
     public function setPhoto(string $photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getVideo(): ?string
+    {
+        return $this->video;
+    }
+
+    public function setVideo(?string $video): self
+    {
+        $this->video = $video;
 
         return $this;
     }

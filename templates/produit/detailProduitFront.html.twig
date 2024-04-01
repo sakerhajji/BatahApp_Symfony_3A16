@@ -1,45 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <!-- Link Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Link Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+       <!-- Favicon -->
+       <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
+    <style>
+        /* Ajoutez vos styles CSS ici */
+        body {
+            background-image: url('background.jpg'); /* Ajouter le chemin de votre image d'arrière-plan */
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: #fff; /* Couleur du texte */
+        }
 
+        .portfolio-details {
+            padding: 80px 0;
+        }
 
-{% block title %}Product Details{% endblock %}
+        .portfolio-info {
+            background-color: rgba(0, 0, 0, 0.5); /* Arrière-plan semi-transparent */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
+        }
 
-{% block pane %}
-   
-        <!-- Portfolio Details Section -->
-        <section id="portfolio-details" class="portfolio-details">
-            <div class="container">
-                <div class="row gy-4">
-                    <div class="col-lg-8">
-                        <div class="portfolio-details-slider swiper">
-                            <div class="swiper-wrapper align-items-center">
-                                <div class="swiper-slide">
-                                    <!-- Display the product image with a maximum height of 400px -->
-                                    <img src="{{ asset('uploads/' ~ image) }}" style="max-height: 400px" alt="Product Image">
+        .portfolio-info h3 {
+            margin-bottom: 20px;
+            color: #ffc107; /* Couleur de titre */
+            font-size: 24px; /* Taille du titre */
+            font-weight: bold; /* Police en gras */
+        }
+
+        .portfolio-info ul {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .portfolio-info ul li {
+            margin-bottom: 10px;
+            color: #fff; /* Couleur de texte */
+            font-size: 18px; /* Taille du texte */
+        }
+
+        .property_sp_map {
+            overflow: hidden;
+            position: relative;
+            border-radius: 15px;
+        }
+
+        .property_sp_map iframe {
+            width: 100%;
+            border: none;
+            border-radius: 15px;
+        }
+
+        .btn-primary {
+            background-color: #007bff; /* Couleur de fond */
+            color: #fff; /* Couleur du texte */
+            border: none; /* Supprimer la bordure */
+            border-radius: 5px; /* Ajouter des coins arrondis */
+            padding: 12px 24px; /* Ajouter de l'espace à l'intérieur du bouton */
+            font-size: 20px; /* Taille de la police */
+            text-decoration: none; /* Supprimer le soulignement */
+            transition: background-color 0.3s; /* Animation de transition */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Changement de couleur au survol */
+        }
+
+        /* Styles pour le bouton "Retour au menu" */
+        .back-to-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        #product-video {
+    margin-top: 20px; /* Ajoutez un espacement au-dessus de la vidéo */
+}
+
+#product-video iframe {
+    border-radius: 15px; /* Ajoutez des coins arrondis à la vidéo */
+}
+    </style>
+</head>
+<body>
+
+<section id="portfolio-details" class="portfolio-details">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-8">
+                <div class="portfolio-details-slider swiper">
+                    <div class="swiper-wrapper align-items-center">
+                        <div class="swiper-slide">
+                            <!-- Affichez l'image du produit avec une hauteur maximale de 400px -->
+                            <img src="{{ asset('uploads/' ~ image) }}" style="max-height: 400px" alt="Product Image">
+                            {% if video is defined %}
+                            {% set videoIdParts = video|split('v=') %}
+                            {% if videoIdParts|length > 1 %}
+                                <div id="product-video" class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ videoIdParts[1] }}?autoplay=1&mute=1" allowfullscreen></iframe>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="portfolio-info">
-                            <h3>Product Information</h3>
-                            <ul>
-                                <li><strong>Product Number</strong>: {{ id }}</li>
-                                <br>
-                                <li><strong>Name</strong>: {{ name }}</li>
-                                <br>
-                                <li><strong>Description</strong>: {{ description }}</li>
-                                <br>
-                                <li><strong>Availability</strong>: {{ artdispo }}</li>
-                                <br>
-                                <li><strong>Price</strong>: {{ prix }}</li>
-                                <br>
-                                <li><strong>Warranty Period</strong>: {{ pg }}</li>
-                            </ul>
+                            {% else %}
+                                <p>Aucune vidéo disponible pour ce produit.</p>
+                            {% endif %}
+                        {% else %}
+                            <p>Aucune vidéo disponible pour ce produit.</p>
+                        {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-        </section><!-- End Portfolio Details Section -->
-   
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-{% endblock %}
+            <div class="col-lg-4">
+                <div class="portfolio-info">
+                    <h3>Informations sur le produit</h3>
+                    <ul class="list-unstyled">
+                        <li><strong>Numéro de produit:</strong> {{ id }}</li>
+                        <li><strong>Nom:</strong> {{ name }}</li>
+                        <li><strong>Description:</strong> {{ description }}</li>
+                        <li><strong>Disponibilité:</strong> {{ artdispo }}</li>
+                        <li><strong>Prix:</strong> {{ prix }}</li>
+                        <li><strong>Période de garantie:</strong> {{ pg }}</li>
+                    </ul>
+                  <div class="property_sp_map mb-4">
+    {% if gps is defined and gps is not null %}
+        <!-- Utilisation de l'iframe avec le lien de la localisation du produit -->
+        <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ gps }}"></iframe>
+    {% else %}
+        <!-- Affichez un contenu créatif si les coordonnées GPS ne sont pas disponibles -->
+        <p class="text-danger">Aucunes coordonnées GPS disponibles pour ce produit.</p>
+        <!-- Vous pouvez ajouter n'importe quel contenu créatif ici -->
+    {% endif %}
+</div>
+                    <a href="#" class="btn btn-primary">Acheter maintenant</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bouton "Retour au menu" -->
+<a href="{{ path('app_afficahge_produits') }}" class="btn btn-primary back-to-menu">Retour au menu</a>
+
+<!-- Link Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Link Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+</body>
+</html>

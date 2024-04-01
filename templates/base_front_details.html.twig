@@ -28,7 +28,7 @@
 </head>
 {% block body %}
 <body>
-
+  {% block header %}
     <!-- header top -->
     <div class="header_top home3_style dn-992">
       <div class="container">
@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-
+  {% endblock %}
     <!-- Modal -->
     <div class="sign_up_modal modal fade" id="logInModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
       aria-hidden="true">
@@ -292,7 +292,7 @@
     <div class="col-xl-12">
       <div class="breadcrumb_content style2">
         <ol class="breadcrumb float-start">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li> <a href="{{ path('app_afficahge_produits') }}">Home</a></li>
           <li class="breadcrumb-item active" aria-current="page">Cars for Sale</li>
         </ol>
       </div>
@@ -815,6 +815,7 @@
                       <input type="email" class="form-control" placeholder="Email">
                     </div>
                   </div>
+                 
                   <div class="col-md-12">
                     <div class="form-group">
                       <textarea class="form-control" rows="9" placeholder="Message"></textarea>
@@ -882,6 +883,7 @@
 </div>
 </section>
 {% endblock %}
+{% block recommended %}
     <!-- Our Shopping Product -->
     <section class="our-shop pb100">
       <div class="container">
@@ -1494,7 +1496,9 @@
         </div>
       </div>
     </section>
+  {% endblock %}
 
+  {% block footer %}
     <!-- Our Footer -->
     <section class="footer_one pt50 pb25">
       <div class="container">
@@ -1578,6 +1582,7 @@
     </section>
     <a class="scrollToHome" href="#"><i class="fa fa-angle-up"></i></a>
   </div>
+{% endblock %}
   {% block js %}
   <!-- Wrapper End -->
   <script src="js/jquery-3.6.0.js"></script>

@@ -1,150 +1,143 @@
-
 {% extends 'base.html.twig' %}
 {% block title %}Show Product{% endblock %}
 
 {% block pane %}
 
-    <main id="main" class="main">
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Les Produits</h1>
+        <form class="search-form d-flex align-items-center">
+            <input type="text" name="query" id="live_search"  placeholder="Search" title="Enter search keyword">
+            <button class="btn btn-outline-primary" type="button" id="search_button">Rechercher</button>
+        </form>
+    </div><!-- End Page Title -->
 
-
-
-        <div class="pagetitle">
-            <h1>Les Produits</h1>
-            <form class="search-form d-flex align-items-center" method="GET" action="{{ path ('search2') }}">
-                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-            <button class="btn btn-outline-primary" type="submit">Rechercher</button>
-            </form>
-
-
-           
-        </div><!-- End Page Title -->
-
-        <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-
-                    <div class="card">
-
-                        {% for message in app.flashes('notice') %}
-                            <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                                {{ message }}
-                            </div>
-
-                        {% endfor %}
-
-
-                        {% for message in app.flashes('noticedelete') %}
-                            <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                                {{ message }}
-                            </div>
-
-                        {% endfor %}
-
-                        <div class="card-body">
-
-                            <h5 class="card-title">List Produits</h5>
-                            <a href="{{ path('app_produit') }}">
-                                <button type="button" style="float: right;padding: 10px;" class="btn btn-outline-info">Ajouter</button>
-
-                            </a>
-
-                            <!-- Default Table -->
-                            <table class="table">
-                                <thead>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('noticedelete') %}
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    <div class="card-body">
+                        <h5 class="card-title">List Produits</h5>
+                        <a href="{{ path('app_produit') }}">
+                            <button type="button" style="float: right;padding: 10px;" class="btn btn-outline-info">Ajouter</button>
+                        </a>
+                        <!-- Default Table -->
+                        <table class="table">
+                            <thead>
                                 <tr>
                                     <th scope="col">Labelle</th>
-                                     <th scope="col">Type</th>
+                                    <th scope="col">Type</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Photo</th>
-
                                     <th scope="col">Prix</th>
                                     <th scope="col">Période de Garantie</th>
-                                   
-
                                     <th scope="col">Modifier</th>
                                     <th scope="col">Supprimer</th>
                                     <th scope="col">Detail</th>
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <td>
                                         {% if listS | length == 0 %}
-
                                             <p style="text-align: center">Produits vides</p>
-
                                         {% endif %}
-
                                     </td>
                                 </tr>
-
-
-
                                 {% for p in listS  %}
-
-
-
                                     <tr>
-
                                         <td>{{p.labelle}}</td>
                                         <td>{{p.type}}</td>
                                         <td>{{ p.status }}</td>
-
-
                                         <td><img  style="width: 75px; height: 55px; padding: 5px;" src="{{ asset('uploads/'~p.photo) }}"/></td>
                                         <td>{{ p.prix | number_format(0, '.', ',') }} TND</td>
                                         <td>{{p.periodegarantie}}</td>
-                                        
                                         <td>
                                             <a href="{{ path('app_modifier_produit', {'idp': p.idProduit}) }}">
-                                                <button type="button" class="btn btn-outline-success">Modifier</button></a></td>
-
-
+                                                <button type="button" class="btn btn-outline-success">Modifier</button>
+                                            </a>
+                                        </td>
                                         <td>
-                                            <a href="javascript:void(0)" onclick="if(confirm('Voulez vraiement supprimer ?')){window.location='{{ path('app_supprimer', {'idp': p.idProduit}) }}';}">
-
+                                            <a href="javascript:void(0)" onclick="if(confirm('Voulez vraiment supprimer ?')){window.location='{{ path('app_supprimer', {'idp': p.idProduit}) }}';}">
                                                 <button type="button" class="btn btn-outline-danger">Supprimer</button>
-                                            </a></td>
-                                        <td><a href="{{ path('app_details_produit', {'idp': p.getidproduit()}) }}">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('app_details_produit', {'idp': p.getidproduit()}) }}">
                                                 <button type="button" class="btn btn-outline-dark">Detail</button>
-                                            </a></td>                                    </tr>
-
-
+                                            </a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
-
-
-                                </tbody>
-                            </table>
-
-                            <!-- End Default Table Example -->
-                            <a href="{{ path('exportExcel') }}">
-                                <button type="button" style="float: right;padding: 10px;margin-left: 10px;" class="btn btn-outline-secondary">Exporter Excel</button>
-                            </a>
-                            <a href="{{ path('exportpdf') }}">
-                                <button type="button" style="float: right;padding: 10px;" class="btn btn-outline-info">Export to PDF</button>
-                            </a>
-                                <a href="#">
-                                    <button type="button" style="float: left;padding: 10px; margin-right: 10px;" class="btn btn-outline-info">statistique</button>
-                                </a>
-                                <a href="{{ path('tri') }}">
-                                    <button type="button" style="float: left;padding: 10px;margin-right: 10px;" class="btn btn-outline-info">tri croissant</button>
-                                </a>
-
-                                <a href="{{ path('stat') }}">
-                                    <button type="button" style="float: left;padding: 10px; margin-right: 10px;" class="btn btn-outline-info">statistique</button>
-                                </a>
-                        </div>
-
+                            </tbody>
+                        </table>
+                        <!-- End Default Table Example -->
+                        <a href="{{ path('exportExcel') }}">
+                            <button type="button" style="float: right;padding: 10px;margin-left: 10px;" class="btn btn-outline-secondary">Exporter Excel</button>
+                        </a>
+                        <a href="{{ path('exportpdf') }}">
+                            <button type="button" style="float: right;padding: 10px;" class="btn btn-outline-info">Export to PDF</button>
+                        </a>
+                        <a href="{{ path('trid') }}">
+                            <button type="button" style="float: left;padding: 10px; margin-right: 10px;" class="btn btn-outline-info">tri decroissant</button>
+                        </a>
+                        <a href="{{ path('tri') }}">
+                            <button type="button" style="float: left;padding: 10px;margin-right: 10px;" class="btn btn-outline-info">tri croissant</button>
+                        </a>
+                        <a href="{{ path('stat') }}">
+                            <button type="button" style="float: left;padding: 10px; margin-right: 10px;" class="btn btn-outline-info">statistique</button>
+                        </a>
                     </div>
-
-
-
                 </div>
-
-
             </div>
-        </section>
+        </div>
+    </section>
+</main>
 
-    </main>
+<div id="search_results"></div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('#search_button').click(function() {
+                var query = $('#live_search').val();
+                $.ajax({
+                    url: '{{ path('ajax_search') }}',
+                    type: 'GET',
+                    data: { q: query },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.products.error) {
+                            // Gérer le cas où aucun produit n'est trouvé
+                            $('#search_results').html('<p>' + response.products.error + '</p>');
+                        } else {
+                            var products = response.products;
+                            var html = '';
+                            $.each(products, function(labelle, product) {
+                                html += '<div class="product">';
+                                html += '<img src="' + product[0] + '" alt="' + labelle + '" />';
+                                html += '<h3>' + labelle + '</h3>';
+                                html += '<p>Status: ' + product[1] + '</p>';
+                                html += '<p>Prix: ' + product[3] + '</p>';
+                                html += '</div>';
+                            });
+                            $('#search_results').html(html);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

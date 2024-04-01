@@ -53,7 +53,12 @@ class ProduitsType extends AbstractType
                 'required' => false,
                 'mapped' => false, // Do not map this field to the entity property
             ])
-            ->add('localisation')
+            ->add('video', null, [
+                'attr' => [
+                    'placeholder' => 'Enter video URL',
+                ],
+            ])
+            ->add('localisation', null, ['attr' => ['class' => 'google-maps-link']])
             ->add('idUtilisateur');
     }
 

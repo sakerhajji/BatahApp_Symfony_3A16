@@ -13,12 +13,12 @@
 	<div class="container" id="container">
 		<div class="form-container sign-up-container" style="position: relative;">
 			<form action="#">
-				<img src={{asset("assets/images/logo.png")}} width="170px;" alt="" style="margin-top: -10px;">
-				<h2 style="font-weight:bold">Créez votre compte</h2>
+			
+					<h2 style="font-weight:bold">Créez votre compte</h2>
 
 				<div class="radio-group">
 					<label><input type="radio" name="user-type" value="client" checked>Client</label>
-					<label><input type="radio" name="user-type" value="artist">Artist</label>
+					<label><input type="radio" name="user-type" value="artist">Admin</label>
 				</div>
 
 				<input type="text" placeholder="Nom" required title="Nom requis"/>
@@ -56,26 +56,35 @@
 			</form>
 		</div>
 		<div class="form-container sign-in-container">
-			<form action="#">
-				<img src={{asset("assets/images/logo.png")}} width="170px;" alt="">
-				<h1>Se connecter</h1>
-				<div class="social-container">
-					<a href="#" class="social">
-						<i class="fab fa-facebook-f"></i>
-					</a>
-					<a href="#" class="social">
-						<i class="fab fa-google-plus-g"></i>
-					</a>
-					<a href="#" class="social">
-						<i class="fab fa-linkedin-in"></i>
-					</a>
-				</div>
-				<input type="email" placeholder="Email" required title="Nom requis"/>
-				<input type="password" placeholder="Password" required title="Nom requis"/>
-				<a href="#">Forgot your password?</a>
-				<button href={{asset("/articles")}}>Login</button>
-			</form>
-		</div>
+    <form action="{{ path('app_login') }}" method="post">
+        <img src="{{ asset("assets/images/batah-logo.png") }}" width="170px;" alt="">
+        <h1>Se connecter</h1>
+        <div class="social-container">
+            <a href="#" class="social">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social">
+                <i class="fab fa-google-plus-g"></i>
+            </a>
+            <a href="#" class="social">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+
+        {{ form_start(form) }}
+
+        {{ form_row(form.adresseemail) }} 
+
+        {{ form_row(form.motdepasse) }} 
+
+        <a href="#">Forgot your password?</a> 
+
+       
+
+        {{ form_end(form) }} 
+    </form>
+</div>
+
 		<div class="overlay-container">
 			<div class="overlay">
 				<div class="overlay-panel overlay-left">
@@ -91,23 +100,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -335,6 +327,7 @@
 			left: 0;
 			width: 50%;
 			z-index: 2;
+
 		}
 
 		.container.right-panel-active .sign-in-container {
@@ -370,7 +363,7 @@
 		}
 
 		.overlay-container {
-			background-image: url({{asset("assets/images/image11.jpg")}});
+			background-image: url({{asset("assets/images/bg-hamza.jpg")}});
 			background-size: 100%;
 			background-repeat: no-repeat;
 			position: absolute;

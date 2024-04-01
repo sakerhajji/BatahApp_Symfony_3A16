@@ -95,7 +95,7 @@ class LocationController extends AbstractController
         return $this->render('location/page-dashboard-listing.html.twig', ['locations' => $lr->findAll()]);
     }
 
-    #[Route('/supprimer/{idl}', name: 'app_supprimer_location')]
+    #[Route('/supprimerLocation/{idl}', name: 'app_supprimer_location')]
     public function removeloca(ManagerRegistry $em, Request $request, LocationRepository $lr, $idl): Response
     {
 
