@@ -6,13 +6,14 @@ use App\Repository\ProduitsRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitsRepository::class)]
 class Produits
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: "idProduit")]
+    #[ORM\Column(name: "idProduit", type: "integer", nullable: false)]
     private int $idProduit;
 
     #[ORM\Column(name: "type", type: "string", length: 300, nullable: false)]
@@ -31,12 +32,14 @@ class Produits
     private string $status;
 
     #[ORM\Column(name: "periodeGarantie", type: "integer", nullable: false)]
+    #[Assert\PositiveOrZero]
     private int $periodeGarantie;
 
     #[ORM\Column(name: "photo", type: "string", length: 255, nullable: false)]
     private string $photo;
 
     #[ORM\Column(name: "video", type: "string", length: 250, nullable: true)]
+    #[Assert\Url]
     private ?string $video;
 
 
@@ -44,14 +47,83 @@ class Produits
     private string $localisation;
 
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
-    #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "id")]
-    private Utilisateur $idUtilisateur;
+    #[ORM\Column(name: "nombreDeVues", type: "integer")]
+    private int $nombreDeVues;
+    /*
+
+    #[ORM\Column(name: "likes", type: "integer", nullable: true, options: ["default" => 0])]
+    private ?int $likes;
+
+    #[ORM\Column(name: "dislikes", type: "integer", nullable: true, options: ["default" => 0])]
+    private ?int $dislikes;
+*/
+
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, cascade: ["persist"])]
+    #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "id", nullable: true)]
+    private ?Utilisateur $idUtilisateur;
+
+
+    public function __construct()
+    {
+        $this->nombreDeVues = 0; // Initialiser à zéro
+        //$this->likes = 0;
+        //$this->dislikes = 0;
+
+        $this->images = new ArrayCollection();
+    }
+
+
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="Produits", orphanRemoval=true, cascade={"persist"})
+     */
+    private $images;
+
 
     /**
      * @ORM\OneToMany(targetEntity=Encheres::class, mappedBy="idProduit")
      */
     private $encheres;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Views::class, mappedBy="idProduit")
+     */
+    private $vues;
+    public function addView(Views $view): self
+    {
+        if (!$this->vues->contains($view)) {
+            $this->vues[] = $view;
+            // Incrémenter le nombre de vues
+            $this->nombreDeVues++;
+        }
+
+        return $this;
+    }
+
+    /*
+    public function addLike(): self
+    {
+        $this->likes++;
+        return $this;
+    }
+
+    public function addDislike(): self
+    {
+        $this->dislikes++;
+        return $this;
+    }
+
+    public function incrementLikes(): void
+    {
+        $this->likes++;
+    }
+
+    public function incrementDislikes(): void
+    {
+        $this->dislikes++;
+    }
+*/
 
     /**
      * @return Collection|Encheres[]|null
@@ -61,12 +133,64 @@ class Produits
         return $this->encheres;
     }
 
+    /**
+     * @return Collection|Views[]|null
+     */
+    public function getViews(): ?Collection
+    {
+        return $this->vues;
+    }
+
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images ?: new ArrayCollection();
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProduits($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduits() === $this) {
+                $image->setProduits(null);
+            }
+        }
+
+        return $this;
+    }
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $imageFile = null;
+
+    public function getImageFile(): ?string
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?string $imageFile): void
+    {
+        $this->imageFile = $imageFile;
+    }
+
 
     public function getIdProduit(): ?int
     {
         return $this->idProduit;
     }
-
     public function getType(): ?string
     {
         return $this->type;
@@ -175,6 +299,39 @@ class Produits
         return $this;
     }
 
+    public function getNombreDeVues(): int
+    {
+        return $this->nombreDeVues;
+    }
+
+    public function setNombreDeVues(int $nombreDeVues): self
+    {
+        $this->nombreDeVues = $nombreDeVues;
+
+        return $this;
+    }
+    /*
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): self
+    {
+        $this->likes = $likes;
+        return $this;
+    }
+
+    public function getDislikes(): ?int
+    {
+        return $this->dislikes;
+    }
+
+    public function setDislikes(int $dislikes): void
+    {
+        $this->dislikes = $dislikes;
+    }
+*/
     public function getIdUtilisateur(): ?Utilisateur
     {
         return $this->idUtilisateur;
@@ -188,6 +345,6 @@ class Produits
     }
     public function __toString()
     {
-        return $this->getIdProduit();
+        return (string) $this->getIdProduit();
     }
 }

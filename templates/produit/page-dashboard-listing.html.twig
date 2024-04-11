@@ -38,12 +38,11 @@
                         <div class="d-flex align-items-center">
                         <div class="product-thumbnail me-3">
                         {% if prod.photo %}
-                            <img src="{{ asset('uploads/' ~ prod.photo) }}" alt="{{ prod.photo }}" class="img-fluid" style="max-width: 100px; height: auto;">
-                        {% else %}
-                            <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
-                        {% endif %}
-                    </div>
-                            <div>
+                        <img src="{{ asset('uploads/' ~ prod.photo) }}" alt="{{ prod.photo }}" class="img-fluid" style="max-width: 100px; height: auto;">
+                    {% else %}
+                        <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
+                    {% endif %}
+                        <div>
                                 <h6 class="mb-0">{{ prod.labelle }}</h6>
                             <span class="text-muted">{{ prod.prix | number_format(0, '.', ',') }} TND</span>
                         </div>
@@ -52,11 +51,11 @@
                     <td>{{ prod.description }}</td>
                     <td>{{ prod.periodeGarantie }} months</td>
                     <td>{{ prod.type }}</td>
-                    <td>{{ prod.status ? 'Actif' : 'Inactif' }}</td>
+                    <td>{{ prod.status }}</td>
                     <td>{{ prod.localisation }}</td>
                         <td>
                             <div class="d-flex button-group">
-                        <a href="{{ path('app_details_produit', {'idp': prod.idProduit()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2 btn btn-custom"><i class="fas fa-eye"></i></a>
+                        <a href="{{ path('detailProduitFront', {'idp': prod.idProduit()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2 btn btn-custom"><i class="fas fa-eye"></i></a>
                         <a href="{{ path('app_modifier_produit', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier" class="me-2 btn btn-custom"><i class="fas fa-edit"></i></a>
                     {#    <a href="{{ path('app_supprimer', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer" class="btn btn-custom"><i class="fas fa-trash"></i></a>  #}
                    

@@ -23,19 +23,30 @@
             width: 100%;
             height: 300px;
         }
+
+        .invalid-input {
+            border-color: red;
+        }
+
+
+
+
+        
+        
+       
     </style>
 {% endblock %}
 
 {% block pane %}
    
-	
-	<section class="our-dashbord dashbord bgc-f9">
-  <div class="container">
-      <div class="row justify-content-center">
-          <div class="col-lg-8">
-              <div class="card">
-                  <div class="card-body">
-                        <h1 class="text-center mb-4">Create New Product</h1>
+<section class="our-dashbord dashbord bgc-light-gray">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                       <h1 class="text-center mb-4">Create New Product</h1>
                       {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
                       
                       <div class="mb-3">
@@ -45,11 +56,10 @@
                       </div>
                       
                       <div class="mb-3">
-                          {{ form_label(form.prix, "Prix", {'class': 'form-label'}) }}
-                          {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
-                          {{ form_errors(form.prix) }}
-                      </div>
-                      
+                      {{ form_label(form.prix, "Prix") }}
+                      {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'id': 'produits_prix'}}) }}
+                      {{ form_errors(form.prix) }}
+                  </div>
                       <div class="mb-3">
                           {{ form_label(form.description, "Description", {'class': 'form-label'}) }}
                           {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
@@ -74,12 +84,19 @@
                           {{ form_errors(form.periodeGarantie) }}
                       </div>
                       
+                   {#  
                       <div class="mb-3">
-                      {{ form_label(form.photo, "Photo", {'class': 'form-label'}) }}
-                      {{ form_widget(form.photo, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
-                      <img id="imagePreview" src="#" alt="Preview" class="preview-image" style="max-width: 200px; display: none; margin-top: 10px;">
-                      {{ form_errors(form.photo) }}
+                      {{ form_label(form.imageFile, "images", {'class': 'form-label'}) }}
+                      {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                      {{ form_errors(form.imageFile) }}
                   </div>
+                  #}
+                  <div class="mb-3">
+                  {{ form_label(form.photo, "Photo", {'class': 'form-label'}) }}
+                  {{ form_widget(form.photo, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
+                  <img id="imagePreview" src="#" alt="Preview" class="preview-image" style="max-width: 200px; display: none; margin-top: 10px;">
+                  {{ form_errors(form.photo) }}
+              </div>
                   
                   <div class="mb-3">
                           {{ form_label(form.video, "Video", {'class': 'form-label'}) }}
@@ -93,9 +110,11 @@
                   {{ form_errors(form.localisation) }}
                   <iframe id="mapIframe" width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
               </div> 
+             
               {% if is_granted('ROLE_USER') %}
-              <input type="hidden" name="idUtilisateur" value="{{ app.user.id }}">
-          {% endif %}   
+              <!-- Champ caché pour stocker l'ID de l'utilisateur -->
+              <input type="hidden" name="idUtilisateur" value="{{ connectedUser.getId() }}">
+          {% endif %}
                 <div class="text-center">
                           <button type="submit" class="btn btn-primary">Ajouter un produit</button>
                         <a href="{{ path('app_back_affiche') }}" class="btn btn-secondary">Back to list</a>
@@ -112,6 +131,9 @@
 
 
 <script>
+
+/*
+
     function previewImage(input) {
         var preview = document.getElementById('imagePreview');
         var file = input.files[0];
@@ -129,6 +151,47 @@
             preview.style.display = 'none';
         }
     }
+*/
+function previewImages(input) {
+    var previewContainer = document.getElementById('imagePreviews');
+    previewContainer.innerHTML = ''; // Clear previous previews
+
+    if (input.files) {
+        for (var i = 0; i < input.files.length; i++) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image col-4';
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+}
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var priceInput = document.getElementById('produits_prix');
+    
+        // Add event listener for input events on the price field
+        priceInput.addEventListener('input', function() {
+            console.log('Input event triggered');
+            var inputValue = priceInput.value;
+    
+            // Check if the input value contains any letters
+            if (/^[a-zA-Z]+$/.test(inputValue)) {
+                // Apply CSS class to change the color of the input field
+                priceInput.classList.add('invalid-input');
+            } else {
+                // Remove the CSS class if the input value is valid
+                priceInput.classList.remove('invalid-input');
+            }
+        });
+    });
+    
 </script>
 
 <script>

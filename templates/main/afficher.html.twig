@@ -28,17 +28,17 @@
                     <tbody>
                     {% for user in u %}
                         <tr>
-                            <td>{{ user.nom }}</td>
-                            <td>{{ user.prenom }}</td>
-                            <td>{{ user.mail }}</td>
-                            <td>{{ user.adresse }}</td>
-                            <td>{{ user.numero }}</td>
-                            <td>{{ user.cin }}</td>
+                            <td>{{ user.nomUtilisateur	 }}</td>
+                            <td>{{ user.prenomUtilisateur }}</td>
+                            <td>{{ user.adresseEmail }}</td>
+                            <td>{{ user.adressePostale }}</td>
+                            <td>{{ user.numeroTelephone }}</td>
+                            <td>{{ user.numeroCin }}</td>
                             <td>
-                                <a class="btn btn-success" href="{{ path('app_modifier',{'id':user.getIdUser()}) }}">Modifier</a>
+                                <a class="btn btn-success" href="#">Modifier</a>
                             </td>
                             <td>
-                                <a class="btn btn-danger" href="{{ path('app_supprimer',{'id':user.getIdUser()}) }}">Supprimer</a>
+                                <a class="btn btn-danger" href="#">Supprimer</a>
                             </td>
                         </tr>
 

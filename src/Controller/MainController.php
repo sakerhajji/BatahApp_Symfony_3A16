@@ -21,10 +21,12 @@ class MainController extends AbstractController
             'controller_name' => 'MainController',
         ]);
     }
+
+    private $passwordEncoder;
+
     #[Route('/login', name: 'app_login')]
     public function login(Request $request): Response
     {
-
         $utilisateur = new Utilisateur();
         $form = $this->createForm(LoginType::class, $utilisateur);
 
@@ -37,15 +39,21 @@ class MainController extends AbstractController
             $repository = $this->getDoctrine()->getRepository(Utilisateur::class);
             $user = $repository->findOneBy(['adresseemail' => $email]);
 
-            $session = new Session();
-            $session->set('user', $user);
+            if ($user) {
+                // User found, set the user in the session
+                $session = new Session();
+                $session->set('user', $user);
 
-            if ($user->getRole() == "U") {
-                // handle the login
-                return $this->redirectToRoute('app_afficahge_produits');
+                if ($user->getRole() == "U") {
+                    // handle the login
+                    return $this->redirectToRoute('app_afficahge_produits');
+                } else {
+                    // handle the login
+                    return $this->redirectToRoute('app_back_affiche');
+                }
             } else {
-                // handle the login
-                return $this->redirectToRoute('app_back_affiche');
+                // User not found, authentication failed
+                return $this->redirectToRoute('login_failure');
             }
         }
 
@@ -72,10 +80,29 @@ class MainController extends AbstractController
             'f' => $form->createView()
         ]);
     }
+    #[Route('/afficherUser', name: 'app_afficher')]
+    public function indexAfficher(): Response
+    {
+
+        $users = $this->getDoctrine()->getManager()->getRepository(Utilisateur::class)->findAll();
+        return $this->render('main/afficher.html.twig', [
+            'u' => $users
+        ]);
+    }
+
 
     #[Route('/login_failure', name: 'login_failure')]
     public function loginFailure(): Response
     {
         return $this->render('main/login_failure.html.twig');
+    }
+    /**
+     * @Route("/logout", name="app_logout")
+     */
+    public function logout(Request $request): Response
+    {
+        $session = $request->getSession();
+        $session->clear();
+        return $this->redirectToRoute('app_login');
     }
 }

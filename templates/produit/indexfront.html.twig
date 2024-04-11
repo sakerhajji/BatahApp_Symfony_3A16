@@ -231,8 +231,8 @@
                             {% set duree = 36 %} {# supposons une période de paiement de 36 mois #}
                             {% set prix_mensuel = prix_total / duree %}
                             <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getphoto()) }}');">
-                                    <div class="container">
+                            <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getPhoto()) }}');">
+                            <div class="container">
                                         <div class="row home-content-home2-style">
                                             <div class="col-lg-12 p-0">
                                                 <h2 class="banner-title text-white"><small>{{ prod.gettype() }}</small><br>{{ prod.getlabelle() }}</h2>
@@ -304,12 +304,29 @@
                 {% for p in listS %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <div class="card h-100 product-card">
-                        <img src="{{ asset('uploads/'~p.photo) }}" class="card-img-top" alt="{{ p.labelle }}">
-                        <div class="card-body">
+                    <img src="{{ asset('uploads/'~p.photo) }}" class="card-img-top" alt="{{ p.labelle }}">
+                    <div class="card-body">
                             <h5 class="card-title">{{ p.labelle }}</h5>
                             <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
-                            <a href="{{ path('detailProduitFront', {'idp': p.getidproduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
-           
+                            <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
+                        <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
+               
+               {#
+                    <button onclick="likeProduct({{ p.idProduit }})">Like</button>
+                <button onclick="dislikeProduct({{ p.idProduit }})">Dislike</button>
+                <!-- Display the like and dislike counts -->
+                <div>Likes: <span id="like-count-{{ p.idProduit }}">{{ p.getLikes() is not null ? p.getLikes() : 0 }}</span></div>
+                <div>Dislikes: <span id="dislike-count-{{ p.idProduit }}">{{ p.getDislikes() is not null ? p.getDislikes() : 0 }}</span></div>
+             #}
+          
+          
+          {#
+            <div>Likes: <span id="like-count-{{ p.idProduit }}">{{ p.getViews().likes }}</span></div>
+            <div>Dislikes: <span id="dislike-count-{{ p.idProduit }}">{{ p.getViews().dislikes }}</span></div>
+            
+            <button onclick="likeProduct({{ p.idProduit }})">Like</button>
+            <button onclick="dislikeProduct({{ p.idProduit }})">Dislike</button>
+#}
                             <div class="comment-section">
                                 <h6 class="mt-3">Commentaires et évaluations</h6>
                                 <form action="{{ path('submit_comment_and_rating', {'id_produit': p.getIdProduit()}) }}" method="POST">
@@ -332,6 +349,7 @@
                                     <button type="submit" class="btn btn-primary">Soumettre</button>
                                 </form>
                             </div>
+                       
                         </div>
                         <div class="card-footer text-center">
                             {% if p.getIdProduit() in existingArticles %}
@@ -416,6 +434,38 @@
             }
         });
     });
+    /*
+    function likeProduct(productId) {
+        $.ajax({
+            type: "POST",
+            url: "/like/" + productId,
+            success: function(data) {
+                // Update the like count for the specific product
+                $("#like-count-" + productId).text(data.likes);
+            }
+        });
+    }
+*/
+    function likeProduct(productId) {
+    $.ajax({
+        type: "POST",
+        url: "/like2/" + productId,
+        success: function(data) {
+            // Update the like count on the page
+            $("#like-count-" + productId).text(data.likes);
+        }
+    });
+    }
+    function dislikeProduct(productId) {
+        $.ajax({
+            type: "POST",
+            url: "/dislike/" + productId,
+            success: function(data) {
+                // Update the dislike count for the specific product
+                $("#dislike-count-" + productId).text(data.dislikes);
+            }
+        });
+    }
     </script>
 
 

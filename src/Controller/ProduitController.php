@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Image;
 use App\Entity\Produits;
 
 use App\Entity\Ratings;
-
+use App\Entity\Utilisateur;
+use App\Entity\Views;
 use App\Form\ProduitsType;
 use App\Form\RatingsType;
 use App\Repository\ProduitsRepository;
@@ -26,12 +28,14 @@ use Knp\Snappy\Pdf;
 use App\Form\CalculatorType;
 use App\Repository\BasketRepository;
 use App\Repository\UtilisateurRepository;
+use App\Repository\ViewsRepository;
 use Dompdf\Dompdf;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProduitController extends AbstractController
 {
@@ -54,18 +58,23 @@ class ProduitController extends AbstractController
 
 
     #[Route('/ajout', name: 'app_produit')]
-    public function addprod(ManagerRegistry $em, Request $request, Security $security): Response
+    public function addprod(UtilisateurRepository $userRepository, ManagerRegistry $em, Request $request, Security $security): Response
     {
         $em = $em->getManager();
+        // Récupérer l'utilisateur connecté à partir de la session Symfony
+        $connectedUser = $request->getSession()->get('user');
+
+
+
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
 
         $prod = new Produits();
 
-        /*
-        // Get the current user from the security context
-        $connectedUser = $security->getUser();
-        // Set the current user as the idUtilisateur for the new Produits object
         $prod->setIdUtilisateur($connectedUser);
-*/
 
         $form = $this->createForm(ProduitsType::class, $prod);
 
@@ -82,19 +91,27 @@ class ProduitController extends AbstractController
 
 
 
-            // Vérifiez si une image a été téléchargée
-            $uploadedFile = $form->get('photo')->getData();
-            if ($uploadedFile) {
-                // Générez un nom de fichier unique
-                $newFilename = uniqid() . '.' . $uploadedFile->guessExtension();
-                // Déplacez le fichier vers le répertoire où les images sont stockées
-                $uploadedFile->move(
-                    $this->getParameter('kernel.project_dir') . '/public/uploads',
-                    $newFilename
-                );
-                // Définissez le chemin de l'image dans l'entité Produits
-                $prod->setPhoto($newFilename);
-            }
+
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads',
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle file upload error
+                }
+
+                // Create and persist the image entity
+                $image = new Image();
+                $image->setUrl('/uploads/' . $newFilename); // Assuming your images are stored in the uploads directory
+                $image->setProduits($prod);
+                $em->persist($image);
+            }     // Persist location and associated image
 
 
             $em->persist($prod);
@@ -103,7 +120,10 @@ class ProduitController extends AbstractController
             return $this->redirectToRoute('app_back_affiche');
         }
 
-        return $this->render('produit/page-dashboard-add-produits.html.twig', ['form' => $form->createView()]);
+        return $this->render('produit/page-dashboard-add-produits.html.twig', [
+            'form' => $form->createView(),
+            'connectedUser' => $connectedUser,
+        ]);
     }
     #[Route('/supprimer/{idp}', name: 'app_supprimer')]
     public function removeprod(ManagerRegistry $em, Request $request, ProduitsRepository $pr, $idp): Response
@@ -137,13 +157,10 @@ class ProduitController extends AbstractController
 
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // Format localisation value
             $localisation = $produit->getLocalisation();
-            // Construire la valeur de "localisation" avec le préfixe et le suffixe requis
             $formattedLocalisation = "https://maps.google.com/maps?q=" . urlencode($localisation) . "&t=&z=13&ie=UTF8&iwloc=&output=embed";
-            // Définir la valeur formatée dans l'entité
             $produit->setLocalisation($formattedLocalisation);
 
             // Handle image upload
@@ -155,6 +172,7 @@ class ProduitController extends AbstractController
                 $produit->setPhoto($newFilename);
             }
 
+            // Flush changes to the database
             $em->flush();
 
             return $this->redirectToRoute('app_back_affiche');
@@ -168,6 +186,18 @@ class ProduitController extends AbstractController
     #[Route('/produitback', name: 'app_back_affiche')]
     public function showprodback(Request $request, ProduitsRepository $pr): Response
     {
+
+        // Récupérer l'utilisateur connecté à partir de la session Symfony
+        $connectedUser = $request->getSession()->get('user');
+
+
+
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$connectedUser) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $user = $this->getUser();
         $currentPage = $request->query->getInt('page', 1);
         $itemsPerPage = 5;
@@ -197,6 +227,7 @@ class ProduitController extends AbstractController
             }
             $product->setlocalisation($localisation); // Mettre à jour l'attribut localisation avec la partie extraite
         }
+
 
         $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -236,27 +267,30 @@ class ProduitController extends AbstractController
         $connectedUser = $this->session->get('user');
 
 
-        $user = $userRep->find($connectedUser->getId());
-
         $existingArticles = [];
-        $basketItems = $basketRep->findBy(['idClient' => $user]);
+        $basketItems = $basketRep->findBy(['idClient' => $connectedUser]);
         $basketItemsCount = count($basketItems);
         $em = $this->getDoctrine()->getManager()->getRepository(Produits::class);
 
         $repository = $this->getDoctrine()->getRepository(Produits::class)->findAll();
 
 
-        // Loop through each basket item
         foreach ($basketItems as $basketItem) {
-            $articleId = $basketItem->getIdProduit()->getIdProduit();
+            // Check if $basketItem has an associated Produits object
+            if ($basketItem->getIdProduit() !== null) {
+                $articleId = $basketItem->getIdProduit()->getIdProduit();
 
-            // Check if the article ID exists in the list of articles
-            foreach ($repository as $article) {
-                if ($article->getIdProduit() === $articleId) {
-                    // Add the existing article to the list of existing articles
-                    $existingArticles[] = $article->getIdProduit();
-                    break;
+                // Check if the article ID exists in the list of articles
+                foreach ($repository as $article) {
+                    if ($article->getIdProduit() === $articleId) {
+                        // Add the existing article to the list of existing articles
+                        $existingArticles[] = $article->getIdProduit();
+                        break;
+                    }
                 }
+            } else {
+                // Handle the case where $basketItem doesn't have an associated Produits
+                // For example, you can log an error message or skip this basket item
             }
         }
 
@@ -300,7 +334,98 @@ class ProduitController extends AbstractController
 
 
 
+    #[Route('/detailProduit/front/{idp}', name: 'detailProduitFront')]
+    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp, SessionInterface $session, EntityManagerInterface $em)
+    {
+        // Retrieve the user from the session
+        $userId = $session->get('user');
+        $user = $em->getRepository(Utilisateur::class)->find($userId);
 
+        if (!$user) {
+            return $this->redirectToRoute("app_login");
+        }
+        $em = $this->getDoctrine()->getManager();
+        $prod = $em->getRepository(Produits::class)->find($idp);
+
+        // Check if the user has already viewed this product
+        $view = $em->getRepository(Views::class)->findOneBy(['utilisateur' => $user, 'produit' => $prod]);
+
+        if (!$view) {
+            // If the user has not viewed this product before, create a new view record
+            $view = new Views();
+            $view->setUtilisateur($user);
+            $view->setProduit($prod);
+
+            // Persist and flush the view entity to the database
+            $em->persist($view);
+            $em->flush();
+
+            // Increment the product view count since this is a new view
+            $prod->setNombreDeVues($prod->getNombreDeVues() + 1);
+
+            // Persist the updated product entity to the database
+            $em->persist($prod);
+            $em->flush();
+        }
+
+
+
+
+
+        // Get the localisation
+        $localisation = $prod->getLocalisation();
+        // Check if localisation is null
+        if ($localisation === null) {
+            // Set a default value or handle the null case as needed
+            $localisation = "No GPS coordinates available";
+        }
+
+
+        return $this->render('produit/detailProduitFront.html.twig', array(
+            'id' => $prod->getIdProduit(),
+            'name' => $prod->getLabelle(),
+            'prix' => $prod->getPrix(),
+            'artdispo' => $prod->getStatus(),
+            'description' => $prod->getDescription(),
+            'image' => $prod->getPhoto(),
+            'pg' => $prod->getPeriodeGarantie(),
+            'gps' => $localisation,
+            'video' => $video = $prod->getVideo(), // Add the 'video' attribute to pass the video URL to the Twig template
+            'nombreDeVues' => $prod->getNombreDeVues(), // Pass the updated view count to the template
+
+        ));
+    }
+
+
+    public function likeProduct($idp, EntityManagerInterface $em)
+    {
+        // Fetch the product
+        $prod = $em->getRepository(Produits::class)->find($idp);
+
+        // Increment likes count in the Views entity
+        $prod->getViews()->incrementLikes();
+
+        // Update the entity
+        $em->flush();
+
+        // Return the updated likes count
+        return new JsonResponse(['likes' => $prod->getViews()->getLikes()]);
+    }
+
+    public function dislikeProduct($idp, EntityManagerInterface $em)
+    {
+        // Fetch the product
+        $prod = $em->getRepository(Produits::class)->find($idp);
+
+        // Increment dislikes count in the Views entity
+        $prod->getViews()->incrementDislikes();
+
+        // Update the entity
+        $em->flush();
+
+        // Return the updated dislikes count
+        return new JsonResponse(['dislikes' => $prod->getViews()->getDislikes()]);
+    }
 
     /************************************************************************************************************************************************* */
     /************************************************************************************************************************************************* */
@@ -356,43 +481,6 @@ class ProduitController extends AbstractController
         ]);
     }
 
-
-
-
-
-    #[Route('/detailProduit/front/{idp}', name: 'detailProduitFront')]
-    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp)
-    {
-        $session =  $req->getSession();
-        $usersession = $session->get('user');
-        if ($usersession == null) {
-            return $this->redirectToRoute("app_login");
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $prod = $em->getRepository(Produits::class)->find($idp);
-
-        // Get the localisation
-        $localisation = $prod->getLocalisation();
-        // Check if localisation is null
-        if ($localisation === null) {
-            // Set a default value or handle the null case as needed
-            $localisation = "No GPS coordinates available";
-        }
-
-
-        return $this->render('produit/detailProduitFront.html.twig', array(
-            'id' => $prod->getIdProduit(),
-            'name' => $prod->getLabelle(),
-            'prix' => $prod->getPrix(),
-            'artdispo' => $prod->getStatus(),
-            'description' => $prod->getDescription(),
-            'image' => $prod->getPhoto(),
-            'pg' => $prod->getPeriodeGarantie(),
-            'gps' => $localisation,
-            'video' => $video = $prod->getVideo(), // Add the 'video' attribute to pass the video URL to the Twig template
-        ));
-    }
 
 
 

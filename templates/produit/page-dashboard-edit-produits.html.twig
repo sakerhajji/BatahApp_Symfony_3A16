@@ -69,13 +69,9 @@
                   {{ form_errors(form.localisation) }}
                   <iframe id="mapIframe" width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
               </div> 
-                      <div class="mb-3">
-                          {{ form_label(form.idUtilisateur, "Select User", {'class': 'form-label'}) }}
-                          {{ form_widget(form.idUtilisateur, {'attr': {'class': 'form-control'}}) }}
-                      </div>
-                      
+                       
                       <div class="text-center">
-                          <button type="submit" class="btn btn-primary">Ajouter un produit</button>
+                          <button type="submit" class="btn btn-primary">Modifier ce produit</button>
                         <a href="{{ path('app_back_affiche') }}" class="btn btn-secondary">Back to list</a>
                       </div>
                       {{ form_end(form) }}

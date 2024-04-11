@@ -1,7 +1,7 @@
-{% extends 'baseBackCommand.html.twig' %}
+{% extends 'base.html.twig' %}
 
 
-{% block body %}
+{% block pane %}
 
 
 	<!-- ======= main ======= -->
@@ -48,8 +48,8 @@
 								<tbody>
 									{% for command in commands %}
 										<tr>
-											<td scope="row">{{command.idClient.getNom}}
-												{{command.idClient.getPrenom}}</td>
+											<td scope="row">{{command.idClient.getNomutilisateur()}}
+												{{command.idClient.getPrenomutilisateur()}}</td>
 											<td>{{command.adresse}}</td>
 											<td>{{command.dateCommande | date('Y-m-d')}}</td>
 											<td>{{command.modePaiement}}</td>

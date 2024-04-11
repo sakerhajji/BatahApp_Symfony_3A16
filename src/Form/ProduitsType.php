@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ProduitsType extends AbstractType
 {
@@ -31,8 +32,8 @@ class ProduitsType extends AbstractType
                 ],
             ])
             ->add('description')
-            ->add('prix')
-            ->add('labelle')
+            ->add('prix', null, ['constraints' => [new Assert\NotBlank()]])
+            ->add('labelle', null, ['constraints' => [new Assert\NotBlank()]])
             ->add('status', ChoiceType::class, [
                 'choices' => [
                     'Disponible' => 'disponible',
@@ -41,26 +42,33 @@ class ProduitsType extends AbstractType
                 'label' => 'Statut',
                 'required' => true,
             ])
-            ->add('periodeGarantie', IntegerType::class, [
-                'label' => 'Warranty Period (months)',
-                'attr' => [
-                    'placeholder' => 'Enter warranty period in months',
-                    'min' => 1, // Minimum value allowed
-                ],
+            ->add('periodeGarantie')
+            /*
+            ->add('photo', FileType::class, [
+                'label' => 'Event Image',
+                'required' => false,
+                'mapped' => false, // Do not map this field to the entity property
             ])
+            */
             ->add('photo', FileType::class, [
                 'label' => 'Event Image',
                 'required' => false,
                 'mapped' => false, // Do not map this field to the entity property
             ])
             ->add('video', null, [
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'Enter video URL',
                 ],
             ])
-            ->add('localisation', null, ['attr' => ['class' => 'google-maps-link']])
-            ->add('idUtilisateur');
+            ->add('localisation', null, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'google-maps-link',
+                ],
+            ]);
     }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

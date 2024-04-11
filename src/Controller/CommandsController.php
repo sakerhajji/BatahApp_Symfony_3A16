@@ -28,20 +28,19 @@ class CommandsController extends AbstractController
     }
 
     #[Route('/command', name: 'app_commands')]
-    public function index(Request $request,BasketService $basketService, UtilisateurRepository $userRep): Response
+    public function index(Request $request, BasketService $basketService, UtilisateurRepository $userRep): Response
     {
-        $session=  $request->getSession();
-        $connectedUser=$session->get('user');
-        if($connectedUser==null)
-        {
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        if ($connectedUser == null) {
             return $this->redirectToRoute("app_login");
         }
 
-        $basketData = $basketService->getCartItems($connectedUser->getIdUser());
+        $basketData = $basketService->getCartItems($connectedUser->getId());
         $basketItemsCount = count($basketData);
 
         $totalPrice = array_reduce($basketData, function ($total, $product) {
-            return $total + $product->getIdArticle()->getArtprix();
+            return $total + $product->getIdProduit()->getPrix();
         }, 0);
 
         return $this->render('commands/command.html.twig', [
@@ -62,25 +61,25 @@ class CommandsController extends AbstractController
         CommandArticlesRepository $commandArticlesRep,
         $livMethod,
         $payMethod
-        ): Response {
+    ): Response {
 
-        $session=  $request->getSession();
-        $connectedUser=$session->get('user');
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
 
         $command = new Commands();
 
         $command->setDateCommande(new \DateTime());
-        $command->setIdClient($userRep->find($connectedUser->getIdUser()));
+        $command->setIdClient($userRep->find($connectedUser->getId()));
         $command->setEtatCommande('En Attente');
 
-        $basketData = $basketService->getCartItems($connectedUser->getIdUser());
+        $basketData = $basketService->getCartItems($connectedUser->getId());
 
         $totalPrice = array_reduce($basketData, function ($total, $product) {
-            return $total + $product->getIdArticle()->getArtprix();
+            return $total + $product->getIdProduit()->getPrix();
         }, 0);
         $command->setCoutTotale($totalPrice + 8);
 
-        $command->setAdresse($connectedUser->getAdresse());
+        $command->setAdresse($connectedUser->getAdressepostale());
 
         $command->setModeLivraison($livMethod);
 
@@ -91,18 +90,16 @@ class CommandsController extends AbstractController
         foreach ($basketData as $basketItem) {
             $commandArticle = new CommandArticles();
             $commandArticle->setCommand($command);
-            $commandArticle->setArticle($basketItem->getIdArticle());
+            $commandArticle->setArticle($basketItem->getIdProduit());
             $commandArticlesRep->save($commandArticle, true);
         }
 
         // add flash message
         $this->addFlash('success', 'Commande effectuée avec succès');
-        if($payMethod == 'Cash'){
-            $basketService->emptyCart($connectedUser->getIdUser());
+        if ($payMethod == 'Cash') {
+            $basketService->emptyCart($connectedUser->getId());
             return $this->redirectToRoute('display_prod_front');
-        }
-
-        else{
+        } else {
             return $this->redirectToRoute('app_stripe');
         }
     }
@@ -120,10 +117,9 @@ class CommandsController extends AbstractController
     #[Route('/afficheCommandClient/{idCommand}', name: 'app_afficheCommandClient')]
     public function afficheCommand(Request $request, CommandsRepository $rep, $idCommand, CommandArticlesRepository $commandArticlesRep, CommandService $commandServ, BasketService $basketService): Response
     {
-        $session=  $request->getSession();
-        $connectedUser=$session->get('user');
-        if($connectedUser==null)
-        {
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        if ($connectedUser == null) {
             return $this->redirectToRoute("app_login");
         }
 
@@ -132,7 +128,7 @@ class CommandsController extends AbstractController
 
         $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
 
-        $basketItemsCount= count($basketService->getCartItems($connectedUser->getIdUser()));
+        $basketItemsCount = count($basketService->getCartItems($connectedUser->getId()));
 
 
         return $this->render('commands/affichageCommand.html.twig', [
@@ -164,10 +160,9 @@ class CommandsController extends AbstractController
     #[Route('/commandHistory', name: 'app_commandHistory')]
     public function commandHistory(CommandsRepository $rep, BasketService $basketService, Request $request): Response
     {
-        $session=  $request->getSession();
-        $connectedUser=$session->get('user');
-        if($connectedUser==null)
-        {
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        if ($connectedUser == null) {
             return $this->redirectToRoute("app_login");
         }
 
@@ -175,9 +170,9 @@ class CommandsController extends AbstractController
         $EnAttentelist = [];
         $Livrelist = [];
         $Annulelist = [];
-        
+
         // Récupère toutes les commandes du client
-        $commands = $rep->findBy(['idClient' => $connectedUser->getIdUser()]);
+        $commands = $rep->findBy(['idClient' => $connectedUser->getId()]);
 
         // Parcourt chaque commande
         foreach ($commands as $command) {
@@ -211,7 +206,7 @@ class CommandsController extends AbstractController
                 $Annulelist[] = $command;
             }
         }
-        $basketItemsCount= count($basketService->getCartItems($connectedUser->getIdUser()));
+        $basketItemsCount = count($basketService->getCartItems($connectedUser->getId()));
 
         return $this->render('commands/listCommandsClient.html.twig', [
             'controller_name' => 'CommandsController',
@@ -250,7 +245,7 @@ class CommandsController extends AbstractController
         $command = new commands();
         $command = $commandRep->find($idCommand);
         $command->setEtatCommande($status);
-        
+
         $commandRep->save($command, true);
 
         // add flash message
@@ -260,11 +255,11 @@ class CommandsController extends AbstractController
     }
 
     #[Route('/facture/{idCommand}', name: 'app_facture')]
-    public function facture($idCommand, CommandsRepository $rep, CommandArticlesRepository $commandArticlesRep, CommandService $commandServ, BasketService $basketService ): Response
+    public function facture($idCommand, CommandsRepository $rep, CommandArticlesRepository $commandArticlesRep, CommandService $commandServ, BasketService $basketService): Response
     {
 
         $numCommand = $commandServ->generateOrderNumber($idCommand);
-        $command= $rep->find($idCommand);
+        $command = $rep->find($idCommand);
         $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
 
         return $this->render('facture/facture.html.twig', [
@@ -276,10 +271,10 @@ class CommandsController extends AbstractController
     }
 
     #[Route('/chart', name: 'app_chart')]
-    public function commandsChart( CommandService $commandServ,\App\Repository\ArticleRepository $repo, EntityManagerInterface $em, CommandsRepository $comRep,  UtilisateurRepository  $userRep)
+    public function commandsChart(CommandService $commandServ, \App\Repository\ProduitsRepository $repo, EntityManagerInterface $em, CommandsRepository $comRep,  UtilisateurRepository  $userRep)
     {
-        $listUsers=$userRep->findAll();
-        $listArticles= $repo->findAll();
+        $listUsers = $userRep->findAll();
+        $listArticles = $repo->findAll();
 
         $months = [
             'January',
@@ -297,16 +292,16 @@ class CommandsController extends AbstractController
         ];
 
         $chartData = [];
-        $totale=0;
+        $totale = 0;
         $commands = $comRep->findAll();
-        for($i=1; $i<13; $i++){
-            for($j=0; $j<count($commands); $j++){
-                if($commands[$j]->getDateCommande()->format('m') == $i){
+        for ($i = 1; $i < 13; $i++) {
+            for ($j = 0; $j < count($commands); $j++) {
+                if ($commands[$j]->getDateCommande()->format('m') == $i) {
                     $totale += $commands[$j]->getCoutTotale();
                 }
             }
-            $chartData[$months[$i-1]] = $totale;
-            $totale=0;
+            $chartData[$months[$i - 1]] = $totale;
+            $totale = 0;
         }
 
         $totalThisMonth = $comRep->getTotalPriceOfCurrentMonth();
@@ -314,20 +309,26 @@ class CommandsController extends AbstractController
 
 
 
-        $total = $repo->countByCatLib('personnes') +
-            $repo->countByCatLib('classique') +
-            $repo->countByCatLib('paysages');
+        $total = $repo->countByType('personnes') +
+            $repo->countByType('classique') +
+            $repo->countByType('paysages');
 
 
-        $BMWCount = $repo->countByCatLib('personnes');
-        $MercedesCount = $repo->countByCatLib('classique');
-        $AudiCount = $repo->countByCatLib('paysages');
+        $BMWCount = $repo->countByType('personnes');
+        $MercedesCount = $repo->countByType('classique');
+        $AudiCount = $repo->countByType('paysages');
 
 
-        $BmwPercentage = round(($BMWCount / $total) * 100);
-        $MercedesPercentage = round(($MercedesCount / $total) * 100);
-        $AudiPercentage = round(($AudiCount / $total) * 100);
-
+        if ($total != 0) {
+            $BmwPercentage = round(($BMWCount / $total) * 100);
+            $MercedesPercentage = round(($MercedesCount / $total) * 100);
+            $AudiPercentage = round(($AudiCount / $total) * 100);
+        } else {
+            // Gérer le cas où le total est zéro (éviter la division par zéro)
+            $BmwPercentage = 0;
+            $MercedesPercentage = 0;
+            $AudiPercentage = 0;
+        }
         return $this->render('chart/index.html.twig', [
             'chartData' =>  $chartData,
             'totalThisMonth' => $totalThisMonth,
@@ -336,7 +337,7 @@ class CommandsController extends AbstractController
             'BMWPercentage' => $BmwPercentage,
             'MercedesPercentage' => $MercedesPercentage,
             'AudiPercentage' => $AudiPercentage,
-            'listArticles' =>$listArticles
+            'listArticles' => $listArticles
         ]);
     }
 }

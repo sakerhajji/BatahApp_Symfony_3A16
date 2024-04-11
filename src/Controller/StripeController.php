@@ -9,20 +9,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\BasketService;
+use Symfony\Component\Security\Core\Security;
+
 
 
 class StripeController extends AbstractController
 {
     #[Route('/command/stripe', name: 'app_stripe')]
-    public function index(BasketService $basketService, UtilisateurRepository $userRep): Response
+    public function index(BasketService $basketService, UtilisateurRepository $userRep, Security $security, Request $request): Response
     {
-        $basketData = $basketService->getCartItems(32);
+
+
+        $connectedUser = $request->getSession()->get('user');
+
+        $basketData = $basketService->getCartItems($connectedUser->getId());
         $basketItemsCount = count($basketData);
-        $connectedUser = $userRep->find(32);
+        //$connectedUser = $userRep->find(32);
 
         $totalPrice = array_reduce($basketData, function ($total, $product) {
-            return $total + $product->getIdArticle()->getArtprix();
+            return $total + $product->getIdProduit()->getPrix();
         }, 0);
+
         $totalPrice += 8;
 
         return $this->render('stripe/index.html.twig', [
@@ -42,7 +49,7 @@ class StripeController extends AbstractController
         $connectedUser = $userRep->find(32);
 
         $totalPrice = array_reduce($basketData, function ($total, $product) {
-            return $total + $product->getIdArticle()->getArtprix();
+            return $total + $product->getIdProduit()->getPrix();
         }, 0);
 
 

@@ -1,5 +1,5 @@
-{% extends 'baseAffichageCommand.html.twig' %}
-{% block title %}Artzii back{% endblock %}
+{% extends 'base.html.twig' %}
+{% block title %}Batah back{% endblock %}
 
 {% block body %}
 
@@ -60,7 +60,7 @@
 
 
 								<div class="col-md-3">
-									<img src="{{asset('uploads/'~commandArticle.article.artimg)}}" style="width: 70%; height: 100%; border-radius: 4px; margin-left: 20px;">
+									<img src="{{asset('uploads/'~commandArticle.article.photo)}}" style="width: 70%; height: 100%; border-radius: 4px; margin-left: 20px;">
 								</div>
 
 								<div class="col-md-6">
@@ -70,17 +70,17 @@
 											1x
 										</span>
 										<span>
-											{{commandArticle.article.artlib}}
+											{{commandArticle.article.labelle}}
 										</span>
 									</div>
                                     <div>
-										Dimension : {{commandArticle.article.artdesc}} cm
+										Dimension : {{commandArticle.article.description}} cm
 									</div>
 
 
 
 									<div>
-									Prix : {{commandArticle.article.artprix}} DT
+									Prix : {{commandArticle.article.prix}} DT
 									</div>
 								</div>
                                 <div class="col-md-3">

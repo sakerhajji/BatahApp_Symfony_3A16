@@ -83,10 +83,47 @@ class Utilisateur implements UserInterface
      */
     private $produits;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Views::class, mappedBy="utilisateur")
+     */
+    private $views;
+
+
     public function __construct()
     {
         $this->produits = new ArrayCollection();
+        $this->views = new ArrayCollection();
     }
+    /**
+     * @return Collection|Views[]
+     */
+    public function getViews(): Collection
+    {
+        return $this->views;
+    }
+
+    public function addView(Views $view): self
+    {
+        if (!$this->views->contains($view)) {
+            $this->views[] = $view;
+            $view->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeView(Views $view): self
+    {
+        if ($this->views->removeElement($view)) {
+            // set the owning side to null (unless already changed)
+            if ($view->getUtilisateur() === $this) {
+                $view->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
 
     /**
      * @return Collection|Produits[]
