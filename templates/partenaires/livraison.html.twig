@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Services affectés{% endblock %}
+
+{% block body %}
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date de Livraison</th>
+                <th>Adresse</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for service in services %}
+                <tr>
+                    <td>{{ service.idLivraison }}</td>
+                    <td>{{ service.dateLivraison|date('Y-m-d') }}</td>
+                    <td>{{ service.commande.adresse }}</td>
+
+                    <td>
+                        <a href="{{ path('app_livraison_show', {'idLivraison': service.idLivraison}) }}">Afficher</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucun enregistrement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="javascript:history.go(-1)" class="btn btn-primary">RETOUR</a>
+    </div>
+{% endblock %}

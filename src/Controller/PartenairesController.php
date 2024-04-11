@@ -4,14 +4,24 @@ namespace App\Controller;
 
 use App\Entity\Partenaires;
 use App\Form\PartenairesType;
+use App\Repository\LivraisonRepository;
 use App\Repository\PartenairesRepository;
+use App\Repository\ServiceApresVenteRepository;
+use App\Services\EmailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Services\FileUploader;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
+
 
 
 #[Route('/partenaires')]
@@ -20,6 +30,7 @@ class PartenairesController extends AbstractController
     #[Route('/', name: 'app_partenaires_index', methods: ['GET'])]
     public function index(PartenairesRepository $PartenairesRepository): Response
     {
+
         $partenaires = $PartenairesRepository->findAll();
         $data = [];
         foreach ($partenaires as $partenaire) {
@@ -28,8 +39,6 @@ class PartenairesController extends AbstractController
                 'points' => $partenaire->getPoints(),
             ];
         }
-
-        // Rendre la vue Twig avec les données des partenaires
         return $this->render('partenaires/index.html.twig', [
             'partenaires' => $partenaires,
             'partenairesJson' => json_encode($data),
@@ -46,21 +55,20 @@ class PartenairesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->persist($partenaire);
             $entityManager->flush();
+
 
             return $this->redirectToRoute('app_partenaires_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Récupérer les erreurs de validation
-        $errors = $form->getErrors(true);
-
         return $this->render('partenaires/new.html.twig', [
-            'partenaire' => $partenaire,
             'form' => $form->createView(),
         ]);
-
     }
+
+
 
     #[Route('/{idpartenaire}', name: 'app_partenaires_show', methods: ['GET'])]
     public function show(Partenaires $partenaire): Response
@@ -71,12 +79,13 @@ class PartenairesController extends AbstractController
     }
 
     #[Route('/{idpartenaire}/edit', name: 'app_partenaires_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Partenaires $partenaire, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request,FileUploader $fileUploader, Partenaires $partenaire, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PartenairesType::class, $partenaire);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->persist($partenaire);
             $entityManager->flush();
 
@@ -102,5 +111,23 @@ class PartenairesController extends AbstractController
         }
 
         return $this->redirectToRoute('app_partenaires_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/{idPartenaire}/services', name: 'app_partenaire_services', methods: ['GET'])]
+    public function showServices($idPartenaire, LivraisonRepository $livraisonRepository, ServiceApresVenteRepository $serviceRepository): Response
+    {
+        $partenaire = $this->getDoctrine()->getRepository(Partenaires::class)->find($idPartenaire);
+
+        if ($partenaire->getType() === 'livraison') {
+            $services = $livraisonRepository->findBy(['partenaire' => $idPartenaire]);
+            return $this->render('partenaires/livraison.html.twig', [
+                'services' => $services,
+            ]);
+        } else {
+            $services = $serviceRepository->findBy(['idPartenaire' => $idPartenaire]);
+            return $this->render('partenaires/services.html.twig', [
+                'services' => $services,
+            ]);
+        }
+
     }
 }

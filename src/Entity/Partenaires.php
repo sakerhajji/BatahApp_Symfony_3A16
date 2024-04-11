@@ -4,7 +4,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PartenairesRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 #[ORM\Entity(repositoryClass: PartenairesRepository::class)]
+#[Vich\Uploadable]
 class Partenaires
 {
     #[ORM\Id]
@@ -16,7 +20,7 @@ class Partenaires
     #[ORM\Column(name: "nom", type: "string", length: 20, nullable: false)]
     private string $nom;
     #[Assert\NotBlank(message: "Le type ne peut pas être vide")]
-    #[Assert\Choice(choices: ["voiture", "maison", "terrain"], message: "Le type doit être voiture, maison ou terrain")]
+    #[Assert\Choice(choices: ["voiture", "maison", "terrain","livraison"], message: "Le type doit être voiture, maison ou terrain")]
     #[ORM\Column(name: "type", type: "string", length: 20, nullable: false)]
     private string $type;
     #[Assert\NotBlank(message: "L'adresse ne peut pas être vide")]
@@ -32,11 +36,13 @@ class Partenaires
     #[ORM\Column(name: "email", type: "string", length: 50, nullable: false)]
     private string $email;
 
-    #[ORM\Column(name: "logo", type: "string", length: 200, nullable: false)]
-    private string $logo;
-
+    #[ORM\Column(name: "logo", type: "string", length: 200, nullable: true)]
+    private ?string $logo=null;
     #[ORM\Column(name: "points", type: "integer", nullable: true)]
     private ?int $points = 0;
+
+    private ?File $logoFile ;
+
 
     public function getIdpartenaire(): int
     {
@@ -98,14 +104,15 @@ class Partenaires
         $this->email = $email;
     }
 
-    public function getLogo(): string
+    public function getLogo(): ?string
     {
         return $this->logo;
     }
 
-    public function setLogo(string $logo): void
+    public function setLogo(?string $logo): void
     {
         $this->logo = $logo;
+
     }
 
     public function getPoints(): ?int
@@ -117,10 +124,22 @@ class Partenaires
     {
         $this->points = $points;
     }
+    public function getLogoFile(): ?File
+    {
+        return $this->logoFile;
+    }
+
+    public function setLogoFile(?File $logoFile): void
+    {
+        $this->logoFile = $logoFile;
+    }
+
 
     public function __toString(): string
     {
         return "ID: {$this->idpartenaire}, Nom: {$this->nom}, Type: {$this->type}, Adresse: {$this->adresse}, Telephone: {$this->telephone}, Email: {$this->email}, Logo: {$this->logo}, Points: {$this->points}";
     }
+
+
 }
 

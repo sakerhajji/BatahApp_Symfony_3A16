@@ -76,6 +76,12 @@ class Utilisateur
     #[ORM\Column(name: "role", type: "string", length: 1, nullable: true, options: ["fixed" => true])]
     private ?string $role;
 
+
+    public function __construct()
+    {
+        $this->id = 1;
+    }
+
     public function getId(): int
     {
         return $this->id;

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Partenaires index{% endblock %}
-{% block pane %}
+{% block body %}
     <div class="c_container">
             <div class="col-lg-6">
             <!-- Affichage de la liste des partenaires -->
@@ -29,6 +29,7 @@
                                     <td>
                                         <a href="{{ path('app_partenaires_show', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Show</a>
                                         <a href="{{ path('app_partenaires_edit', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Edit</a>
+                                        <a href="{{ path('app_partenaire_services', {'idPartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Consulter les services">Consulter</a>
                                     </td>
                                 </tr>
                             {% else %}

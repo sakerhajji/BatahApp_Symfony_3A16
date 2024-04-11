@@ -35,7 +35,7 @@
 </head>
 
 <body>
-{% block body %}
+
     <div class="wrapper">
         <div class="preloader"></div>
 
@@ -481,6 +481,16 @@
                                                             class="flaticon-list"></span>Partenaires</a></li>
                                             <li><a href="{{ path('app_service_apres_vente_index') }}"><span
                                                             class="flaticon-list"></span>Apres Vente</a></li>
+                                            <li><a href="{{ path('liste_commandes') }}"><span
+                                                            class="flaticon-list"></span>Liste commandes</a></li>
+                                            <li><a href="{{ path('app_livraison_index') }}"><span
+                                                            class="flaticon-list"></span>Liste Livraisons</a></li>
+                                            <li><a href="{{ path('liste_livraisons_utilisateur') }}"><span
+                                                            class="flaticon-list"></span>mes Livraisons</a></li>
+                                            <li><a href="{{ path('app_avis_livraison_index') }}"><span
+                                                            class="flaticon-list"></span>Avis</a></li>
+
+
                                             <li><a href="page-login.html"><span
                                                             class="flaticon-logout"></span>Logout</a></li>
                                         </ul>
@@ -517,7 +527,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            {% block pane %}
+                            {% block body %}
                             <div class="col-xl-8">
                                 <div class="breadcrumb_content mb50">
                                     <h2 class="breadcrumb_title">Hello, Cameron!</h2>
@@ -585,8 +595,9 @@
 
             </div>
         </div>
-    </div>
-  </div>
+
+
+
     </section>
 
     <div class="ed_menu_list">
@@ -628,7 +639,7 @@
     <script src="{{ asset('js/script.js') }}"></script>
 
 {% endblock %}
-{% endblock %}
+
 </body>
 
 <!-- Mirrored from creativelayers.net/themes/voiture-html/page-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2024 13:40:05 GMT -->

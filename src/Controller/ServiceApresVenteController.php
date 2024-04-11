@@ -6,7 +6,9 @@ use App\Entity\Partenaires;
 use App\Entity\ServiceApresVente;
 use App\Form\ServiceApresVenteType;
 use App\Repository\ServiceApresVenteRepository;
+use App\Services\EmailSender;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,22 +87,22 @@ class ServiceApresVenteController extends AbstractController
     }
 
 
-
-    private $mailer;
-
-    public function __construct(MailerInterface $mailer)
-    {
-        $this->mailer = $mailer;
-    }
     #[Route('/{idService}/app_assign_partner', name: 'app_assign_partner', methods: ['GET', 'POST'])]
     public function assignPartner(Request $request, ServiceApresVente $serviceApresVente, EntityManagerInterface $entityManager): Response
     {
-        // Créez le formulaire pour sélectionner le partenaire
+        $serviceType = $serviceApresVente->getType();
+
         $form = $this->createFormBuilder()
             ->add('partner', EntityType::class, [
                 'class' => Partenaires::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Sélectionner un partenaire',
+                // Ajoutez une condition pour filtrer les partenaires par type
+                'query_builder' => function (EntityRepository $er) use ($serviceType) {
+                    return $er->createQueryBuilder('p')
+                        ->andWhere('p.type = :type')
+                        ->setParameter('type', $serviceType);
+                },
             ])
             ->add('submit', SubmitType::class, ['label' => 'Assigner'])
             ->getForm();
@@ -119,13 +121,9 @@ class ServiceApresVenteController extends AbstractController
 
             // Envoyer un e-mail au partenaire
             $partnerEmail = $selectedPartner->getEmail();
-            $email = (new Email())
-                ->from('batahapp@gmail.com')
-                ->to($partnerEmail)
-                ->subject('Nouvelle affectation')
-                ->html('<p>Bonjour,</p><p>Vous avez été affecté à un nouveau service. Merci de consulter votre tableau de bord pour plus de détails.</p>');
-
-            $this->mailer->send($email);
+            $partnerNom = $selectedPartner->getNom();
+            $email=new EmailSender();
+            $email->sendEmail($partnerEmail,"affectation","$partnerNom vous avez affecter à un service");
 
             // Enregistrer les modifications dans la base de données
             $entityManager->persist($selectedPartner);
