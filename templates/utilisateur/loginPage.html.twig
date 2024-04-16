@@ -8,14 +8,14 @@
                     <div class="login_form mt60-sm">
                         <h2 class="title">Sign in</h2>
                         <p>New to Cars.com? <a href="page-register.html">Sign up.</a> Are you a dealer?</p>
-                        <form action="{{ path('Login') }}" method="post">
+                        <form action="{{ path('Login') }}" method="post" id="login_form">
                             <div class="mb-2 mr-sm-2">
                                 <label class="form-label">Username or email address  *</label>
-                                <input type="text" class="form-control" name="email">
+                                <input type="text" class="form-control" name="email" id="email">
                             </div>
                             <div class="form-group mb5">
                                 <label class="form-label">Password  *</label>
-                                <input type="password" class="form-control" name="password" >
+                                <input type="password" class="form-control" name="password"  id="password">
                             </div>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="exampleCheck3"  >
@@ -37,5 +37,11 @@
                 </div>
             </div>
         </div>
+
+            {% block jsControle %}
+{#                <script src="{{ asset('js/LogControl.js') }}"></script>#}
+            {% endblock %}
+
     </section>
+
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends 'front.html.twig' %}
-{% block title %}login{% endblock %}
+{% block title %}Sign Up{% endblock %}
 {% block main %}
     <section class="our-log bgc-f9">
 
@@ -9,31 +9,31 @@
                     <div class="sign_up_form mt60-sm">
                         <h2 class="title">Sign up</h2>
                         <p>Already have a profile? <a href="page-login.html">Sign in.</a></p>
-                        <form action="{{ path('Iscription') }}" method="post">
+                        <form action="{{ path('Iscription') }}" method="post" id="singUp">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-label">First Name</label>
-                                        <input type="text" class="form-control" name="first_name">
+                                        <input type="text" class="form-control" name="first_name" id="first_name">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" name="last_name">
+                                        <input type="text" class="form-control" name="last_name" id="last_name">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" name="email">
+                                        <input type="email" class="form-control" name="email" id="email">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group mb20">
                                         <label class="form-label">Confirm Password</label>
-                                        <input type="date" class="form-control" name="date_de_naissance">
+                                        <input type="date" class="form-control" name="date_de_naissance" id="date_de_naissance">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -48,13 +48,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group mb20">
                                         <label class="form-label">Password</label>
-                                        <input type="password" class="form-control" name="password">
+                                        <input type="password" class="form-control" name="password" id="password">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group mb20">
                                         <label class="form-label">Confirm Password</label>
-                                        <input type="password" class="form-control" name="confirm_password">
+                                        <input type="password" class="form-control" name="confirm_password" id="confirm_password">
                                     </div>
                                 </div>
 
@@ -75,8 +75,15 @@
                 </div>
             </div>
         </div>
+
     </section>
+    {% block jsControle %}
+{#        <script type="module" src="{{ asset('js/InputControl.js') }}"></script>#}
+{#        <script src="{{ asset('js/SignUPControl.js') }}"></script>#}
+    {% endblock %}
+
 {% endblock %}
+
 
 
 
