@@ -38,35 +38,46 @@ class UtilisateurController extends AbstractController
 
     }
     #[Route('/Iscription', name: 'Iscription', methods: ['POST'])]
-
-    public function Iscription (Request $request, EntityManagerInterface $entityManager): Response
+    public function Iscription(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $check = new InputControl();
 
         $data = $request->request->all();
-        $utilisateur =new Utilisateur();
+        $utilisateur = new Utilisateur();
         $utilisateur->setNomutilisateur($data['first_name']);
         $utilisateur->setPrenomutilisateur($data['last_name']);
         $utilisateur->setAdresseemail($data['email']);
         $utilisateur->setDatedenaissance(new \DateTime($data['date_de_naissance']));
         $utilisateur->setSexe($data['gender']);
         $utilisateur->setMotdepasse($data['password']);
+
         // Instead of passing the user as a parameter, use the EntityManager to persist and flush
-        $entityManager->persist($utilisateur);
-        $entityManager->flush();
+        if ($check->checkPasswordStrength($utilisateur->getMotdepasse()) &&
+            $check->verifierNom($utilisateur->getNomutilisateur()) &&
+            $check->verifierNom($utilisateur->getPrenomutilisateur()) &&
+            $check->verifyEmail($utilisateur->getAdresseemail())) {
 
+            $entityManager->persist($utilisateur);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        dd("invalid input");
         // Redirect or return a response
-        return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
-
     }
+
     #[Route('/Login', name: 'Login', methods: ['POST'])]
 
     public function Login (Request $request, EntityManagerInterface $entityManager , UtilisateurRepository $repository): Response
     {
-
+        $check=new InputControl() ;
         $data = $request->request->all();
         $utilisateur =new Utilisateur();
         $utilisateur->setAdresseemail($data['email']);
         $utilisateur->setMotdepasse($data['password']);
+        if($check->checkPasswordStrength($utilisateur->getMotdepasse() ) || $check->verifyEmail($utilisateur->getAdresseemail()) )
+            dd("password or mail invalid") ;
         $utilisateur=$repository->login($utilisateur->getAdresseemail(),$utilisateur->getMotdepasse()) ;
      if($utilisateur != null)
      return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);

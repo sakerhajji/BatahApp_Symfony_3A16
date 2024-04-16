@@ -14,11 +14,12 @@ class TestController extends AbstractController
     #[Route('/mail', name: 'mail')]
     public function index(SessionInterface $session , MailerInterface $mailer): Response
     {
-        $emailSender = new EmailSender();
-        $emailSender->sendEmail();
-        return $this->render('base.html.twig');
+//        $emailSender = new EmailSender();
+//        $emailSender->sendEmail();
+        return $this->render('utilisateur/DashboardProfile.html.twig');
 
     }
+
 
 
 
