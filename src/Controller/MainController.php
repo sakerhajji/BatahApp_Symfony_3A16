@@ -39,6 +39,7 @@ class MainController extends AbstractController
             $repository = $this->getDoctrine()->getRepository(Utilisateur::class);
             $user = $repository->findOneBy(['adresseemail' => $email]);
 
+
             if ($user) {
                 // User found, set the user in the session
                 $session = new Session();

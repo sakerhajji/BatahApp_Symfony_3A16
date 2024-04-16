@@ -27,6 +27,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Knp\Snappy\Pdf;
 use App\Form\CalculatorType;
 use App\Repository\BasketRepository;
+use App\Repository\ImageRepository;
 use App\Repository\UtilisateurRepository;
 use App\Repository\ViewsRepository;
 use Dompdf\Dompdf;
@@ -71,6 +72,12 @@ class ProduitController extends AbstractController
         if (!$connectedUser) {
             return $this->redirectToRoute('app_login');
         }
+        // Vérifier le rôle de l'utilisateur
+        $isAdmin = $security->isGranted('ROLE_ADMIN');
+
+        // Choix de la template en fonction du rôle de l'utilisateur
+        $template = $isAdmin ? 'produit/page-dashboard-add-produits.html.twig' : 'produit/page-dashboard-add-produits_front.html.twig';
+
 
         $prod = new Produits();
 
@@ -90,9 +97,10 @@ class ProduitController extends AbstractController
             $prod->setLocalisation($formattedLocalisation);
 
 
+            /*  
+! photo
 
-
-            $imageFile = $form->get('imageFile')->getData();
+            $imageFile = $form->get('photo')->getData();
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFilename = $originalFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
@@ -112,15 +120,50 @@ class ProduitController extends AbstractController
                 $image->setProduits($prod);
                 $em->persist($image);
             }     // Persist location and associated image
+*/
 
+            $imageFiles = $form->get('images')->getData(); // Utilisez le nom de champ associé à la relation OneToMany
 
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile) {
+                    try {
+                        // Générez un nom de fichier unique en utilisant l'extension de fichier d'origine
+                        $originalFilename = $imageFile->getClientOriginalName();
+                        $extension = $imageFile->getClientOriginalExtension();
+                        $newFilename = uniqid() . '.' . $extension;
+
+                        $imageFile->move(
+                            $this->getParameter('kernel.project_dir') . '/public/uploads',
+                            $newFilename
+                        );
+
+                        // Définissez le chemin réel de l'image téléchargée dans l'entité Image
+                        $imagePath = '/uploads/' . $newFilename; // Chemin relatif depuis le répertoire public
+
+                        // Créez une nouvelle entité Image
+                        $image = new Image();
+                        $image->setUrl($imagePath);
+                        // Associez l'image au produit
+                        $prod->addImage($image);
+
+                        // Persistez l'entité Image
+                        $em->persist($image);
+                    } catch (FileException $e) {
+                        // Gérer l'erreur de téléchargement de fichier
+                        $this->addFlash('error', 'Failed to upload one or more images.');
+                        return $this->redirectToRoute('app_produit');
+                    }
+                }
+            }
+
+            //
             $em->persist($prod);
             $em->flush();
 
             return $this->redirectToRoute('app_back_affiche');
         }
 
-        return $this->render('produit/page-dashboard-add-produits.html.twig', [
+        return $this->render($template, [
             'form' => $form->createView(),
             'connectedUser' => $connectedUser,
         ]);
@@ -144,7 +187,7 @@ class ProduitController extends AbstractController
     }
 
     #[Route('/modifierProduit/{idp}', name: 'app_modifier_produit')]
-    public function editprod(ManagerRegistry $em, Request $request, ProduitsRepository $pr, $idp): Response
+    public function editprod(ManagerRegistry $em, Request $request, ProduitsRepository $pr, $idp, ImageRepository $imageRepository): Response
     {
         $em = $em->getManager();
         $produit = $pr->find($idp);
@@ -163,29 +206,70 @@ class ProduitController extends AbstractController
             $formattedLocalisation = "https://maps.google.com/maps?q=" . urlencode($localisation) . "&t=&z=13&ie=UTF8&iwloc=&output=embed";
             $produit->setLocalisation($formattedLocalisation);
 
-            // Handle image upload
-            $photoFile = $form->get('photo')->getData();
+            // Handle image upload if form is submitted
+            $existingImages = $imageRepository->findBy(['produits' => $produit]);
+            $imageFiles = $form->get('images')->getData(); // Récupère un tableau d'objets UploadedFile
 
-            if ($photoFile instanceof UploadedFile) {
-                $newFilename = md5(uniqid()) . '.' . $photoFile->guessExtension();
-                $photoFile->move($this->getParameter('kernel.project_dir') . '/public/uploads', $newFilename);
-                $produit->setPhoto($newFilename);
+            // Supprimer les images existantes associées au produit
+            foreach ($existingImages as $existingImage) {
+                $existingImagePath = $existingImage->getUrl();
+                if (file_exists($existingImagePath)) {
+                    unlink($existingImagePath);
+                }
+                // Supprimer l'image de la base de données
+                $em->remove($existingImage);
             }
 
-            // Flush changes to the database
+            // Enregistrer les nouvelles images associées au produit
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile) {
+                    try {
+                        // Générer un nom de fichier unique en utilisant l'extension de fichier d'origine
+                        $originalFilename = $imageFile->getClientOriginalName();
+                        $extension = $imageFile->getClientOriginalExtension();
+                        $newFilename = uniqid() . '.' . $extension;
+
+                        // Déplacer le fichier téléchargé vers l'emplacement désiré
+                        $imageFile->move(
+                            $this->getParameter('kernel.project_dir') . '/public/uploads',
+                            $newFilename
+                        );
+
+                        // Créer une nouvelle entité Image
+                        $newImage = new Image();
+                        $newImage->setUrl('/uploads/' . $newFilename);
+                        $newImage->setProduits($produit);
+
+                        // Persistez l'entité Image
+                        $em->persist($newImage);
+                    } catch (FileException $e) {
+                        // Gérer l'erreur de téléchargement de fichier
+                        $this->addFlash('error', 'Failed to upload one or more images.');
+                        return $this->redirectToRoute('app_produit');
+                    }
+                }
+            }
+            // Persist the changes to the database
             $em->flush();
+
 
             return $this->redirectToRoute('app_back_affiche');
         }
 
         return $this->render('produit/page-dashboard-edit-produits.html.twig', [
             'form' => $form->createView(),
-            'photo_path' => $produit->getPhoto() ? '/uploads/' . $produit->getPhoto() : null,
+            //'photo_path' => $produit->getPhoto() ? '/uploads/' . $produit->getPhoto() : null,
         ]);
     }
     #[Route('/produitback', name: 'app_back_affiche')]
-    public function showprodback(Request $request, ProduitsRepository $pr): Response
+    public function showprodback(Request $request, ProduitsRepository $pr,  ImageRepository $imageRepository): Response
     {
+        /*
+        // Vérifier si l'utilisateur a le rôle requis
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->render('error/not_admin.html.twig', []);
+        }
+*/
 
         // Récupérer l'utilisateur connecté à partir de la session Symfony
         $connectedUser = $request->getSession()->get('user');
@@ -228,6 +312,15 @@ class ProduitController extends AbstractController
             $product->setlocalisation($localisation); // Mettre à jour l'attribut localisation avec la partie extraite
         }
 
+        /*
+! images
+*/
+        // Fetch images
+        $imagesByLocation = [];
+        foreach ($products as $prod) {
+            $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
+        }
+
 
         $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -236,6 +329,7 @@ class ProduitController extends AbstractController
             'searchQuery' => $searchQuery,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
+            'imagesByLocation' => $imagesByLocation,
         ]);
     }
 
@@ -255,7 +349,7 @@ class ProduitController extends AbstractController
     }
 
     #[Route('/az', name: 'app_afficahge_produits')]
-    public function index(Request $request, PaginatorInterface $paginator, UtilisateurRepository $userRep, BasketRepository $basketRep, ProduitsRepository $pr): Response
+    public function index(Request $request, PaginatorInterface $paginator, UtilisateurRepository $userRep, BasketRepository $basketRep, ProduitsRepository $pr, ImageRepository $imageRepository): Response
     {
 
         $session =  $request->getSession();
@@ -298,20 +392,49 @@ class ProduitController extends AbstractController
         $pagination = $paginator->paginate(
             $repository,
             $request->query->getInt('page', 1), // Current page number
-            50 // Number of items per page
+            3 // Number of items per page
         );
         $basketItemsCount = count($basketItems);
 
         $allProducts = $pr->findAll();
         $newCars =  $newCars = array_reverse($allProducts); // Inverser l'ordre des produits pour simuler un tri par date d'ajout décroissante
         //$otherProducts = array_slice($allProducts, 0, count($allProducts) - count($newCars)); // Produits restants
+        /*
+        //images
+        $entityManager = $this->getDoctrine()->getManager();
+        $produit = $entityManager->getRepository(Produits::class)->find(2);
+        $images = [];
 
+        // Vérifiez si le produit existe
+        if ($produit) {
+            // Récupérez les images associées à ce produit
+            $produitImages = $produit->getImages();
+
+            // Ajoutez chaque image à la liste des images
+            foreach ($produitImages as $image) {
+                $images[] = $image;
+            }
+        } else {
+            echo 'Produit non trouvé.';
+        }
+*/
+
+
+
+        // Fetch images
+        $imagesByLocation = [];
+        foreach ($allProducts as $prod) { // Utilisez $allProducts à la place de $products
+            $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
+        }
         return $this->render('produit/indexfront.html.twig', [
             'listS' => $pagination,
             'existingArticles' => $existingArticles,
             'basketItemsCount' => $basketItemsCount,
             'products' => $allProducts, // Produits pour nav-home
             'newCars' => $newCars, // Produits pour nav-shopping
+            //   'p' => $produit, // Assurez-vous de transmettre le produit au modèle Twig
+            // 'images' => $images, // Transmettez la liste des images au modèle Twig
+            'imagesByLocation' => $imagesByLocation,
         ]);
     }
 
@@ -335,7 +458,7 @@ class ProduitController extends AbstractController
 
 
     #[Route('/detailProduit/front/{idp}', name: 'detailProduitFront')]
-    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp, SessionInterface $session, EntityManagerInterface $em)
+    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp, SessionInterface $session, EntityManagerInterface $em, ImageRepository $imageRepository)
     {
         // Retrieve the user from the session
         $userId = $session->get('user');
@@ -380,6 +503,10 @@ class ProduitController extends AbstractController
             $localisation = "No GPS coordinates available";
         }
 
+        // Fetch images for the product
+        $imagesByLocation = [];
+        $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
+
 
         return $this->render('produit/detailProduitFront.html.twig', array(
             'id' => $prod->getIdProduit(),
@@ -392,7 +519,8 @@ class ProduitController extends AbstractController
             'gps' => $localisation,
             'video' => $video = $prod->getVideo(), // Add the 'video' attribute to pass the video URL to the Twig template
             'nombreDeVues' => $prod->getNombreDeVues(), // Pass the updated view count to the template
-
+            'product' => $prod,
+            'imagesByLocation' => $imagesByLocation,
         ));
     }
 

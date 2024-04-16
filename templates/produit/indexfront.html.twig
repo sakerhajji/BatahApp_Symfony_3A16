@@ -1,8 +1,14 @@
 {% extends 'base_front.html.twig' %}
 
 {% block title %}HOME{% endblock %}
+    {% block basket %}  
+        <span class='badge badge-warning badge2' id='lblCartCount'>
+            {{ basketItemsCount }}
+        </span> 
+    {% endblock %}
 
 {% block pane %}
+ 
 <style>
     .slide-one {
         background-size: cover;
@@ -296,61 +302,116 @@
             </div>
             <div class="row d-flex" id="containerr">
                 <div id="search"></div>
-
+                <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Status</button>
+            <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">New Cars</button>
+              </div>
+          
                 <div class="row justify-content-center">
-
+               
                 <div class="row">
                 <!-- Single Item -->
                 {% for p in listS %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card h-100 product-card">
-                    <img src="{{ asset('uploads/'~p.photo) }}" class="card-img-top" alt="{{ p.labelle }}">
-                    <div class="card-body">
+                <div class="card h-100 product-card">
+                
+                {% set images = imagesByLocation[p.getIdProduit()] %}
+                {% if images is not empty %}
+                    <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="1500">
+                       
+{#
+<div class="carousel-item {% if loop.first %}active{% endif %}">
+    <div class="image-container" style="width: 250px; height: 250px; overflow: hidden;">
+        <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ p.labelle }}" style="object-fit: cover; width: 100%; height: 100%;">
+    </div>
+</div>
+#}
+
+                    <div class="carousel-inner">
+                            {% for key, image in images %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ p.labelle }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                {% else %}
+                    <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
+                {% endif %}
+                
+                <!-- Autres détails de la carte -->
+            
+{#                  
+                    {% if p.images|length > 0 %}
+                    {% for image in p.images %}
+                        <img src="{{ asset('uploads/' ~ image.url) }}" class="card-img-top" alt="{{ p.labelle }}">
+                    {% endfor %}
+                {% else %}
+                    <!-- Si le produit n'a pas d'images, affichez une image par défaut ou un message -->
+                    <img src="{{ asset('uploads/default.jpg') }}" class="card-img-top" alt="Image par défaut">
+                {% endif %}
+  #}
+                <div class="card-body">
                             <h5 class="card-title">{{ p.labelle }}</h5>
                             <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
                             <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
                         <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
-               
-               {#
-                    <button onclick="likeProduct({{ p.idProduit }})">Like</button>
-                <button onclick="dislikeProduct({{ p.idProduit }})">Dislike</button>
-                <!-- Display the like and dislike counts -->
-                <div>Likes: <span id="like-count-{{ p.idProduit }}">{{ p.getLikes() is not null ? p.getLikes() : 0 }}</span></div>
-                <div>Dislikes: <span id="dislike-count-{{ p.idProduit }}">{{ p.getDislikes() is not null ? p.getDislikes() : 0 }}</span></div>
-             #}
+     {#          
           
-          
-          {#
-            <div>Likes: <span id="like-count-{{ p.idProduit }}">{{ p.getViews().likes }}</span></div>
-            <div>Dislikes: <span id="dislike-count-{{ p.idProduit }}">{{ p.getViews().dislikes }}</span></div>
-            
-            <button onclick="likeProduct({{ p.idProduit }})">Like</button>
-            <button onclick="dislikeProduct({{ p.idProduit }})">Dislike</button>
-#}
-                            <div class="comment-section">
-                                <h6 class="mt-3">Commentaires et évaluations</h6>
-                                <form action="{{ path('submit_comment_and_rating', {'id_produit': p.getIdProduit()}) }}" method="POST">
-                                    <div class="form-group">
-                                        <label for="rating">Évaluation du produit:</label>
-                                        <div class="stars" id="ratingStars">
-                                            <!-- Add code for 5-star rating -->
-                                            <i class="fas fa-star" data-rating="1"></i>
-                                            <i class="fas fa-star" data-rating="2"></i>
-                                            <i class="fas fa-star" data-rating="3"></i>
-                                            <i class="fas fa-star" data-rating="4"></i>
-                                            <i class="fas fa-star" data-rating="5"></i>
-                                        </div>
-                                        <input name="rating" id="rating" value="0" type="hidden">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="comment">Commentaire:</label>
-                                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Soumettre</button>
-                                </form>
-                            </div>
-                       
-                        </div>
+       <!-- Affichage des commentaires pour ce produit -->
+<h3>Commentaires :</h3>
+    <ul>
+        {% if p.comments is defined %}
+            {% for comment in p.comments %}
+                <li>
+                    {{ comment.commentaire }} - Par :<img src="{{ asset('uploads/'~ comment.idClient.avatar ) }}" width="50" height="50" alt="Avatar" >    {{ comment.idClient.username }} - Date : {{ comment.date|date('Y-m-d H:i:s') }}
+                    {% if app.user and app.user == comment.idClient %}
+                        <a href="{{ path('delete_comment', {'id': comment.id}) }}" class="delete-comment">Supprimer</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>Aucun commentaire pour le moment.</li>
+        {% endif %}
+    </ul>
+    
+    <div class="post-input-container">
+<button  onclick="openForm()"><strong>Ajouter Un Commentaire</strong></button>
+</div>
+
+<div class="form-popupc" id="popupForm">
+<div class="comment">
+<section class="post">
+    <h3 class="fermer" onclick="closeForm()">Fermer</h3>
+    <header>Ajouter Un Commentaire</header>
+    <div class="form">
+    #}
+   {#
+    {{ form_start(form,{'attr' :{'novalidate':'novalidate'}}) }}
+        <div class="user-profile">
+            <img src="{{ asset('uploads/'~ user.Image ) }}" alt="logo">
+            <div class="details">
+                <p>{{ user.UserName }}</p>
+            </div>
+        </div>
+        {{form_widget(form.Commentaire)}}
+        <button type= "submit" class="btn btn-success"> Commenter ! </button>
+        <div class="options">
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+#}           
+        </div>
+        <hr>
                         <div class="card-footer text-center">
                             {% if p.getIdProduit() in existingArticles %}
                             <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
@@ -365,6 +426,8 @@
                 </div>
                 {% endfor %}
             </div>
+            
+
             
     </section>
     {% for flash_message in app.session.flashbag.get('success') %}
@@ -505,12 +568,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+
     </script>
+
     
+
+    <script>
+        document.getElementById('add-comment-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Empêcher la soumission du formulaire par défaut
+    
+            var formData = new FormData(this);
+    
+            fetch(this.getAttribute('action'), {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors de l\'ajout du commentaire');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message); // Afficher un message de succès
+                // Rafraîchir la page ou charger les nouveaux commentaires via AJAX si nécessaire
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Une erreur s\'est produite lors de l\'ajout du commentaire');
+            });
+        });
+
+
+
+        
+    </script>
+    <script>
+        function openForm() {
+            document.getElementById("popupForm").style.display = "block";
+        }
+    
+        function closeForm() {
+            document.getElementById("popupForm").style.display = "none";
+        }
+    </script>
+
     
     {{ knp_pagination_render(listS, 'bootstrap_4_pagination.html.twig') }}
 
 
+
+
+    
   
 {% endblock %}
 

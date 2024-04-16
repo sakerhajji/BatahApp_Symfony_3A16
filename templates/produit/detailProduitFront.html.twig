@@ -103,8 +103,35 @@
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide">
                             <!-- Affichez l'image du produit avec une hauteur maximale de 400px -->
-                            <img src="{{ asset('uploads/' ~ image) }}" style="max-height: 400px" alt="Product Image">
-                            {% if video is defined %}
+                            {% set images = imagesByLocation[product.getIdProduit()] %}
+                            {% if images is not empty %}
+                                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-indicators">
+                                        {% for key, image in images %}
+                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ key }}" {% if loop.first %}class="active"{% endif %} aria-label="Slide {{ loop.index }}"></button>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="carousel-inner">
+                                        {% for key, image in images %}
+                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ product.labelle }}">
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                            {% else %}
+                                <!-- Si aucune image n'est disponible, affichez une image par défaut -->
+                                <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
+                            {% endif %}
+                                {% if video is defined %}
                             {% set videoIdParts = video|split('v=') %}
                             {% if videoIdParts|length > 1 %}
                                 <div id="product-video" class="embed-responsive embed-responsive-16by9">
@@ -143,7 +170,9 @@
         <!-- Vous pouvez ajouter n'importe quel contenu créatif ici -->
     {% endif %}
 </div>
-                    <a href="#" class="btn btn-primary">Acheter maintenant</a>
+                    <a  href="{{ path('app_addToBasket', {'idp': product.getIdProduit()} ) }} class="btn btn-primary">Ajouter au Panier</a>
+               
+               
                 </div>
             </div>
         </div>

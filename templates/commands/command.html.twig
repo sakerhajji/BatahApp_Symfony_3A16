@@ -112,7 +112,13 @@
 							<div class="row">
 
 								<div class="col-md-6">
-									<img src="{{asset('uploads/'~basketItem.getIdProduit.photo)}}" style="width: 75%; height: 100%; border-radius: 4px; margin-left: 20px;">
+								{% set images = imagesByLocation[basketItem.getIdProduit().getIdProduit()] %}
+								{% if images is not empty %}
+									{% set firstImage = images[0] %}
+									<img src="{{ asset(firstImage.getUrl()) }}" style="width: 70%; height: 100%; border-radius: 4px; margin-left: 20px;">
+								{% else %}
+									<img src="{{ asset('uploads/defaultimage.jpg') }}" style="width: 70%; height: 100%; border-radius: 4px; margin-left: 20px;">
+								{% endif %}
 								</div>
 
 								<div class="col-md-6" style="margin-left: -30px; margin-top: -10px;">

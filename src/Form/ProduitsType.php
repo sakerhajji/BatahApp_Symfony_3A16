@@ -32,7 +32,15 @@ class ProduitsType extends AbstractType
                 ],
             ])
             ->add('description')
-            ->add('prix', null, ['constraints' => [new Assert\NotBlank()]])
+            ->add('prix', null, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Regex([
+                        'pattern' => '/^\d+$/',
+                        'message' => 'Le prix doit être un nombre entier.'
+                    ])
+                ]
+            ])
             ->add('labelle', null, ['constraints' => [new Assert\NotBlank()]])
             ->add('status', ChoiceType::class, [
                 'choices' => [
@@ -42,18 +50,34 @@ class ProduitsType extends AbstractType
                 'label' => 'Statut',
                 'required' => true,
             ])
-            ->add('periodeGarantie')
+            ->add('periodeGarantie', null, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Type(['type' => 'numeric']),
+                    new Assert\GreaterThanOrEqual(['value' => 0]),
+                ],
+            ])
             /*
             ->add('photo', FileType::class, [
                 'label' => 'Event Image',
                 'required' => false,
                 'mapped' => false, // Do not map this field to the entity property
             ])
-            */
-            ->add('photo', FileType::class, [
-                'label' => 'Event Image',
+  */
+            /*
+            ->add('imageFile', FileType::class, [
                 'required' => false,
-                'mapped' => false, // Do not map this field to the entity property
+                'label' => 'Images',
+                'attr' => ['class' => 'form-control-file'],
+                'multiple' => true, // Allow multiple file uploads
+            ])
+            */
+            ->add('images', FileType::class, [
+                'required' => false,
+                'label' => 'Images',
+                'attr' => ['class' => 'form-control-file'],
+                'multiple' => true, // Allow multiple file uploads
+                'mapped' => false, // Pour éviter la liaison automatique avec une entité
             ])
             ->add('video', null, [
                 'required' => false,

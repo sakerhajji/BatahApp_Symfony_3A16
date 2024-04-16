@@ -50,12 +50,12 @@
                           {{ form_errors(form.periodeGarantie) }}
                       </div>
                       
-                      <div class="mb-3">
-                      {{ form_label(form.photo, "Photo", {'class': 'form-label'}) }}
-                      {{ form_widget(form.photo, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
-                      <img id="imagePreview" src="#" alt="Preview" class="preview-image" style="max-width: 200px; display: none; margin-top: 10px;">
-                      {{ form_errors(form.photo) }}
-                  </div>
+                      <div class="mb20">
+    {{ form_label(form.images, "Images") }}
+    {{ form_widget(form.images, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
+    {{ form_errors(form.images) }}
+</div>
+
                   <div class="mb-3">
                   {{ form_label(form.video, "Video", {'class': 'form-label'}) }}
                   {{ form_widget(form.video, {'attr': {'class': 'form-control'}}) }}

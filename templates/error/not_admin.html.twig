@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accès restreint{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        .card-header {
+            background-color: #ff8a65; /* Changement de couleur */
+            color: #fff;
+            text-align: center; /* Centrer le texte */
+            padding: 20px; /* Ajouter de l'espacement */
+            font-size: 24px; /* Augmenter la taille du texte */
+        }
+
+        .card-body {
+            background-color: #f5f5f5; /* Changement de couleur */
+            padding: 30px; /* Ajouter de l'espacement */
+            text-align: center; /* Centrer le contenu */
+        }
+
+        .card-body p {
+            margin-bottom: 30px; /* Espacement entre les paragraphes */
+            font-size: 18px; /* Augmenter la taille du texte */
+            line-height: 1.6; /* Espacement des lignes */
+        }
+
+        .card-body a {
+            color: #1565c0; /* Changement de couleur du lien */
+            text-decoration: none; /* Supprimer le soulignement du lien */
+            font-size: 20px; /* Augmenter la taille du texte */
+            font-weight: bold; /* Rendre le lien en gras */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Accès restreint</div>
+
+                    <div class="card-body">
+                        <p>Vous devez être administrateur pour accéder à cette page.</p>
+                        <a href="{{ path('app_login') }}">Se connecter</a> en tant qu'administrateur.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exemple de code JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            // Code à exécuter une fois que le DOM est entièrement chargé
+            console.log('DOM chargé');
+        });
+    </script>
+{% endblock %}

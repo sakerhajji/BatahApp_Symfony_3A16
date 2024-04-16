@@ -70,13 +70,14 @@ class Produits
         //$this->dislikes = 0;
 
         $this->images = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
 
 
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="Produits", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="produits", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $images;
 
@@ -141,7 +142,6 @@ class Produits
         return $this->vues;
     }
 
-
     /**
      * @return Collection|Image[]
      */
@@ -164,17 +164,20 @@ class Produits
     {
         if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)
-            if ($image->getProduits() === $this) {
-                $image->setProduits(null);
+            if ($image->getLocation() === $this) {
+                $image->setLocation(null);
             }
         }
 
         return $this;
     }
+
+    /*
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private ?string $imageFile = null;
+    private ?string $imageFile;
 
     public function getImageFile(): ?string
     {
@@ -186,7 +189,8 @@ class Produits
         $this->imageFile = $imageFile;
     }
 
-
+    #[ORM\OneToMany(mappedBy: 'idProduit', targetEntity: Comment::class)]
+    private Collection $comments;
     public function getIdProduit(): ?int
     {
         return $this->idProduit;
@@ -346,5 +350,35 @@ class Produits
     public function __toString()
     {
         return (string) $this->getIdProduit();
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setIdProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getIdProduit() === $this) {
+                $comment->setIdProduit(null);
+            }
+        }
+
+        return $this;
     }
 }

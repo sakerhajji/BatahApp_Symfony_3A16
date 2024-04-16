@@ -15,6 +15,7 @@ use App\Service\CommandService;
 use App\Entity\Commands;
 use App\Entity\CommandArticles;
 use App\Repository\CommandArticlesRepository;
+use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -28,7 +29,7 @@ class CommandsController extends AbstractController
     }
 
     #[Route('/command', name: 'app_commands')]
-    public function index(Request $request, BasketService $basketService, UtilisateurRepository $userRep): Response
+    public function index(Request $request, BasketService $basketService, UtilisateurRepository $userRep, ImageRepository $imageRepository): Response
     {
         $session =  $request->getSession();
         $connectedUser = $session->get('user');
@@ -43,12 +44,19 @@ class CommandsController extends AbstractController
             return $total + $product->getIdProduit()->getPrix();
         }, 0);
 
+        // Fetch images for each article in the basket
+        $imagesByLocation = [];
+        foreach ($basketData as $basketItem) {
+            $imagesByLocation[$basketItem->getIdProduit()->getIdProduit()] = $imageRepository->findBy(['produits' => $basketItem->getIdProduit()]);
+        }
+
         return $this->render('commands/command.html.twig', [
             'controller_name' => 'CommandsController',
             'basketData' => $basketData,
             'totalPrice' => $totalPrice,
             'connectedUser' => $connectedUser,
             'basketItemsCount' => $basketItemsCount,
+            'imagesByLocation' => $imagesByLocation,
         ]);
     }
 

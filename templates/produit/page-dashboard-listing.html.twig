@@ -37,12 +37,29 @@
                     <td>
                         <div class="d-flex align-items-center">
                         <div class="product-thumbnail me-3">
-                        {% if prod.photo %}
-                        <img src="{{ asset('uploads/' ~ prod.photo) }}" alt="{{ prod.photo }}" class="img-fluid" style="max-width: 100px; height: auto;">
-                    {% else %}
-                        <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
-                    {% endif %}
-                        <div>
+                        
+             {#       
+             ! pour afficher tous les images d'un produit
+
+                        {% set images = imagesByLocation[prod.getIdProduit()] %}
+                        {% if images is not empty %}
+                            {% for image in images %}
+                                <img src="{{ asset(image.getUrl()) }}" alt="Product Image" class="img-fluid" style="max-width: 100px; height: auto;">
+                            {% endfor %}
+                        {% else %}
+                            <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
+                        {% endif %}
+               #}
+               {% set images = imagesByLocation[prod.getIdProduit()] %}
+{% if images is not empty %}
+    {% set firstImage = images[0] %}
+    <img src="{{ asset(firstImage.getUrl()) }}" alt="Product Image" class="img-fluid" style="max-width: 100px; height: auto;">
+{% else %}
+    <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
+{% endif %}
+               
+               
+                    </div>
                                 <h6 class="mb-0">{{ prod.labelle }}</h6>
                             <span class="text-muted">{{ prod.prix | number_format(0, '.', ',') }} TND</span>
                         </div>

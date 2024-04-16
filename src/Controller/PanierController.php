@@ -12,6 +12,7 @@ use App\Entity\Utilisateur;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\ArticleRepository;
 use App\Repository\BasketRepository;
+use App\Repository\ImageRepository;
 use App\Repository\ProduitsRepository;
 use App\Repository\UtilisateurRepository;
 use Twilio\Rest\Preview\HostedNumbers\ReadAuthorizationDocumentOptions;
@@ -26,7 +27,7 @@ class PanierController extends AbstractController
     }
 
     #[Route('/panier', name: 'app_panier')]
-    public function index(BasketService $basketService, UtilisateurRepository $userRep, Request $request): Response
+    public function index(BasketService $basketService, UtilisateurRepository $userRep, Request $request, ImageRepository $imageRepository): Response
     {
         $session =  $request->getSession();
         $connectedUser = $session->get('user');
@@ -45,6 +46,17 @@ class PanierController extends AbstractController
             return $total + $product->getIdProduit()->getPrix();
         }, 0);
 
+
+        $imagesByLocation = [];
+
+        // Boucler sur les articles du panier pour récupérer les images
+        foreach ($basketData as $item) {
+            // Récupérer l'ID du produit
+            $productId = $item->getIdProduit()->getIdProduit();
+            // Récupérer les images du produit
+            $imagesByLocation[$productId] = $imageRepository->findBy(['produits' => $item->getIdProduit()]);
+        }
+
         // Render the panier.html.twig template with necessary data
         return $this->render('panier/panier.html.twig', [
             'controller_name' => 'PanierController',
@@ -52,6 +64,7 @@ class PanierController extends AbstractController
             'totalPrice' => $totalPrice,
             'connectedUser' => $connectedUser,
             'basketItemsCount' => $basketItemsCount,
+            'imagesByLocation' => $imagesByLocation,
         ]);
     }
 
