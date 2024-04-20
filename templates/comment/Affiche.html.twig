@@ -1,0 +1,28 @@
+
+<body>
+<h1>List comment</h1>
+{#<a href="{{ path('app_AddBook')}}">Add</a>#}
+
+<table border="1">
+    <tr>
+        <th>Comment</th>
+        <th>Event id</th>
+        <th>user id</th>
+        <th>mod</th>
+    </tr>
+
+
+    <tr>  {% for c in comment %} </tr>
+    <td>{{ c.commentaire }}</td>
+    <td>{{ c.prod.labelle  }}</td>
+    <td>{{ c.user.nomutilisateur  }}</td>
+    
+    <td>
+        <a href="{{ path('app_deletecomment', {'ref': c.id}) }}">delete</a>
+        <a href="{{ path('app_detailcomment', {'ref': c.id}) }}">detail</a>
+    </td>
+    {% endfor %}
+
+</table>
+<a href="{{ path('app_Addcomment')}}">Add</a>
+

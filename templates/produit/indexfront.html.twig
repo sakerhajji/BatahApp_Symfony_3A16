@@ -364,7 +364,17 @@
                             <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
                             <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
                         <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
-     {#          
+    
+    {#  
+                    <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ p.idrep }}">{{ p.likes }}</span></p>
+                        <button type="button" class="btn btn-link like-button" data-reponse-id="{{ p.idrep }}">
+                            <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
+                        </button>
+              
+               #}
+                        {#          
+
+     
           
        <!-- Affichage des commentaires pour ce produit -->
 <h3>Commentaires :</h3>
@@ -409,7 +419,11 @@
 
         {{ form_end(form) }}
     </div>
-#}           
+#}  
+
+    
+
+
         </div>
         <hr>
                         <div class="card-footer text-center">
@@ -620,9 +634,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
+    <script>
+        // Attacher un gestionnaire d'événement à tous les boutons de like
+        document.querySelectorAll('.like-button').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                var reponseId = button.dataset.reponseId;
+                var likeCountElement = document.querySelector('#like-count-' + reponseId);
     
-  
+                // Vérifier si le bouton a déjà été cliqué (déjà liké)
+                var isLiked = button.classList.contains('liked');
+    
+                // Envoyer une requête AJAX pour incrémenter ou décrémenter les likes
+                fetch('{{ path('likeReclamations', {'idrep': '1'}) }}'.replace('1', reponseId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ isLiked: isLiked }) // Envoyer l'état actuel du like
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Mettre à jour le nombre de likes affiché dans le DOM
+                    likeCountElement.textContent = data.likesCount;
+    
+                    // Mettre à jour la classe du bouton en fonction de l'état actuel du like
+                    if (isLiked) {
+                        button.classList.remove('liked');
+                    } else {
+                        button.classList.add('liked');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            });
+        });
+    
+    </script>
 {% endblock %}
 
 {% block footer %} {% endblock %}

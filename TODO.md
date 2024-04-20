@@ -9,14 +9,24 @@ Project Description
 - [ ] recommanded product in details template  
 - [ ] top product sold/viwed  
 - [ ] add likes/dislikes  
- 
 - [ ] Stock Price Prediction
+- [ ] mailling/sms
+- [ ] google chart bundle*
+- [ ] weather
 
 ### In Progress
 
-- [ ] use image table 
-- [ ] add comments feature s 
+
+- [ ] admin can delete all comments  
 
 ### Done ✓
+- [ ] use image table 
+- [ ] flash bundle
+- [ ] pagination
+- [ ] statistique
+- [ ] pdf personalise
+- [ ] add comments feature 
+- [ ] tri croit/decroit par prix
+- [ ] traitement mathématique simple(calculator)
 
 

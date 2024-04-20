@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Basket;
+use App\Entity\Utilisateur;
 use Stripe;
 use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,36 +40,58 @@ class StripeController extends AbstractController
             'basketItemsCount' => $basketItemsCount,
         ]);
     }
-
-
     #[Route('/stripe/create-charge', name: 'app_stripe_charge', methods: ['POST'])]
-    public function createCharge(Request $request, BasketService $basketService, UtilisateurRepository $userRep)
+    public function createCharge(Request $request, BasketService $basketService, Security $security, UtilisateurRepository $userRep)
     {
 
-        $basketData = $basketService->getCartItems(32);
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        $connectedUser = $userRep->find($connectedUser->getId());
+
+
+        $basketData = $basketService->getCartItems($connectedUser);
         $basketItemsCount = count($basketData);
-        $connectedUser = $userRep->find(32);
 
         $totalPrice = array_reduce($basketData, function ($total, $product) {
             return $total + $product->getIdProduit()->getPrix();
         }, 0);
 
+        $totalPrice += 8;
+
+        // Log the total price for debugging
+        error_log("Total Price: " . $totalPrice);
 
         Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
-        Stripe\Charge::create([
-            "amount" => ($totalPrice + 8) * 100,
-            "currency" => "usd",
-            "source" => $request->request->get('stripeToken'),
-            "description" => "Paiement de la commande via BATTAH",
-            "metadata" => [
-                "client_name" => "John Doe"
-            ]
-        ]);
-        $this->addFlash(
-            'successPaiement',
-            'Payment succées!',
-        );
-        $basketService->emptyCart(32);
-        return $this->redirectToRoute('app_afficahge_produits');
+
+        try {
+            Stripe\Charge::create([
+                "amount" => $totalPrice * 100,  // Amount in cents
+                "currency" => "usd",
+                "source" => $request->request->get('stripeToken'),
+                "description" => "Paiement de la commande via Bttah",
+                "metadata" => [
+                    "client_name" => $connectedUser->getUsername() // Assuming getUsername() returns the user's name
+                ]
+            ]);
+
+            $this->addFlash(
+                'successPaiement',
+                'Payment succées!',
+            );
+
+            $basketService->emptyCart($connectedUser);
+
+            return $this->redirectToRoute('produits');
+        } catch (\Exception $e) {
+            // Log the exception for debugging
+            error_log("Error creating charge: " . $e->getMessage());
+
+            $this->addFlash(
+                'errorPaiement',
+                'Error processing payment!',
+            );
+
+            return $this->redirectToRoute('app_afficahge_produits');
+        }
     }
 }

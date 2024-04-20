@@ -49,14 +49,14 @@ class Produits
 
     #[ORM\Column(name: "nombreDeVues", type: "integer")]
     private int $nombreDeVues;
-    /*
+
 
     #[ORM\Column(name: "likes", type: "integer", nullable: true, options: ["default" => 0])]
     private ?int $likes;
 
     #[ORM\Column(name: "dislikes", type: "integer", nullable: true, options: ["default" => 0])]
     private ?int $dislikes;
-*/
+
 
     #[ORM\ManyToOne(targetEntity: Utilisateur::class, cascade: ["persist"])]
     #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "id", nullable: true)]
@@ -66,8 +66,8 @@ class Produits
     public function __construct()
     {
         $this->nombreDeVues = 0; // Initialiser à zéro
-        //$this->likes = 0;
-        //$this->dislikes = 0;
+        $this->likes = 0;
+        $this->dislikes = 0;
 
         $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -102,7 +102,7 @@ class Produits
         return $this;
     }
 
-    /*
+
     public function addLike(): self
     {
         $this->likes++;
@@ -124,7 +124,7 @@ class Produits
     {
         $this->dislikes++;
     }
-*/
+
 
     /**
      * @return Collection|Encheres[]|null
@@ -314,7 +314,7 @@ class Produits
 
         return $this;
     }
-    /*
+
     public function getLikes(): ?int
     {
         return $this->likes;
@@ -335,7 +335,7 @@ class Produits
     {
         $this->dislikes = $dislikes;
     }
-*/
+
     public function getIdUtilisateur(): ?Utilisateur
     {
         return $this->idUtilisateur;

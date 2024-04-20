@@ -458,7 +458,7 @@ class ProduitController extends AbstractController
 
 
     #[Route('/detailProduit/front/{idp}', name: 'detailProduitFront')]
-    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp, SessionInterface $session, EntityManagerInterface $em, ImageRepository $imageRepository)
+    public function detailArticlefront(\Symfony\Component\HttpFoundation\Request $req, $idp, SessionInterface $session, EntityManagerInterface $em, UtilisateurRepository $userRepository, ImageRepository $imageRepository)
     {
         // Retrieve the user from the session
         $userId = $session->get('user');
@@ -521,11 +521,15 @@ class ProduitController extends AbstractController
             'nombreDeVues' => $prod->getNombreDeVues(), // Pass the updated view count to the template
             'product' => $prod,
             'imagesByLocation' => $imagesByLocation,
+            'user' => $user,
         ));
     }
 
-
-    public function likeProduct($idp, EntityManagerInterface $em)
+    /*///
+  *************************************************likes*************************
+*/
+    /*  
+public function likeProduct($idp, EntityManagerInterface $em)
     {
         // Fetch the product
         $prod = $em->getRepository(Produits::class)->find($idp);
@@ -554,6 +558,37 @@ class ProduitController extends AbstractController
         // Return the updated dislikes count
         return new JsonResponse(['dislikes' => $prod->getViews()->getDislikes()]);
     }
+*/
+
+
+
+    #[Route('/likeReclamations/{idrep}', name: 'likeReclamations', methods: ['POST'])]
+    public function likeReclamations(Request $request, $idrep, ManagerRegistry $em): JsonResponse
+    {
+        $reponse = $this->$em->getRepository(Reponses::class)->find($idrep);
+
+        if (!$reponse) {
+            throw $this->createNotFoundException('Réponse non trouvée');
+        }
+
+        $likesCount = $reponse->getLikes();
+        $reponse->setLikes($likesCount == 0 ? 1 : 0);
+
+        $em = $this->$em->getManager();
+        $em->persist($reponse);
+        $em->flush();
+
+        return new JsonResponse(['likesCount' => $reponse->getLikes()]);
+    }
+
+
+
+
+
+
+
+
+
 
     /************************************************************************************************************************************************* */
     /************************************************************************************************************************************************* */
