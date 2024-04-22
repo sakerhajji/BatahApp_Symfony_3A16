@@ -96,46 +96,5 @@ date_de_naissance.addEventListener('input', function() {
     }
 });
 
-function handleSubmit(event) {
-    event.preventDefault();
 
-    if (!verifierNom(first_name.value)) {
-        displayErrorMessage("Invalid first name");
-        return;
-    }
 
-    if (!verifierNom(last_name.value)) {
-        displayErrorMessage("Invalid last name");
-        return;
-    }
-
-    if (!verifyEmail(email.value)) {
-        displayErrorMessage("Invalid email address");
-        return;
-    }
-
-    if (!checkPasswordStrength(password.value)) {
-        displayErrorMessage("Invalid password");
-        return;
-    }
-
-    if (password.value !== confirm_password.value) {
-        displayErrorMessage("Passwords do not match");
-        return;
-    }
-
-    if (!isDateValidAndOver18(date_de_naissance.value)) {
-        displayErrorMessage("Invalid date of birth");
-        return;
-    }
-
-    alert("Form submitted successfully!");
-}
-
-function displayErrorMessage(message) {
-    alert(message);
-}
-
-var form = document.getElementById('Login');
-
-form.addEventListener('submit', handleSubmit);

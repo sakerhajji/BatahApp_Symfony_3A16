@@ -10,8 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
-
 
 
 #[Route('/partenaires')]
@@ -75,7 +73,7 @@ class PartenairesController extends AbstractController
     #[Route('/partenaires/{idpartenaire}', name: 'app_partenaires_delete', methods: ['POST'])]
     public function delete(Request $request, Partenaires $partenaire, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$partenaire->getIdpartenaire(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $partenaire->getIdpartenaire(), $request->request->get('_token'))) {
             $entityManager->remove($partenaire);
             $entityManager->flush();
         }

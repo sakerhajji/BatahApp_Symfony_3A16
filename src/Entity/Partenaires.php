@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PartenairesRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PartenairesRepository::class)]
 class Partenaires

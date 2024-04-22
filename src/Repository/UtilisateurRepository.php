@@ -50,8 +50,6 @@ class UtilisateurRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('u')
             ->where('u.adresseemail = :username') // Assuming 'adresseemail' is analogous to 'username'
             ->setParameter('username', $username)
-            ->andWhere('u.motdepasse = :password') // Assuming 'motdepasse' is analogous to 'password'
-            ->setParameter('password', $password)
             ->setMaxResults(1);
 
         $user = $queryBuilder->getQuery()->getOneOrNullResult();

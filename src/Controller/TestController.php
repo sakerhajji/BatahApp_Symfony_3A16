@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Services\EmailSender;
+use App\Repository\UtilisateurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -11,16 +11,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
 {
-    #[Route('/mail', name: 'mail')]
-    public function index(SessionInterface $session , MailerInterface $mailer): Response
+    #[Route('/mail', name: 'mail') ]
+    public function index(SessionInterface $session, MailerInterface $mailer , UtilisateurRepository $repository): Response
     {
 //        $emailSender = new EmailSender();
 //        $emailSender->sendEmail();
-        return $this->render('utilisateur/DashboardProfile.html.twig');
+
+
+        return $this->render('utilisateur/profile.html.twig');
 
     }
-
-
 
 
 }

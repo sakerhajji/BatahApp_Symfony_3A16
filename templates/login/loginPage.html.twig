@@ -36,6 +36,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
             {% block jsControle %}
@@ -43,5 +44,10 @@
             {% endblock %}
 
     </section>
+{% if errorMsg|length > 0 %}
+    <div class="alert alert-danger" role="alert">
+        {{ errorMsg }}
+    </div>
+    {% endif %}
 
 {% endblock %}

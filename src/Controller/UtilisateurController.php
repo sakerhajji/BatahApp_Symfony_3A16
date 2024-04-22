@@ -9,20 +9,19 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/utilisateur')]
 class UtilisateurController extends AbstractController
 {
 
     #[Route('/ajouter', name: 'ajouter', methods: ['POST'])]
-
     public function ajouter(Request $request, EntityManagerInterface $entityManager): Response
     {
 
         $data = $request->request->all();
-        $utilisateur =new Utilisateur();
+        $utilisateur = new Utilisateur();
         $utilisateur->setNomutilisateur($data['first_name']);
         $utilisateur->setPrenomutilisateur($data['last_name']);
         $utilisateur->setAdresseemail($data['email']);
@@ -37,72 +36,25 @@ class UtilisateurController extends AbstractController
         return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
 
     }
-    #[Route('/Iscription', name: 'Iscription', methods: ['POST'])]
-    public function Iscription(Request $request, EntityManagerInterface $entityManager): Response
+
+    
+
+
+    #[Route('/ForgetPassword', name: 'ForgetPassword', methods: ['POST'])]
+    public function ForgetPassword(Request $request, EntityManagerInterface $entityManager, UtilisateurRepository $repository, SessionInterface $session): Response
     {
-        $check = new InputControl();
 
         $data = $request->request->all();
         $utilisateur = new Utilisateur();
-        $utilisateur->setNomutilisateur($data['first_name']);
-        $utilisateur->setPrenomutilisateur($data['last_name']);
         $utilisateur->setAdresseemail($data['email']);
-        $utilisateur->setDatedenaissance(new \DateTime($data['date_de_naissance']));
-        $utilisateur->setSexe($data['gender']);
-        $utilisateur->setMotdepasse($data['password']);
+        $utilisateur = $repository->ForgetPassword($utilisateur->getAdresseemail());
+        if ($utilisateur != null) //return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+        {
+            $session->set('user', $utilisateur);
+            dd($session->get('user'));
 
-        // Instead of passing the user as a parameter, use the EntityManager to persist and flush
-        if ($check->checkPasswordStrength($utilisateur->getMotdepasse()) &&
-            $check->verifierNom($utilisateur->getNomutilisateur()) &&
-            $check->verifierNom($utilisateur->getPrenomutilisateur()) &&
-            $check->verifyEmail($utilisateur->getAdresseemail())) {
-
-            $entityManager->persist($utilisateur);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        dd("invalid input");
-        // Redirect or return a response
-    }
-
-    #[Route('/Login', name: 'Login', methods: ['POST'])]
-
-    public function Login (Request $request, EntityManagerInterface $entityManager , UtilisateurRepository $repository): Response
-    {
-        $check=new InputControl() ;
-        $data = $request->request->all();
-        $utilisateur =new Utilisateur();
-        $utilisateur->setAdresseemail($data['email']);
-        $utilisateur->setMotdepasse($data['password']);
-        if($check->checkPasswordStrength($utilisateur->getMotdepasse() ) || $check->verifyEmail($utilisateur->getAdresseemail()) )
-            dd("password or mail invalid") ;
-        $utilisateur=$repository->login($utilisateur->getAdresseemail(),$utilisateur->getMotdepasse()) ;
-     if($utilisateur != null)
-     return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
-        else
-            dd("password or mail incorrect") ;
-
-
-    }
-    #[Route('/ForgetPassword', name: 'ForgetPassword', methods: ['POST'])]
-
-    public function ForgetPassword (Request $request, EntityManagerInterface $entityManager , UtilisateurRepository $repository , SessionInterface $session): Response
-    {
-
-        $data = $request->request->all();
-        $utilisateur =new Utilisateur();
-        $utilisateur->setAdresseemail($data['email']);
-        $utilisateur=$repository->ForgetPassword($utilisateur->getAdresseemail()) ;
-        if($utilisateur != null)
-            //return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
-        {   $session->set('user',$utilisateur) ;
-            dd($session->get('user')) ;
-
-        }
-            else
-            dd("mail n'existe pas") ;
+        } else
+            dd("mail n'existe pas");
 
 
     }
@@ -165,16 +117,46 @@ class UtilisateurController extends AbstractController
     #[Route('/{id}', name: 'app_utilisateur_delete', methods: ['POST'])]
     public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $utilisateur->getId(), $request->request->get('_token'))) {
             $entityManager->remove($utilisateur);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
     }
+#[Route("/search", name: "utilisateur_search", methods:["GET"])]
+public function search(Request $request): Response
+{
+    $query = $request->query->get('query');
 
+    $entityManager = $this->getDoctrine()->getManager();
 
+    $queryBuilder = $entityManager->createQueryBuilder();
+    $queryBuilder->select('u')
+        ->from(Utilisateur::class, 'u')
+        ->where('u.nomutilisateur LIKE :query')
+        ->orWhere('u.prenomutilisateur LIKE :query')
+        ->setParameter('query', '%' . $query . '%');
 
+    $utilisateurs = $queryBuilder->getQuery()->getResult();
+
+    // Serialize the search results to JSON
+    $data = [];
+    foreach ($utilisateurs as $utilisateur) {
+        $data[] = [
+            'id' => $utilisateur->getId(),
+            'idgoogle' => $utilisateur->getIdGoogle(),
+            'nomutilisateur' => $utilisateur->getNomUtilisateur(),
+            'prenomutilisateur' => $utilisateur->getPrenomUtilisateur(),
+            'sexe' => $utilisateur->getSexe(),
+            'datedenaissance' => $utilisateur->getDatedeNaissance() ? $utilisateur->getDatedeNaissance()->format('Y-m-d') : '',
+            // Add other fields if needed
+        ];
+    }
+
+    // Return JSON response
+    return $this->json($data);
+}
 
 
 

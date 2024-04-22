@@ -14,20 +14,13 @@ class PagesController extends AbstractController
     {
         return $this->render('base.html.twig');
     }
-    #[Route('/signUp', name: 'signUp')]
-    public function signUp(): Response
-    {
-        return $this->render('utilisateur/signUp.html.twig');
-    }
-    #[Route('/loginPage', name: 'loginPage')]
-    public function loginPage(): Response
-    {
-        return $this->render('utilisateur/loginPage.html.twig');
-    }
+
+
     #[Route('/forgetpassword', name: 'forgetpassword')]
     public function forgetpassword(): Response
     {
         return $this->render('utilisateur/forgetpassword.html.twig');
     }
+
 
 }
