@@ -1,0 +1,398 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}HOME{% endblock %}
+{% block pane %}
+
+    <section class="home-one mt10 mt70-992 p0 bdrs16 bdrs0-md ovh">
+    <div class="container-fluid p0">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="main-banner-wrapper home2_main_slider mb30-md">
+            <div class="banner-style-one owl-theme owl-carousel dots_none" id="product-carousel">
+              {% for prod in products %}
+              <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getphoto()) }}'); height: 750px;">
+                <div class="container">
+                  <div class="row home-content-home2-style">
+                    <div class="col-lg-12 p0">
+                      <h2 class="banner-title"><small>2021</small><br>{{ prod.getlabelle() }}</h2>
+                      <h3 class="banner_top_title text-thm">
+                        <span class="animated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>
+                        <span>${{ prod.getprix() }}</span><small class="text-white">/ Month</small>
+                      </h3>
+                      <a href="{{ path('app_details', {'idp': prod.getidproduit()}) }}" class="btn banner-btn">Learn More</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="carousel-btn-block banner-carousel-btn">
+              <button class="carousel-btn left-btn" onclick="prevSlide()"><i class="flaticon-left-arrow left"></i></button>
+              <button class="carousel-btn right-btn" onclick="nextSlide()"><i class="flaticon-right-arrow right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    // Initialize Owl Carousel
+    $("#product-carousel").owlCarousel({
+      items: 1,
+      loop: true,
+      autoplay: true,
+      autoplayTimeout: 5000,
+      autoplayHoverPause: true,
+      nav: false
+    });
+  
+    // Function to navigate to the previous slide
+    function prevSlide() {
+      $("#product-carousel").trigger('prev.owl.carousel');
+    }
+  
+    // Function to navigate to the next slide
+    function nextSlide() {
+      $("#product-carousel").trigger('next.owl.carousel');
+    }
+  </script>
+
+
+    <!-- How It Works -->
+    
+    <section class="whychose_us pb70 pt0">
+      <div class="container">
+        <div class="row mb20">
+          <div class="col-lg-10 m-auto">
+            <div class="advance_search_panel home2_style">
+              <div class="row">
+                <div class="col-lg-12">
+                  <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="pills-allstatus-tab" data-bs-toggle="pill" data-bs-target="#pills-allstatus" type="button" role="tab" aria-controls="pills-allstatus" aria-selected="true">All Status</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="pills-usedcar-tab" data-bs-toggle="pill" data-bs-target="#pills-usedcar" type="button" role="tab" aria-controls="pills-usedcar" aria-selected="false">Used Cars</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="pills-newcar-tab" data-bs-toggle="pill" data-bs-target="#pills-newcar" type="button" role="tab" aria-controls="pills-newcar" aria-selected="false">New Cars</button>
+                    </li>
+                  </ul>
+                  <div class="adss_bg_stylehome1">
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-allstatus" role="tabpanel" aria-labelledby="pills-allstatus-tab">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="home1_advance_search_wrapper">
+                              <ul class="mb0 text-center">
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_brand">
+                                      <h6 class="title">Make</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Makes</option>
+                                        <option>Audi</option>
+                                        <option>Bentley</option>
+                                        <option>BMW</option>
+                                        <option>Ford</option>
+                                        <option>Honda</option>
+                                        <option>Mercedes</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_models">
+                                      <h6 class="title">Models</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Models</option>
+                                        <option>A3 Sportback</option>
+                                        <option>A4</option>
+                                        <option>A6</option>
+                                        <option>Q5</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_prices">
+                                      <h6 class="title">Price</h6>
+                                      <select class="selectpicker">
+                                        <option>All Price</option>
+                                        <option>No max Price</option>
+                                        <option>$2,000</option>
+                                        <option>$5,000</option>
+                                        <option>$10,000</option>
+                                        <option>$15,000</option>
+                                        <option>$5,000</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="d-block">
+                                    <button class="btn btn-thm advnc_search_form_btn"><span class="flaticon-magnifiying-glass"></span>Search</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="pills-usedcar" role="tabpanel" aria-labelledby="pills-usedcar-tab">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="home1_advance_search_wrapper">
+                              <ul class="mb0 text-center">
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_brand">
+                                      <h6 class="title">Make</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Makes</option>
+                                        <option>Audi</option>
+                                        <option>Bentley</option>
+                                        <option>BMW</option>
+                                        <option>Ford</option>
+                                        <option>Honda</option>
+                                        <option>Mercedes</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_models">
+                                      <h6 class="title">Models</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Models</option>
+                                        <option>A3 Sportback</option>
+                                        <option>A4</option>
+                                        <option>A6</option>
+                                        <option>Q5</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_prices">
+                                      <h6 class="title">Price</h6>
+                                      <select class="selectpicker">
+                                        <option>All Price</option>
+                                        <option>No max Price</option>
+                                        <option>$2,000</option>
+                                        <option>$5,000</option>
+                                        <option>$10,000</option>
+                                        <option>$15,000</option>
+                                        <option>$5,000</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <button class="btn btn-thm advnc_search_form_btn"><span class="flaticon-magnifiying-glass"></span>Search</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="pills-newcar" role="tabpanel" aria-labelledby="pills-newcar-tab">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="home1_advance_search_wrapper">
+                              <ul class="mb0 text-center">
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_brand">
+                                      <h6 class="title">Make</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Makes</option>
+                                        <option>Audi</option>
+                                        <option>Bentley</option>
+                                        <option>BMW</option>
+                                        <option>Ford</option>
+                                        <option>Honda</option>
+                                        <option>Mercedes</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_models">
+                                      <h6 class="title">Models</h6>
+                                      <select class="selectpicker">
+                                        <option>Select Models</option>
+                                        <option>A3 Sportback</option>
+                                        <option>A4</option>
+                                        <option>A6</option>
+                                        <option>Q5</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <div class="car_prices">
+                                      <h6 class="title">Price</h6>
+                                      <select class="selectpicker">
+                                        <option>All Price</option>
+                                        <option>No max Price</option>
+                                        <option>$2,000</option>
+                                        <option>$5,000</option>
+                                        <option>$10,000</option>
+                                        <option>$15,000</option>
+                                        <option>$5,000</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li class="list-inline-item">
+                                  <div class="select-boxes">
+                                    <button class="btn btn-thm advnc_search_form_btn"><span class="flaticon-magnifiying-glass"></span>Search</button>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt100 justify-content-center">
+          <div class="col-lg-8">
+            <div class="main-title text-center">
+              <h2>Why Choose Us?</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-lg-4">
+            <div class="why_chose_us">
+              <div class="icon float-start fn-520"><span class="flaticon-price-tag"></span></div>
+              <div class="details">
+                <h5 class="title">Best Price</h5>
+                <p>Our stress-free finance department that can find financial solutions to save you money.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4">
+            <div class="why_chose_us">
+              <div class="icon float-start fn-520 style2"><span class="flaticon-price-tag"></span></div>
+              <div class="details">
+                <h5 class="title">Trusted By Thousands</h5>
+                <p>Our stress-free finance department that can find financial solutions to save you money.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4">
+            <div class="why_chose_us">
+              <div class="icon float-start fn-520 style3"><span class="flaticon-price-tag"></span></div>
+              <div class="details">
+                <h5 class="title">Wide Range of Brands</h5>
+                <p>Our stress-free finance department that can find financial solutions to save you money.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Product  -->
+   
+    <section class="featured-product pt0">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="main-title text-center">
+              <h2>Featured Listings</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="popular_listing_sliders row">
+              <!-- Nav tabs -->
+              <div class="nav nav-tabs col-lg-12" role="tablist">
+                <a class="active" href="#commercial" data-toggle="tab">
+                  <div class="icon">
+                    <span class="flaticon-house"></span>
+                  </div>
+                  <h6>Commercial</h6>
+                </a>
+                <a href="#sale" data-toggle="tab">
+                  <div class="icon">
+                    <span class="flaticon-house"></span>
+                  </div>
+                  <h6>Sale</h6>
+                </a>
+                <a href="#rent" data-toggle="tab">
+                  <div class="icon">
+                    <span class="flaticon-house"></span>
+                  </div>
+                  <h6>Rent</h6>
+                </a>
+              </div>
+              <!-- Tab panes -->
+              <div class="tab-content col-lg-12">
+                <div class="tab-pane active fade show" id="commercial">
+                  <div class="row">
+                    {% for product in featured_products %}
+                    <div class="col-lg-4 col-md-6">
+                      <div class="property_item">
+                        <div class="image">
+                          <img src="{{ asset('uploads/' ~ product.photo) }}" alt="fp1.jpg">
+                          <div class="property_meta">
+                            <span><i class="flaticon-bed"></i>05</span>
+                            <span><i class="flaticon-bath"></i>03</span>
+                          </div>
+                        </div>
+                        <div class="property_text">
+                          <div class="property_meta">
+                            <div class="list-fx-features">
+                              <div class="listing-card-info-icon">
+                                <span class="flaticon-placeholder"></span>
+                                <h6>{{ product.location }}</h6>
+                              </div>
+                              <div class="listing-card-info-icon">
+                                <span class="flaticon-price"></span>
+                                <h6>${{ product.price }}</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <h5 class="property_title"><a href="{{ path('app_details', {'idp': product.id}) }}">{{ product.name }}</a></h5>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="sale">
+                  <div class="row">
+                    <!-- Sale Properties -->
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="rent">
+                  <div class="row">
+                    <!-- Rent Properties -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Partenaires index{% endblock %}
+{% block pane %}
+    <div class="c_container">
+            <div class="col-lg-6">
+            <!-- Affichage de la liste des partenaires -->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Liste des partenaires</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Type</th>
+                                <th>Email</th>
+                                <th>Points</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for partenaire in partenaires %}
+                                <tr>
+                                    <td>{{ partenaire.nom }}</td>
+                                    <td>{{ partenaire.type }}</td>
+                                    <td>{{ partenaire.email }}</td>
+                                    <td>{{ partenaire.points }}</td>
+                                    <td>
+                                        <a href="{{ path('app_partenaires_show', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Show</a>
+                                        <a href="{{ path('app_partenaires_edit', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Edit</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7">Aucun enregistrement trouvé</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{ path('app_partenaires_new') }}" class="btn btn-success">Créer nouveau</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistique des partenaires -->
+        <div class="col-md-6">
+            <h2>Statistique des partenaires</h2>
+            <!-- Inclure Chart.js -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <!-- Créer un élément canvas pour le graphique -->
+            <canvas id="partnerChart" width="400" height="200" class="chartjs-render-monitor"></canvas>
+            <script>
+                // Récupérer les données des partenaires depuis l'attribut data HTML
+                //let partners = JSON.parse(document.getElementById('partenairesData').getAttribute('data-json'));
+                let partners = {{ partenairesJson|raw }};
+                // Extraire les noms et les points des partenaires
+                let partnerNames = partners.map(partner => partner.nom);
+                let partnerPoints = partners.map(partner => partner.points);
+                // Créer le graphique à barres
+                let ctx = document.getElementById('partnerChart').getContext('2d');
+                let chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: partnerNames,
+                        datasets: [{
+                            label: 'Points',
+                            data: partnerPoints,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+
+{% endblock %}

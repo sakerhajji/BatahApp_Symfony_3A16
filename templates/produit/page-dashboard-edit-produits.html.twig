@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block pane %}
+    <h1 class="text-center">Create New Product</h1>
+
+    <section class="our-dashbord dashbord bgc-f9">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="breadcrumb_content">
+                        <h2 class="breadcrumb_title text-center">Add Listing</h2>
+                        <p class="text-center">Ready to jump back in?</p>
+                    </div>
+
+                    <div class="new_property_form">
+                         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <h4 class="title mb-3">Produit</h4>
+
+                        <div class="mb-3">
+                            {{ form_label(form.labelle, "Labelle", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.labelle, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.labelle) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.prix, "Prix", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.prix) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description, "Description", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.type, "Type", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.type) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.status, "Status", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.periodeGarantie, "Période de Garantie", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.periodeGarantie, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.periodeGarantie) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.localisation, "Localisation", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.localisation, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.localisation) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.idUtilisateur, "Select User", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.idUtilisateur, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.photo, "Photo", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.photo, {'attr': {'class': 'form-control', 'accept': 'image/*'}}) }}
+                            {{ form_errors(form.photo) }}
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="{{ path('app_back_affiche') }}" class="btn btn-secondary">Back to list</a>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
