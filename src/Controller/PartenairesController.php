@@ -55,6 +55,21 @@ class PartenairesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('logo')->getData();
+            // if($imageFile){
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+            try {
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+            }
+
+            $partenaire->setLogo($newFilename);
+
 
             $entityManager->persist($partenaire);
             $entityManager->flush();
@@ -79,7 +94,7 @@ class PartenairesController extends AbstractController
     }
 
     #[Route('/{idpartenaire}/edit', name: 'app_partenaires_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request,FileUploader $fileUploader, Partenaires $partenaire, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Partenaires $partenaire, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PartenairesType::class, $partenaire);
         $form->handleRequest($request);

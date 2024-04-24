@@ -6,7 +6,7 @@
     <h1>Create New Partenaire</h1>
 
 
-    <form action="{{ path('app_partenaires_new') }}" method="post">
+    <form action="{{ path('app_partenaires_new') }}" enctype="multipart/form-data" method="post">
         {{ include('partenaires/_form.html.twig') }}
 
 

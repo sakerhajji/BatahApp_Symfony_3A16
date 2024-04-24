@@ -37,7 +37,7 @@ class Partenaires
     private string $email;
 
     #[ORM\Column(name: "logo", type: "string", length: 200, nullable: true)]
-    private ?string $logo=null;
+    private ?string $logo;
     #[ORM\Column(name: "points", type: "integer", nullable: true)]
     private ?int $points = 0;
 

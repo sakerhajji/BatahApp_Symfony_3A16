@@ -6,6 +6,7 @@
 parameters:
     logo_directory: '%kernel.project_dir%/public/images/partners'
     app.path.partners_logo: /images/partners
+    images_directory: '%kernel.project_dir%/public/image/uploads/partenaires'
 services:
     # default configuration for services in *this* file
     _defaults:

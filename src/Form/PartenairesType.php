@@ -71,10 +71,9 @@ class PartenairesType extends AbstractType
                 ]
             ])
 
-            ->add('logo', null, [
-                'label' => 'Logo',
-                'required' => false
-            ])
+            ->add('logo', FileType::class, [
+                'attr' => ['class' => 'form-style', 'placeholder' => 'Votre image'],])
+
         ;
 
     }
@@ -83,6 +82,8 @@ class PartenairesType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Partenaires::class,
+            'attr' => ['enctype' => 'multipart/form-data'],
         ]);
     }
+
 }
