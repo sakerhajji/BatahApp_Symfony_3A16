@@ -365,65 +365,7 @@
                             <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
                         <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
     
-    {#  
-                    <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ p.idrep }}">{{ p.likes }}</span></p>
-                        <button type="button" class="btn btn-link like-button" data-reponse-id="{{ p.idrep }}">
-                            <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
-                        </button>
-              
-               #}
-                        {#          
-
-     
-          
-       <!-- Affichage des commentaires pour ce produit -->
-<h3>Commentaires :</h3>
-    <ul>
-        {% if p.comments is defined %}
-            {% for comment in p.comments %}
-                <li>
-                    {{ comment.commentaire }} - Par :<img src="{{ asset('uploads/'~ comment.idClient.avatar ) }}" width="50" height="50" alt="Avatar" >    {{ comment.idClient.username }} - Date : {{ comment.date|date('Y-m-d H:i:s') }}
-                    {% if app.user and app.user == comment.idClient %}
-                        <a href="{{ path('delete_comment', {'id': comment.id}) }}" class="delete-comment">Supprimer</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        {% else %}
-            <li>Aucun commentaire pour le moment.</li>
-        {% endif %}
-    </ul>
-    
-    <div class="post-input-container">
-<button  onclick="openForm()"><strong>Ajouter Un Commentaire</strong></button>
-</div>
-
-<div class="form-popupc" id="popupForm">
-<div class="comment">
-<section class="post">
-    <h3 class="fermer" onclick="closeForm()">Fermer</h3>
-    <header>Ajouter Un Commentaire</header>
-    <div class="form">
-    #}
-   {#
-    {{ form_start(form,{'attr' :{'novalidate':'novalidate'}}) }}
-        <div class="user-profile">
-            <img src="{{ asset('uploads/'~ user.Image ) }}" alt="logo">
-            <div class="details">
-                <p>{{ user.UserName }}</p>
-            </div>
-        </div>
-        {{form_widget(form.Commentaire)}}
-        <button type= "submit" class="btn btn-success"> Commenter ! </button>
-        <div class="options">
-        </div>
-
-        {{ form_end(form) }}
-    </div>
-#}  
-
-    
-
-
+   
         </div>
         <hr>
                         <div class="card-footer text-center">
@@ -475,74 +417,47 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">
         
-    jQuery(document).ready(function() {
-        var searchRequest = null;
-        $("#search").keyup(function() {
-            var minlength = 3;
-            var that = this;
-            var value = $(this).val();
-            var entitySelector = $("#entitiesNav").html('');
-            if (value.length >= minlength ) {
-                if (searchRequest != null)
-                    searchRequest.abort();
-                searchRequest = $.ajax({
-                    type: "GET",
-                    url: "{{ path('ajax_search') }}", // Remplacez 'votre_endpoint_de_recherche' par l'URL de votre endpoint de recherche
-                    data: {
-                        'q' : value
-                    },
-                    dataType: "json", // Changez le type de données attendu à JSON
-                    success: function(response){
-                        // Vérifiez si la réponse contient des données
-                        if (response && response.products) {
-                            $.each(response.products, function(id, product) {
-                                // Ajoutez les éléments de produit à votre HTML
-                                entitySelector.append('<div style="display: table;width:100%;padding: 15px"><span style="text-align: center">'+product[3]+'</span><br/><a href="/detailProduit/front/'+product[0]+'">'+'<img src="/uploads/'+product[1]+'" style="width: 150px; height: 150px"/>'+'</a></div>');
-                            });
-                             } else {
-                            // Gérez les cas où aucune donnée n'est renvoyée
-                            entitySelector.append('<li class="errorLi">Aucun résultat trouvé</li>');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error); // Affichez les erreurs dans la console
+   jQuery(document).ready(function() {
+    var searchRequest = null;
+    $("#search").keyup(function() {
+        var minlength = 3;
+        var that = this;
+        var value = $(this).val();
+        var entitySelector = $("#entitiesNav").html('');
+        if (value.length >= minlength ) {
+            if (searchRequest != null)
+                searchRequest.abort();
+            searchRequest = $.ajax({
+                type: "GET",
+                url: "{{ path('ajax_search') }}",
+                data: {
+                    'q' : value
+                },
+                dataType: "json",
+                success: function(response){
+                    if (response && response.products) {
+                        // Create a container div
+                        var container = $('<div style="display: flex; flex-wrap: wrap; justify-content: space-around;"></div>');
+                        $.each(response.products, function(id, product) {
+                            // Append each product to the container
+                            container.append('<div style="padding: 15px; text-align: center;"><span>'+product[3]+'</span><br/><a href="/detailProduit/front/'+product[0]+'">'+'<img src="/uploads/'+product[1]+'" style="width: 150px; height: 150px;"/></a></div>');
+                        });
+                        // Append the container to the entitySelector
+                        entitySelector.append(container);
+                    } else {
+                        entitySelector.append('<li class="errorLi">Aucun résultat trouvé</li>');
                     }
-                });
-            }
-        });
-    });
-    /*
-    function likeProduct(productId) {
-        $.ajax({
-            type: "POST",
-            url: "/like/" + productId,
-            success: function(data) {
-                // Update the like count for the specific product
-                $("#like-count-" + productId).text(data.likes);
-            }
-        });
-    }
-*/
-    function likeProduct(productId) {
-    $.ajax({
-        type: "POST",
-        url: "/like2/" + productId,
-        success: function(data) {
-            // Update the like count on the page
-            $("#like-count-" + productId).text(data.likes);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
         }
     });
-    }
-    function dislikeProduct(productId) {
-        $.ajax({
-            type: "POST",
-            url: "/dislike/" + productId,
-            success: function(data) {
-                // Update the dislike count for the specific product
-                $("#dislike-count-" + productId).text(data.dislikes);
-            }
-        });
-    }
+});
+
+   
+   
     </script>
 
 
@@ -560,28 +475,6 @@
         });
 
 
-         // JavaScript for rating functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const stars = document.querySelectorAll('.stars i');
-
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            const rating = this.dataset.rating;
-            document.getElementById('rating').value = rating;
-            highlightStars(rating);
-        });
-    });
-
-    function highlightStars(rating) {
-        stars.forEach(star => {
-            if (star.dataset.rating <= rating) {
-                star.classList.add('rated');
-            } else {
-                star.classList.remove('rated');
-            }
-        });
-    }
-});
 
 
 
@@ -589,36 +482,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
-    <script>
-        document.getElementById('add-comment-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêcher la soumission du formulaire par défaut
-    
-            var formData = new FormData(this);
-    
-            fetch(this.getAttribute('action'), {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur lors de l\'ajout du commentaire');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message); // Afficher un message de succès
-                // Rafraîchir la page ou charger les nouveaux commentaires via AJAX si nécessaire
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Une erreur s\'est produite lors de l\'ajout du commentaire');
-            });
-        });
-
-
-
-        
-    </script>
+  
     <script>
         function openForm() {
             document.getElementById("popupForm").style.display = "block";
@@ -634,50 +498,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    <script>
-        // Attacher un gestionnaire d'événement à tous les boutons de like
-        document.querySelectorAll('.like-button').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                var reponseId = button.dataset.reponseId;
-                var likeCountElement = document.querySelector('#like-count-' + reponseId);
-    
-                // Vérifier si le bouton a déjà été cliqué (déjà liké)
-                var isLiked = button.classList.contains('liked');
-    
-                // Envoyer une requête AJAX pour incrémenter ou décrémenter les likes
-                fetch('{{ path('likeReclamations', {'idrep': '1'}) }}'.replace('1', reponseId), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({ isLiked: isLiked }) // Envoyer l'état actuel du like
-                })
-                .then(function(response) {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(function(data) {
-                    // Mettre à jour le nombre de likes affiché dans le DOM
-                    likeCountElement.textContent = data.likesCount;
-    
-                    // Mettre à jour la classe du bouton en fonction de l'état actuel du like
-                    if (isLiked) {
-                        button.classList.remove('liked');
-                    } else {
-                        button.classList.add('liked');
-                    }
-                })
-                .catch(function(error) {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
-            });
-        });
-    
-    </script>
 {% endblock %}
 
 {% block footer %} {% endblock %}

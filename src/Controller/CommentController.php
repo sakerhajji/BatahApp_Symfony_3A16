@@ -70,13 +70,11 @@ class CommentController extends AbstractController
         $user = $userRepository->find($iduser);
 
         if (!$product || !$user) {
-            throw $this->createNotFoundException('prod or User not found');
+            throw $this->createNotFoundException('Product or User not found');
         }
 
         if ($request->isMethod('POST')) {
-
             $commentaire = $request->request->get('commentaire');
-
 
             $comment = new Comment();
             $comment->setIdProduit($product);
@@ -89,32 +87,14 @@ class CommentController extends AbstractController
             $em->persist($comment);
             $em->flush();
 
-            // Fetch images for the product
-            $imagesByLocation = [];
-            $imagesByLocation[$product->getIdProduit()] = $imageRepository->findBy(['produits' => $product]);
-
-            return $this->render('produit/detailProduitFront.html.twig', [
-                'product' => $product,
-                'user' => $user,
-                'imagesByLocation' => $imagesByLocation, // Pass imagesByLocation to the template
-                'id' => $product->getIdProduit(),
-                'name' => $product->getLabelle(),
-                'description' => $product->getDescription(),
-                'artdispo' => $product->getStatus(),
-                'prix' => $product->getPrix(),
-                'pg' => $product->getPeriodeGarantie(),
-                // 'gps' => $localisation,
-                'video' => $video = $product->getVideo(), // Add the 'video' attribute to pass the video URL to the Twig template
-                'nombreDeVues' => $product->getNombreDeVues(), // Pass the updated view count to the template
-
-            ]);
+            // Rediriger vers l'interface de détails du produit avec l'ID du produit
+            return $this->redirectToRoute('detailProduitFront', ['idp' => $idp]);
         }
 
-        return $this->render('produit/detailProduitFront.html.twig', [
-            'product' => $product,
-            'user' => $user,
-        ]);
+        // Si la requête n'est pas de type POST, rend le template de détails du produit
+        return $this->redirectToRoute('detailProduitFront', ['idp' => $idp]);
     }
+
 
     #[Route('/deletecomment/{ref}/{idp}/{iduser}', name: 'app_deletecomment')]
     public function deleteComment($ref, $idp, $iduser, CommentRepository $commentRepository, UtilisateurRepository $userRepository, ProduitsRepository $produitsRepository)
@@ -139,29 +119,33 @@ class CommentController extends AbstractController
     /*********************************************************************************************************************************************** */
     /*********************************************************CRUD-COMMENT************************************************************************************** */
 
-
-
     #[Route('/editcomment/{id}', name: 'app_editcomment')]
     public function edit($id, CommentRepository $repository, Request $request)
     {
         $comment = $repository->find($id);
-        /*
-    if (!$comment) {
-        return $this->redirectToRoute('app_Affichecomment');
-    }
-*/
-        $form = $this->createForm(UtilisateurType::class, $comment);
+
+        // Vérifiez si le commentaire existe
+        if (!$comment) {
+            throw $this->createNotFoundException('Comment not found');
+        }
+
+        $form = $this->createForm(CommentType::class, $comment);
         $form->add('Modifier', SubmitType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si le formulaire est soumis et valide, mettez à jour le commentaire
             $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('app_Afficheuser');
+
+            // Rediriger vers la page de détails du produit après modification du commentaire
+            return $this->redirectToRoute('detailProduitFront', ['idp' => $comment->getIdProduit()->getIdProduit()]);
         }
 
-        return $this->render('user/Edit.html.twig', ['form' => $form->createView()]);
+        // Si la méthode n'est pas POST, rediriger vers la page de détails du produit
+        return $this->redirectToRoute('detailProduitFront', ['idp' => $comment->getIdProduit()->getIdProduit()]);
     }
+
 
 
     #[Route('/Affichecomment', name: 'app_Affichecomment')]

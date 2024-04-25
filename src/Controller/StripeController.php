@@ -68,9 +68,9 @@ class StripeController extends AbstractController
                 "amount" => $totalPrice * 100,  // Amount in cents
                 "currency" => "usd",
                 "source" => $request->request->get('stripeToken'),
-                "description" => "Paiement de la commande via Bttah",
+                "description" => "Paiement de la commande via Battah",
                 "metadata" => [
-                    "client_name" => $connectedUser->getUsername() // Assuming getUsername() returns the user's name
+                    "client_name" => $connectedUser->getNomutilisateur() . ' ' . $connectedUser->getPrenomutilisateur()
                 ]
             ]);
 

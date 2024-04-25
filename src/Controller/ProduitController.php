@@ -562,28 +562,6 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
 
 
-    #[Route('/likeReclamations/{idrep}', name: 'likeReclamations', methods: ['POST'])]
-    public function likeReclamations(Request $request, $idrep, ManagerRegistry $em): JsonResponse
-    {
-        $reponse = $this->$em->getRepository(Reponses::class)->find($idrep);
-
-        if (!$reponse) {
-            throw $this->createNotFoundException('Réponse non trouvée');
-        }
-
-        $likesCount = $reponse->getLikes();
-        $reponse->setLikes($likesCount == 0 ? 1 : 0);
-
-        $em = $this->$em->getManager();
-        $em->persist($reponse);
-        $em->flush();
-
-        return new JsonResponse(['likesCount' => $reponse->getLikes()]);
-    }
-
-
-
-
 
 
 
