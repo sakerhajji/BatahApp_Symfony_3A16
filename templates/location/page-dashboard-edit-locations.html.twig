@@ -1,59 +1,65 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Edit Product{% endblock %}
+{% extends 'base.html.twig' %}
+{% block title %}Edit Product
+{% endblock %}
 
 {% block pane %}
-    <h1 class="text-center">Create New Product</h1>
+    <h1 class="text-center">Edit Product</h1>
+
+
 
     <section class="our-dashbord dashbord bgc-f9">
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="breadcrumb_content">
-                        <h2 class="breadcrumb_title text-center">Add Listing</h2>
-                        <p class="text-center">Ready to jump back in?</p>
+                        <h2 class="breadcrumb_title text-center">Edit Listing</h2>
+                        <p class="text-center">Ready to make some changes?</p>
                     </div>
-
+                
                     <div class="new_property_form">
-                        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+                        {{ form_start(form) }}
+                        
 
                         <h4 class="title mb30">Location</h4>
                         <div class="row">
                             <div class="col-md-12 mb20">
-                                {{ form_label(form.prix, "Prix") }}
-                                {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.prix) }}
+                                {{ form_label(form.prix, "prix") }}
+                                            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+                                            <div class="text-danger">{{ form_errors(form.prix) }}</div>
                             </div>
-                            <div class="col-md-12 mb20">
-                                {{ form_label(form.type, "Type") }}
+                            <div class="mb20">
+                                {{ form_label(form.type, "type") }}
                                 {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.type) }}
+                                <div class="text-danger">{{ form_errors(form.type) }}</div>
                             </div>
+                            
                             <div class="col-md-12 mb20">
                                 {{ form_label(form.description, "Description") }}
                                 {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.description) }}
+                                <div class="text-danger"> {{ form_errors(form.description) }}</div>
                             </div>
                             <div class="col-md-12 mb20">
                                 {{ form_label(form.adresse, "Adresse") }}
                                 {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.adresse) }}
+                                <div class="text-danger"> {{ form_errors(form.adresse) }}</div>
                             </div>
                             <div class="col-md-12 mb20">
                                 {{ form_label(form.disponibilite, "Disponibilité") }}
                                 {{ form_widget(form.disponibilite, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(form.disponibilite) }}
+                                <div class="text-danger"> {{ form_errors(form.disponibilite) }}</div>
                             </div>
                         </div>
                         <div class="col-md-12 mb20">
-                        {{ form_label(form.imageFile, "Image") }}
-                        {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.imageFile) }}
-                    </div>
+                            {{ form_label(form.imageFile, "Image") }}
+                            {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                            <div class="text-danger"> {{ form_errors(form.imageFile) }}</div>
+                        </div>
 
                         <div class="form-group">
                             {{ form_label(form.id, "Select User") }}
                             {{ form_widget(form.id, {'attr': {'class': 'form-control'}}) }}
+                            <div class="text-danger"> {{ form_errors(form.id) }}</div>
                         </div>
 
                         <div class="col-md-12 mb20">

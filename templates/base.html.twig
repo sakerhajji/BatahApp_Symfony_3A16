@@ -21,9 +21,8 @@
         <!-- Responsive stylesheet -->
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
         <!-- Favicon -->
-        <link href="{{ asset('images/favicon.ico') }}" sizes="128x128" rel="shortcut icon" type="image/x-icon"/>
-        <link href="{{ asset('images/favicon.ico') }}" sizes="128x128" rel="shortcut icon"/>
-    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
+ {% endblock %}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -46,12 +45,9 @@
                     <div class="col-lg-8 col-xl-7">
                         <div class="header_top_contact_opening_widget text-center text-md-start">
                             <ul class="mb0">
-                                <li class="list-inline-item"><a href="#"><span class="flaticon-phone-call"></span>1-800-458-56987</a>
-                                </li>
-                                <li class="list-inline-item"><a href="#"><span class="flaticon-map"></span>47 Bakery
-                                        Street, London, UK</a></li>
-                                <li class="list-inline-item"><a href="#"><span class="flaticon-clock"></span>Mon - Fri
-                                        8:00 - 18:00</a></li>
+                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-phone-call"></span>+216 95 316 683</a></li>
+                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-map"></span>cité ghazela - Esprit</a></li>
+                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-clock"></span>Mon - Fri 8:00 - 18:00</a></li>
                             </ul>
                         </div>
                     </div>
@@ -64,9 +60,9 @@
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-twitter"></span></a></li>
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-instagram"></span></a></li>
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-linkedin"></span></a></li>
-                                <li class="list-inline-item"><a href="#" data-bs-toggle="modal"
+                                <li class="list-inline-item" style="font-size: 20px;"><a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#logInModal">Login</a></li>
-                                <li class="list-inline-item"><a href="#" data-bs-toggle="modal"
+                                <li class="list-inline-item" style="font-size: 20px;"><a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#logInModal">Register</a></li>
                             </ul>
                         </div>
@@ -89,25 +85,59 @@
                             <span class="icon-bar"></span>
                         </button>
                     </div>
-                    <a href="index.html" class="navbar_brand float-start dn-md">
-                        <img class="logo1 img-fluid" src="{{ asset('images/header-logo2.svg') }}"
-                             alt="header-logo2.png">
-                        <img class="logo2 img-fluid" src="{{ asset('images/header-logo2.svg') }}"
-                             alt="header-logo2.svg">
-                    </a>
+                    <a href="#" class="navbar_brand float-start dn-md" id="logo-container">
+                    <div class="logo-container">
+                        <img class="logo img-fluid" src="{{ asset('uploads/logo.png') }}" alt="Logo">
+                        <span class="brand-text">batah</span>
+                    </div>
+                </a>
+          <style>
+            .logo-container {
+              display: inline-flex;
+              align-items: center;
+              transition: transform 0.3s ease-in-out; /* Add smooth transition */
+          }
+          
+          .logo {
+              width: 100px; /* Adjust the size as needed */
+              height: auto;
+              margin-right: 10px; /* Adjust the spacing between the logo and text */
+          }
+          
+          .brand-text {
+              font-size: 14px; /* Adjust the font size as needed */
+              color: #FF5733; /* Attractive color for the text */
+              font-weight: bold; /* Make the text bold */
+          }
+          
+          #logo-container:hover .logo-container {
+              transform: rotate(360deg); /* Rotate the logo 360 degrees on hover */
+          }
+          
+          
+          </style>
+          <script>
+            const logoContainer = document.getElementById('logo-container');
+          
+          logoContainer.addEventListener('mouseenter', () => {
+              logoContainer.classList.add('rotate-logo');
+          });
+          
+          logoContainer.addEventListener('mouseleave', () => {
+              logoContainer.classList.remove('rotate-logo');
+          });
+          </script>
+                
                     <!-- Responsive Menu Structure-->
                     <ul id="respMenu" class="ace-responsive-menu menu_list_custom_code wa text-end"
                         data-menu-style="horizontal">
                         <li><a href="#"><span class="title">Home</span></a>
                             <!-- Level Two-->
                             <ul>
-                                <li><a href="index.html">Home V1</a></li>
-                                <li><a href="index2.html">Home V2</a></li>
-                                <li><a href="index3.html">Home V3</a></li>
-                                <li><a href="index4.html">Home V4</a></li>
-                                <li><a href="index5.html">Home V5</a></li>
-                                <li><a href="index6.html">Home V6</a></li>
-                                <li><a href="index7.html">Home V7</a></li>
+                                <li><a href="{{ path('app_afficahge_produits') }}">Home Product</a></li>
+                                <li><a href="#">Home Location</a></li>
+                                <li><a href="#">Home V3</a></li>
+                                
                             </ul>
                         </li>
                         <li><a href="#"><span class="title">Explore</span></a>
@@ -180,7 +210,7 @@
                         <li><a href="#"><span class="title">Pages</span></a>
                             <ul>
                                 <li><a href="page-about.html">About Us</a></li>
-                                <li><a href="page-calculator.html">Calculator</a></li>
+                                <li><a href="#">Calculator</a></li>
                                 <li><a href="page-compare.html">Compare</a></li>
                                 <li><a href="page-contact.html">Contact</a></li>
                                 <li><a href="page-error.html">404 Page</a></li>
@@ -198,29 +228,7 @@
                                             class="badge">2</sup></span></a></li>
                         <li><a class="notification" href="#"><span class="body-color flaticon-bell fz16"></span></a>
                         </li>
-                        <li class="user_setting">
-                            <div class="dropdown">
-                                <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}"
-                                         alt="e1.png">
-                                    <span class="dn-1366"> Jerome Bell <span
-                                                class="fas fa-angle-down ml5"></span></span>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <div class="user_set_header">
-                                        <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
-                                        <p>Jerome Bell <br><span class="address">alitufan@gmail.com</span></p>
-                                    </div>
-                                    <div class="user_setting_content">
-                                        <a class="dropdown-item active" href="#">My Profile</a>
-                                        <a class="dropdown-item" href="#">Messages</a>
-                                        <a class="dropdown-item" href="#">My Listing</a>
-                                        <a class="dropdown-item" href="#">Help</a>
-                                        <a class="dropdown-item" href="#">Log out</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+
                     </ul>
                 </div>
             </nav>
@@ -253,7 +261,7 @@
                                  aria-labelledby="home-tab">
                                 <div class="col-lg-12">
                                     <div class="login_form">
-                                        <p>New to Cars.com? <a href="page-register.html">Sign up.</a> Are you a dealer?
+                                        <p>New to battah.com? <a href="page-register.html">Sign up.</a> Are you a dealer?
                                         </p>
                                         <form action="#">
                                             <div class="mb-2 mr-sm-2">
@@ -331,7 +339,7 @@
                     <div class="mobile_menu_bar">
                         <a class="menubar" href="#menu"><small>Menu</small><span></span></a>
                     </div>
-                    <div class="mobile_menu_main_logo"><img class="nav_logo_img img-fluid" src="images/header-logo2.svg"
+                    <div class="mobile_menu_main_logo"><img class="nav_logo_img img-fluid" src="{{ asset('images/header-logo2.svg') }}"
                                                             alt="images/header-logo2.png"></div>
                 </div>
             </div>
@@ -474,19 +482,29 @@
                                             <li><a href="page-dashboard-favorites.html"><span
                                                             class="flaticon-heart"></span>Favorites</a></li>
                                             <li><a href="page-dashboard-add-listings.html"><span
-                                                            class="flaticon-plus"></span>Add Listing</a></li>
+                                                            class="flaticon-plus"></span>Add Listing</a></li>       
                                             <li><a href="page-dashboard-messages.html"><span
                                                             class="flaticon-message"></span>Messages</a></li>
                                             <li><a href="{{ path('app_partenaires_index') }}"><span
                                                             class="flaticon-list"></span>Partenaires</a></li>
                                                             <li><a href="{{ path('app_back_affiche') }}"><span
                                                             class="flaticon-list"></span>Product</a></li>
+                                                            <li><a href="#"><span
+                                                            class="flaticon-list"></span>Command</a></li>
+
+
                                             <li><a href="{{ path('app_location_back_affiche') }}"><span
                                                             class="flaticon-list"></span>Location</a></li>
                                             <li><a href="{{ path('app_service_apres_vente_index') }}"><span
                                                             class="flaticon-list"></span>Apres Vente</a></li>
+                                                            <li><a href="#"><span
+                                                            class="flaticon-list"></span>Encheres</a></li>
                                             <li><a href="page-login.html"><span
                                                             class="flaticon-logout"></span>Logout</a></li>
+
+
+
+
                                         </ul>
                                     </div>
                                 </div>
@@ -637,3 +655,4 @@
 
 <!-- Mirrored from creativelayers.net/themes/voiture-html/page-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2024 13:40:05 GMT -->
 </html>
+<style>

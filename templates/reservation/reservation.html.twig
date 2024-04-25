@@ -1,0 +1,62 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Réserver Location{% endblock %}
+
+{% block pane %}
+<div>
+    <h4 class="mb30">Contact </h4>
+    <form action="{{ path('app_reservation_submit') }}" method="post">
+        <input type="hidden" name="locationId" value="{{ locationId }}">
+    
+        <div class="row">
+            <div class="col-lg-12">
+                <label for="user">Utilisateur</label>
+                <div class="mb-3">
+                    <select class="form-control form_control" id="user" name="user" >
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <label for="date_debut">Date Début</label>
+                <div class="mb-3">
+                    <input class="form-control form_control" type="date" id="date_debut" name="date_debut" >
+                    {% if errors is defined %}
+                    {% for errorArray in errors %}
+                        {% for errorMessage in errorArray %}
+                            <div class="invalid-feedback">{{ errorMessage }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+                    {% if errors.dateDebut is defined %}
+                        <div class="invalid-feedback">{{ errors.dateDebut | join('<br>') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <label for="date_fin">Date Fin</label>
+                <div class="mb-3">
+                    <input class="form-control form_control" type="date" id="date_fin" name="date_fin">
+                    {% if errors.dateFin is defined %}
+                        <div class="invalid-feedback">{{ errors.dateFin | join('<br>') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <label for="note">Note</label>
+                <div class="mb-3">
+                    <input class="form-control form_control" type="text" id="note" name="note" placeholder="Note" >
+                    {% if errors.notes is defined %}
+                        <div class="invalid-feedback">{{ errors.notes | join('<br>') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-block btn-thm mt10 mb20">Réserver</button>
+    </form>
+</div>
+{% endblock %}
+{% block basket %}{% endblock %}
+{% block footer %}{% endblock %}

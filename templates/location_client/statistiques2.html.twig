@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nombre de locations par type</title>
+    <!-- Inclure la bibliothèque Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+</head>
+<body>
+    <h1>Nombre de locations par type</h1>
+    <!-- Créer un élément canvas pour le graphe -->
+    <canvas id="locationTypeChart" width="400" height="400"></canvas>
+
+    <script>
+        // Récupérer les données depuis PHP (Twig)
+        const carLocationsCount = {{ carLocationsCount }};
+        const houseLocationsCount = {{ houseLocationsCount }};
+        
+        // Calculer le total des locations
+        const totalLocations = carLocationsCount + houseLocationsCount;
+        
+        // Calculer les pourcentages
+        const carLocationsPercentage = Math.round((carLocationsCount / totalLocations) * 100);
+        const houseLocationsPercentage = Math.round((houseLocationsCount / totalLocations) * 100);
+ 
+        // Créer le graphe (graphique circulaire)
+        const ctxLocationType = document.getElementById('locationTypeChart').getContext('2d');
+        const locationTypeChart = new Chart(ctxLocationType, {
+            type: 'doughnut',
+            data: {
+                labels: ['Voiture', 'Maison'],
+                datasets: [{
+                    data: [carLocationsPercentage, houseLocationsPercentage],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                cutout: '70%',
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Pourcentage des locations par type'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.formattedValue + '%';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

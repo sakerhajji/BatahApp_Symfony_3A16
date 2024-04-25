@@ -14,15 +14,13 @@
   <!-- css file -->
   {% block css %}
   <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <!-- Responsive stylesheet -->
   <link rel="stylesheet" href="css/responsive.css">
   {% endblock %}
   <!-- Title -->
   <title>{% block title %}Voiture - Automotive & Car Dealer HTML Template{% endblock %}</title>
-  <!-- Favicon -->
-  <link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
-  <link href="images/favicon.ico" sizes="128x128" rel="shortcut icon" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,7 +33,7 @@
 
 <body class="body_home2_style">
   <div class="wrapper ovh">
-    <div class="preloader"></div>
+  <div class="preloader"></div>
     <!-- Sidebar Panel Start -->
     <div class="listing_sidebar">
       <div class="siderbar_left_home pt20">
@@ -75,24 +73,62 @@
               <span class="icon-bar"></span>
             </button>
           </div>
-          <a href="index.html" class="navbar_brand float-start dn-md">
-            <img class="logo1 img-fluid" src="images/header-logo2.svg" alt="header-logo2.png">
-            <img class="logo2 img-fluid" src="images/header-logo2.svg" alt="header-logo2.svg">
-          </a>
-          <!-- Responsive Menu Structure-->
+          <a href="#" class="navbar_brand float-start dn-md" id="logo-container">
+          <div class="logo-container">
+              <img class="logo img-fluid" src="{{ asset('uploads/logo.png') }}" alt="Logo">
+              <span class="brand-text">batah</span>
+          </div>
+      </a>
+
+      <style>
+   .logo-container {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out; /* Add smooth transition */
+}
+
+.logo {
+    width: 100px; /* Adjust the size as needed */
+    height: auto;
+    margin-right: 10px; /* Adjust the spacing between the logo and text */
+}
+
+.brand-text {
+    font-size: 14px; /* Adjust the font size as needed */
+    color: #FF5733; /* Attractive color for the text */
+    font-weight: bold; /* Make the text bold */
+}
+
+#logo-container:hover .logo-container {
+    transform: rotate(360deg); /* Rotate the logo 360 degrees on hover */
+}
+
+
+</style>
+<script>
+  const logoContainer = document.getElementById('logo-container');
+
+logoContainer.addEventListener('mouseenter', () => {
+    logoContainer.classList.add('rotate-logo');
+});
+
+logoContainer.addEventListener('mouseleave', () => {
+    logoContainer.classList.remove('rotate-logo');
+});
+</script>
+<!-- Responsive Menu Structure-->
           <ul id="respMenu" class="ace-responsive-menu menu_list_custom_code wa text-end" data-menu-style="horizontal">
             <li> <a href="#"><span class="title">Home</span></a>
               <!-- Level Two-->
               <ul>
-                <li><a href="index.html">Home V1</a></li>
-                <li><a href="index2.html">Home V2</a></li>
-                <li><a href="index3.html">Home V3</a></li>
-                <li><a href="index4.html">Home V4</a></li>
-                <li><a href="index5.html">Home V5</a></li>
-                <li><a href="index6.html">Home V6</a></li>
-                <li><a href="index7.html">Home V7</a></li>
+                <li><a href="#">Home Product</a></li>
+                <li><a href="#">Home Product2</a></li>
+                <li><a href="{{ path('app_location_front_affiche') }}">Home location</a></li>  
               </ul>
             </li>
+          <li> <a href="#"><span class="title">Command History</span></a>
+          <li> <a href="#"><span class="title">Add Vehicule</span></a>
+            <li> <a href="{{ path('app_location_front_add') }}"><span class="title">Add Location</span></a>
             <li> <a href="#"><span class="title">Explore</span></a>
               <!-- Level Two-->
               <ul>
@@ -102,9 +138,10 @@
                     <li><a href="page-dashboard-profile.html">Profile</a></li>
                     <li><a href="page-dashboard-listing.html">My Listing</a></li>
                     <li><a href="page-dashboard-favorites.html">Favorites</a></li>
-                    <li><a href="{{ path('app_produit') }}">Add Vehicule</a></li>
+                    <li><a href="#">Add Vehicule</a></li>
+                    <li><a href="{{ path('app_location_front_add') }}">Add Location</a></li>
                     <li><a href="page-dashboard-messages.html">Messages</a></li>
-                    <li><a href="page-login.html">Logout</a></li>
+                    <li><a href="#">Logout</a></li>
                   </ul>
                 </li>
                 <li><a href="page-user-profile.html">User Profile</a></li>
@@ -163,7 +200,7 @@
             <li> <a href="#"><span class="title">Pages</span></a>
               <ul>
                 <li><a href="page-about.html">About Us</a></li>
-                <li><a href="page-calculator.html">Calculator</a></li>
+                <li><a href="#">Calculator</a></li>
                 <li><a href="page-compare.html">Compare</a></li>
                 <li><a href="page-contact.html">Contact</a></li>
                 <li><a href="page-error.html">404 Page</a></li>
@@ -174,12 +211,16 @@
                 <li><a href="page-service.html">Service</a></li>
                 <li><a href="page-terms.html">Terms and Conditions</a></li>
                 <li><a href="page-ui-element.html">UI Elements</a></li>
+                </ul>
+                  <li>
+                    <a style="margin-left: 10px; margin-right: 5px; transform: scale(1.4);" class="btn btn-square rounded-circle bg-light text-primary me-0" href="{{ path('app_panier') }}">
+                        <img src="{{ asset('uploads/panier.png') }}" width="35px;">
+                      {% block basket %}  <span class='badge badge-warning badge2' id='lblCartCount'>{{ basketItemsCount }}</span> {% endblock %}
+                    </a>
+                </li>
               </ul>
-            </li>
-            <li class="add_listing"><a href="page-dashboard-add-listings.html">+ Add Listing</a></li>
-            <li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
-          </ul>
-        </div>
+    
+              
       </nav>
     </header>
     <!-- Modal -->
@@ -276,6 +317,7 @@
         </div>
       </div>
     </div>
+ 
 
     <!-- Main Header Nav For Mobile -->
     <div id="page" class="stylehome1 h0">
@@ -310,7 +352,7 @@
                   <li><a href="page-dashboard-profile.html">Profile</a></li>
                   <li><a href="page-dashboard-listing.html">My Listing</a></li>
                   <li><a href="page-dashboard-favorites.html">Favorites</a></li>
-                  <li><a href="page-dashboard-add-listings.html">Add Listing</a></li>
+                  <li><a href="{{ path('app_produit') }}">Add Listing</a></li>
                   <li><a href="page-dashboard-messages.html">Messages</a></li>
                   <li><a href="page-login.html">Login</a></li>
                 </ul>
@@ -348,7 +390,7 @@
                   <li><a href="page-car-single-v6.html">Single V6</a></li>
                 </ul>
               </li>
-              <li><a href="page-dashboard-add-listings.html">Add Listing</a></li>
+              <li><a href="{{ path('app_produit') }}">Add Listing</a></li>
             </ul>
           </li>
           <li><span>Blog</span>
@@ -1860,6 +1902,7 @@
       </div>
     </section>
     {% endblock %}
+    {% block footer %}
     <!-- Our Popular Listing -->
     <section class="popular-listing pb80 pt0">
       <div class="container">
@@ -2331,6 +2374,7 @@
     </section>
     <a class="scrollToHome" href="#"><i class="fas fa-arrow-up"></i></a>
   </div>
+  {% endblock %}
   <!-- Wrapper End -->
   {% block js %}
   <script src="js/jquery-3.6.0.js"></script>

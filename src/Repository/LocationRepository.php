@@ -32,6 +32,16 @@ class LocationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByUserId(int $userId): array
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.id', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
      public function findUsers()
     {
         $qb = $this->createQueryBuilder('l')
@@ -41,13 +51,70 @@ class LocationRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+       /**
+     * Find locations by type
+     *
+     * @param string $type
+     * @return Location[]
+     */
+    public function findByType(string $type): array
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByPrice(float $prix)
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.prix = :prix')
+            ->setParameter('prix', $prix)
+            ->getQuery()
+            ->getResult();
+    }
+
+   // Autres fonctions déjà présentes
+
+    /**
+     * Count total reservations for each location.
+     *
+     * @return array
+     */
+    public function countReservationsByLocation(): array
+    {
+        $query = $this->getEntityManager()->createQuery('
+        SELECT l.idLocation as location_id, COUNT(r.id_reservation_location) as reservation_count
+        FROM App\Entity\Location l
+        LEFT JOIN App\Entity\ReservationLocation r WITH r.location = l
+        GROUP BY l.idLocation
+    ');
+
+    return $query->getResult();
+    }
+
+ 
+
+    public function countLocationsByType(string $type): array
+    {
+        $query = $this->createQueryBuilder('l')
+            ->select('COUNT(l.idLocation) as location_count')
+            ->andWhere('l.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery();
+    
+        return $query->getSingleResult();
+    }
+    
+
 
     //    /**
     //     * @return Location[] Returns an array of Location objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('l')
+   //        return $this->createQueryBuilder('l')
     //            ->andWhere('l.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->orderBy('l.id', 'ASC')

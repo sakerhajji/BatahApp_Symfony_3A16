@@ -6,6 +6,8 @@ use App\Repository\LocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 class Location
@@ -15,24 +17,31 @@ class Location
     #[ORM\Column(name: "idLocation")]
     private int $idLocation;
 
-    #[ORM\Column(name: "type", type: "string", length: 300, nullable: false)]
-    private string $type;
+    #[Assert\NotBlank(message: 'Le type ne peut pas être vide.')]
+    #[ORM\Column(name: 'type', type: 'string', length: 300, nullable: false)]
+    private  $type;
 
-    #[ORM\Column(name: "description", type: "string", length: 300, nullable: false)]
-    private string $description;
 
-    #[ORM\Column(name: "prix", type: "float", nullable: false)]
-    private float $prix;
+    #[Assert\NotBlank(message: 'La description ne peut pas être vide.')]
+    #[ORM\Column(name: 'description', type: 'string', length: 300, nullable: false)]
+    private  $description;
 
-    #[ORM\Column(name: "adresse", type: "string", length: 300, nullable: false)]
-    private string $adresse;
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide.')]
+    #[Assert\Type(type: 'float', message: 'Le prix doit être un nombre.')]
+    #[ORM\Column(name: 'prix', type: 'float', nullable: false)]
+    private $prix;
 
-    #[ORM\Column(name: "disponibilite", type: "string", length: 255, nullable: false)]
-    private string $disponibilite;
+    #[Assert\NotBlank(message: "L'adresse ne peut pas être vide.")]
+    #[ORM\Column(name: 'adresse', type: 'string', length: 300, nullable: false)]
+    private ?string $adresse;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id")]
-    private Utilisateur $id;
+    #[Assert\NotBlank(message: 'La disponibilité ne peut pas être vide.')]
+    #[ORM\Column(name: 'disponibilite', type: 'string', length: 255, nullable: false)]
+    private ?string $disponibilite;
+
+        #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+        #[ORM\JoinColumn(name: "id", referencedColumnName: "id")]
+        private Utilisateur $id;
 
 
     /**
@@ -56,7 +65,7 @@ class Location
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
         return $this;
@@ -67,7 +76,7 @@ class Location
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
         return $this;
@@ -78,7 +87,7 @@ class Location
         return $this->prix;
     }
 
-    public function setPrix(float $prix): self
+    public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
         return $this;
@@ -89,7 +98,7 @@ class Location
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): self
+    public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
         return $this;
@@ -100,7 +109,7 @@ class Location
         return $this->disponibilite;
     }
 
-    public function setDisponibilite(string $disponibilite): self
+    public function setDisponibilite(?string $disponibilite): self
     {
         $this->disponibilite = $disponibilite;
         return $this;

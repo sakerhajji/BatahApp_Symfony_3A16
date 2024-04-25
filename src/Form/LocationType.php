@@ -1,20 +1,20 @@
 <?php
-
 namespace App\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-
-use App\Entity\Utilisateur;
-use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use App\Entity\Location;
 use App\Repository\UtilisateurRepository;
 
 class LocationType extends AbstractType
-
 {
     private $utilisateurRepository;
 
@@ -22,57 +22,83 @@ class LocationType extends AbstractType
     {
         $this->utilisateurRepository = $utilisateurRepository;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        
         $users = $this->utilisateurRepository->findAllUsers();
-        $userChoices = [];
-
-        foreach ($users as $user) {
-            $userChoices[$user->getNomutilisateur() . ' ' . $user->getPrenomutilisateur()] = $user->getId();
-        }
 
         $builder
-            ->add('prix')
-             ->add('type', ChoiceType::class, [
+            // ->add('prix', NumberType::class, [
+            //     'constraints' => [
+            //         new NotBlank(['message' => 'Le prix ne peut pas être vide.']),
+            //         new Regex([
+            //             'pattern' => '/^\d+$/',
+            //             'message' => 'Le prix doit contenir uniquement des chiffres.',
+            //         ]),
+            //     ],
+            //     'invalid_message' => 'Le prix ne peut pas être vide.',
+            //     'required' => false,
+            // ])
+           ->add('prix', NumberType::class, [
+               
+                'required' => false, // Modifier à true pour le rendre obligatoire
+            ])
+            ->add('type', ChoiceType::class, [
                 'label' => 'Type',
                 'choices' => [
                     'Maison' => 'maison',
                     'Voiture' => 'voiture',
                 ],
                 'placeholder' => 'Choisir un type',
-                'attr' => [
-                    'class' => 'form-control',
-                ],
+                'attr' => ['class' => 'form-control'],
+                'required' => false,
+               
             ])
-            ->add('description')
-            ->add('adresse')
+            ->add('description', TextType::class, [
+                
+                
+                'required' => false,
+            ])
+            ->add('adresse', TextType::class, [
+               
+                'required' => false,
+            ])
             ->add('disponibilite', ChoiceType::class, [
                 'choices' => [
                     'Available' => true,
                     'Not Available' => false,
                 ],
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+               
             ])
             ->add('id', ChoiceType::class, [
                 'label' => 'Select User',
                 'choices' => array_combine(
-                    array_map(function (Utilisateur $user) {
+                    array_map(function ($user) {
                         return $user->getNomutilisateur() . ' ' . $user->getPrenomutilisateur();
                     }, $users),
                     $users
                 ),
-                'choice_value' => function (Utilisateur $user = null) {
+                'choice_value' => function ($user = null) {
                     return $user ? $user->getId() : '';
                 },
-                'choice_label' => function (Utilisateur $user = null) {
+                'choice_label' => function ($user = null) {
                     return $user ? $user->getNomutilisateur() . ' ' . $user->getPrenomutilisateur() : '';
                 },
                 'attr' => ['class' => 'form-control'],
+                'required' => false,
+                
             ])
             ->add('imageFile', FileType::class, [
-                'required' => false,
+        
                 'label' => 'Image',
-                // Add more options here as needed
+                'attr' => ['class' => 'form-control-file'],
+                'required' => false,
+                'constraints' => [
+                    new NotBlank(['message' => 'image ne peut pas être vide.']),
+                ],
+                'invalid_message' => 'image ne peut pas être vide.',
             ]);
     }
 
