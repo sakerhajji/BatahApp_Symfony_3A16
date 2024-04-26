@@ -199,14 +199,17 @@
                                             class="badge">2</sup></span></a></li>
                         <li><a class="notification" href="#"><span class="body-color flaticon-bell fz16"></span></a>
                         </li>
+                        {% block profileBlock %}
                         <li class="user_setting">
                             <div class="dropdown">
+
                                 <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
                                     <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}"
                                          alt="e1.png">
                                     <span class="dn-1366"> Jerome Bell <span
                                                 class="fas fa-angle-down ml5"></span></span>
                                 </a>
+
                                 <div class="dropdown-menu">
                                     <div class="user_set_header">
                                         <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
@@ -222,6 +225,7 @@
                                 </div>
                             </div>
                         </li>
+                        {% endblock %}
                     </ul>
                 </div>
             </nav>
@@ -280,7 +284,7 @@
                                  aria-labelledby="profile-tab">
                                 <div class="col-lg-12">
                                     <div class="sign_up_form">
-                                        <p>Already have a profile? <a href="page-login.html">Sign in.</a></p>
+                                        <p>Already have a profile? <a href="{{ path('app_login') }}">Sign in.</a></p>
                                         {# regitre fomulaire#}
 {#                                        <form action="{{ path('handle_form') }}" method="post">#}
 
@@ -352,7 +356,7 @@
                     <div class="mobile_menu_bar">
                         <a class="menubar" href="#menu"><small>Menu</small><span></span></a>
                     </div>
-                    <div class="mobile_menu_main_logo"><img class="nav_logo_img img-fluid" src="images/header-logo2.svg"
+                    <div class="mobile_menu_main_logo"><img class="nav_logo_img img-fluid" src="{{ asset('images/header-logo2.svg') }}"
                                                             alt="images/header-logo2.png"></div>
                 </div>
             </div>
@@ -380,7 +384,7 @@
                                     <li><a href="page-dashboard-favorites.html">Favorites</a></li>
                                     <li><a href="page-dashboard-add-listings.html">Add Listing</a></li>
                                     <li><a href="page-dashboard-messages.html">Messages</a></li>
-                                    <li><a href="page-login.html">Login</a></li>
+                                    <li><a href="{{path('app_login')}}">Login</a></li>
                                 </ul>
                             </li>
                             <li><a href="page-user-profile.html">User Profile</a></li>
@@ -444,7 +448,7 @@
                             <li><a href="page-contact.html">Contact</a></li>
                             <li><a href="page-error.html">Error</a></li>
                             <li><a href="page-faq.html">Faq</a></li>
-                            <li><a href="page-login.html">Login</a></li>
+                            <li><a href="{{path('app_login')}}">Login</a></li>
                             <li><a href="page-pricing.html">Pricing Table</a></li>
                             <li><a href="page-register.html">Sign up</a></li>
                             <li><a href="page-service.html">Service</a></li>
@@ -500,7 +504,7 @@
                                                                 class="flaticon-message"></span>Messages</a></li>
                                                 <li><a href="{{ path('app_partenaires_index') }}"><span
                                                                 class="flaticon-list"></span>Partenaires</a></li>
-                                                <li><a href="page-login.html"><span
+                                                <li><a href="{{path('app_login')}}"><span
                                                                 class="flaticon-logout"></span>Logout</a></li>
                                             </ul>
                                         </div>
@@ -528,7 +532,7 @@
                                                                 class="flaticon-plus"></span>Add Listing</a></li>
                                                 <li><a href="page-dashboard-messages.html"><span
                                                                 class="flaticon-message"></span>Messages</a></li>
-                                                <li><a href="page-login.html"><span
+                                                <li><a href="{{path('app_login')}}"><span
                                                                 class="flaticon-logout"></span>Logout</a></li>
                                             </ul>
                                         </div>
@@ -616,7 +620,7 @@
             <li><a href="page-dashboard-favorites.html"><span class="flaticon-heart"></span>Favorites</a></li>
             <li><a href="page-dashboard-add-listings.html"><span class="flaticon-plus"></span>Add Listing</a></li>
             <li><a href="page-dashboard-messages.html"><span class="flaticon-message"></span>Messages</a></li>
-            <li><a href="page-login.html"><span class="flaticon-logout"></span>Logout</a></li>
+            <li><a href="{{path('app_login')}}"><span class="flaticon-logout"></span>Logout</a></li>
         </ul>
     </div>
     <a class="scrollToHome" href="#"><i class="fas fa-arrow-up"></i></a>

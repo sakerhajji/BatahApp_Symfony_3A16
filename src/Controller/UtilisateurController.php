@@ -6,6 +6,7 @@ use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/utilisateur')]
 class UtilisateurController extends AbstractController
 {
+    private   $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
 
     #[Route('/ajouter', name: 'ajouter', methods: ['POST'])]
     public function ajouter(Request $request, EntityManagerInterface $entityManager): Response
@@ -37,7 +44,17 @@ class UtilisateurController extends AbstractController
 
     }
 
-    
+    #[Route('/profile', name: 'profile')]
+    public function profile(UtilisateurRepository $repository)
+    {
+        $user = new Utilisateur() ;
+        $user = $this->session->get("user");
+        $user=$repository->find($user->getID()) ;
+        return $this->render('utilisateur/profile.html.twig',
+        ['user'=>$user]);
+    }
+
+
 
 
     #[Route('/ForgetPassword', name: 'ForgetPassword', methods: ['POST'])]
@@ -60,10 +77,13 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/', name: 'app_utilisateur_index', methods: ['GET'])]
-    public function index(UtilisateurRepository $utilisateurRepository): Response
+    public function index(UtilisateurRepository $utilisateurRepository  ): Response
     {
+        $data= $this->session->get('user') ;
+
         return $this->render('utilisateur/index.html.twig', [
             'utilisateurs' => $utilisateurRepository->findAll(),
+            'user'=>$data ,
         ]);
     }
 
@@ -114,6 +134,9 @@ class UtilisateurController extends AbstractController
     }
 
 
+
+
+
     #[Route('/{id}', name: 'app_utilisateur_delete', methods: ['POST'])]
     public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
     {
@@ -124,40 +147,6 @@ class UtilisateurController extends AbstractController
 
         return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
     }
-#[Route("/search", name: "utilisateur_search", methods:["GET"])]
-public function search(Request $request): Response
-{
-    $query = $request->query->get('query');
-
-    $entityManager = $this->getDoctrine()->getManager();
-
-    $queryBuilder = $entityManager->createQueryBuilder();
-    $queryBuilder->select('u')
-        ->from(Utilisateur::class, 'u')
-        ->where('u.nomutilisateur LIKE :query')
-        ->orWhere('u.prenomutilisateur LIKE :query')
-        ->setParameter('query', '%' . $query . '%');
-
-    $utilisateurs = $queryBuilder->getQuery()->getResult();
-
-    // Serialize the search results to JSON
-    $data = [];
-    foreach ($utilisateurs as $utilisateur) {
-        $data[] = [
-            'id' => $utilisateur->getId(),
-            'idgoogle' => $utilisateur->getIdGoogle(),
-            'nomutilisateur' => $utilisateur->getNomUtilisateur(),
-            'prenomutilisateur' => $utilisateur->getPrenomUtilisateur(),
-            'sexe' => $utilisateur->getSexe(),
-            'datedenaissance' => $utilisateur->getDatedeNaissance() ? $utilisateur->getDatedeNaissance()->format('Y-m-d') : '',
-            // Add other fields if needed
-        ];
-    }
-
-    // Return JSON response
-    return $this->json($data);
-}
-
 
 
 }

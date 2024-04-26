@@ -10790,7 +10790,7 @@ a.btn_error{
   border-bottom: 1px solid #EAEAEA;
 }
 .ui_kit_tab.style2 .nav.nav-tabs .nav-item{
-  line-height: ;
+  line-height:10px;
 }
 .ui_kit_tab.style2 .nav.nav-tabs .nav-link {
   border-bottom: 3px solid transparent;
