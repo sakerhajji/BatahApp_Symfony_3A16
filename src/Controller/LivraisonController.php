@@ -102,8 +102,11 @@ class LivraisonController extends AbstractController
     #[Route('/', name: 'app_livraison_index', methods: ['GET'])]
     public function index(LivraisonRepository $livraisonRepository): Response
     {
+        $livraisonsStats = $livraisonRepository->countDeliveriesByStatus();
         return $this->render('livraison/index.html.twig', [
             'livraisons' => $livraisonRepository->findAll(),
+            'livraisonsStats' => $livraisonsStats
+
         ]);
     }
 

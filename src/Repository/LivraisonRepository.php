@@ -20,7 +20,14 @@ class LivraisonRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Livraison::class);
     }
-
+    public function countDeliveriesByStatus(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l.statut, COUNT(l.idLivraison) as nbLivraisons')
+            ->groupBy('l.statut')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Livraison[] Returns an array of Livraison objects
 //     */
