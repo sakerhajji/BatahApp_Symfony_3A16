@@ -30,6 +30,8 @@ use App\Repository\BasketRepository;
 use App\Repository\ImageRepository;
 use App\Repository\UtilisateurRepository;
 use App\Repository\ViewsRepository;
+use App\Service\EmailSender;
+use App\Service\TwilioService;
 use Dompdf\Dompdf;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -37,6 +39,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Mailer\MailerInterface;
 
 class ProduitController extends AbstractController
 {
@@ -360,6 +363,7 @@ class ProduitController extends AbstractController
 
         $connectedUser = $this->session->get('user');
 
+        $listArticles = $pr->findAll();
 
         $existingArticles = [];
         $basketItems = $basketRep->findBy(['idClient' => $connectedUser]);
@@ -435,6 +439,7 @@ class ProduitController extends AbstractController
             //   'p' => $produit, // Assurez-vous de transmettre le produit au modèle Twig
             // 'images' => $images, // Transmettez la liste des images au modèle Twig
             'imagesByLocation' => $imagesByLocation,
+            'listArticles' => $listArticles
         ]);
     }
 
@@ -1042,5 +1047,81 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
 
         ));
+    }
+    /*
+********************mail********************
+*/
+    #[Route('/mail', name: 'app_mail')]
+    public function indexmail(EmailSender $emailSender): Response
+    {
+        $emailSender->sendEmail();
+
+        return new Response('Email sent successfully!');
+    }
+
+    /*
+********************rating********************
+*/
+
+    #[Route('/submit_rating', name: 'submit_rating', methods: ['POST'])]
+    public function submitRating2(Request $request, SessionInterface $session, EntityManagerInterface $em): Response
+    {
+
+        // Retrieve the user from the session
+        $userId = $session->get('user');
+        $user = $em->getRepository(Utilisateur::class)->find($userId);
+
+
+        // Get the product ID and rating from the form submission
+        $productId = $request->request->get('product_id');
+        $ratingValue = $request->request->get('rating');
+
+        // Retrieve the product entity based on the ID
+        $entityManager = $this->getDoctrine()->getManager();
+        $product = $entityManager->getRepository(Produits::class)->find($productId);
+
+        // Create a new Ratings entity and set its properties
+        $rating = new Ratings();
+        $rating->setProduit($product);
+        $rating->setRating($ratingValue);
+        $rating->setUser($user);
+
+
+        // Calculate average rating for the product
+        $averageRating = $em->getRepository(Ratings::class)->getAverageRatingForProduct($product);
+
+        // Update averageRating property of the product
+        $product->setAverageRating($averageRating);
+        $em->persist($product);
+        $em->flush();
+        return $this->redirectToRoute('app_afficahge_produits');
+    }
+
+
+    /*
+******************************test sms**************
+*/
+    #[Route('/send-sms', name: 'send_sms')]
+    public function sendSms(): Response
+    {
+        // Replace 'your_twilio_sid_here', 'your_twilio_token_here', and 'your_twilio_from_number_here' with your actual Twilio credentials
+        $twilioSid = 'AC3490868f23a7ed5ad7fba1dceb54a27f';
+        $twilioToken = '63488d173ace1256ff133392db521501';
+        $twilioFromNumber = '+19292961852';
+
+        // Create an instance of TwilioService with explicit SID, token, and from number
+        $twilioService = new TwilioService($twilioSid, $twilioToken, $twilioFromNumber);
+
+        // Remplacez le numéro de téléphone par le numéro auquel vous souhaitez envoyer le SMS
+        $to = '+21695316683';
+
+        // Message à envoyer
+        $message = 'Bonjour! Ceci est un exemple de SMS envoyé depuis Symfony avec Twilio.';
+
+        // Envoi du SMS
+        $twilioService->sendSms($to, $message);
+
+        // Réponse à l'utilisateur
+        return new Response('SMS envoyé avec succès!');
     }
 }

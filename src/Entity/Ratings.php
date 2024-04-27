@@ -29,18 +29,16 @@ class Ratings
     private float $rating;
 
 
-    #[ORM\Column(name: "commentaire", type: "string", length: 255, nullable: true)] // Ajout de l'attribut commentaire
-    private ?string $commentaire;
-
 
     #[ORM\ManyToOne(targetEntity: Produits::class)]
     #[ORM\JoinColumn(name: "id_produit", referencedColumnName: "idProduit")]
     private Produits $produit;
 
     #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
-    #[ORM\JoinColumn(name: "id_user", referencedColumnName: "id")]
+    #[ORM\JoinColumn(name: "id_user", referencedColumnName: "id", nullable: true)]
 
-    private Utilisateur $user;
+    private ?Utilisateur $user = null;
+
 
     public function getIdRating(): int
     {
@@ -62,15 +60,7 @@ class Ratings
         $this->rating = $rating;
     }
 
-    public function getCommentaire(): ?string
-    {
-        return $this->commentaire;
-    }
 
-    public function setCommentaire(?string $commentaire): void
-    {
-        $this->commentaire = $commentaire;
-    }
     public function getProduit(): Produits
     {
         return $this->produit;
@@ -86,7 +76,7 @@ class Ratings
         return $this->user;
     }
 
-    public function setUser(Utilisateur $user): void
+    public function setUser(?Utilisateur $user): void
     {
         $this->user = $user;
     }

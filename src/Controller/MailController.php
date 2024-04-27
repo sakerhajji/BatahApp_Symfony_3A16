@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MailController extends AbstractController
 {
     /**
-     * @Route("/", name="default")
+     * @Route("/default", name="default")
      * @return Response
      */
     public function index(): Response

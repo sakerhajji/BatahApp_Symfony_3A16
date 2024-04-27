@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Produits;
 use App\Entity\Rating;
+use App\Entity\Ratings;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,31 +20,49 @@ class RatingRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Rating::class);
+        parent::__construct($registry, Ratings::class);
     }
 
-//    /**
-//     * @return Rating[] Returns an array of Rating objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Calculate average rating for a given product.
+     *
+     * @param Produits $product
+     * @return float|null
+     */
+    public function getAverageRatingForProduct(Produits $product): ?float
+    {
+        $queryBuilder = $this->createQueryBuilder('r');
+        $queryBuilder->select('AVG(r.rating) as average_rating')
+            ->andWhere('r.produit = :product')
+            ->setParameter('product', $product);
 
-//    public function findOneBySomeField($value): ?Rating
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['average_rating'];
+    }
+
+    //    /**
+    //     * @return Rating[] Returns an array of Rating objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('r.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Rating
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

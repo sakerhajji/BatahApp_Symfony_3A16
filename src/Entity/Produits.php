@@ -71,6 +71,9 @@ class Produits
 
         $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
+
+        // Your existing constructor
+        $this->averageRating = 0; // Initialize average rating
     }
 
 
@@ -330,6 +333,24 @@ class Produits
     {
         return $this->dislikes;
     }
+
+    #[ORM\Column(name: "average_rating", type: "float", nullable: true)]
+    private ?float $averageRating; // Initialize to null
+
+    public function getAverageRating(): ?float
+    {
+        return $this->averageRating;
+    }
+
+    public function setAverageRating(?float $averageRating): self
+    {
+        $this->averageRating = $averageRating;
+        return $this;
+    }
+
+
+
+
 
     public function setDislikes(int $dislikes): void
     {

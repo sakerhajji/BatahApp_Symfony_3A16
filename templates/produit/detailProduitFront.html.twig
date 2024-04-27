@@ -98,6 +98,46 @@
         .reply-form .btn {
             margin-top: 10px; /* Ajouter de l'espace au-dessus du bouton */
         }
+
+
+
+
+
+        .image-gallery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-image-container {
+    margin-bottom: 20px;
+}
+
+.main-image {
+    max-width: 100%;
+}
+
+.thumbnails-container {
+    display: flex;
+    justify-content: center;
+}
+
+.thumbnail-image {
+    width: 80px;
+    height: auto;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.thumbnail-image:hover {
+    transform: scale(1.1);
+}
+
+.thumbnail-image.active {
+    transform: scale(1.2);
+}
+
     </style>
 </head>
 <body>
@@ -108,36 +148,23 @@
                 <div class="portfolio-details-slider swiper">
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide">
-                            <!-- Affichez l'image du produit avec une hauteur maximale de 400px -->
-                            {% set images = imagesByLocation[product.getIdProduit()] %}
-                            {% if images is not empty %}
-                                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-indicators">
-                                        {% for key, image in images %}
-                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ key }}" {% if loop.first %}class="active"{% endif %} aria-label="Slide {{ loop.index }}"></button>
-                                        {% endfor %}
-                                    </div>
-                                    <div class="carousel-inner">
-                                        {% for key, image in images %}
-                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                                <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ product.labelle }}">
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
+                        {% set images = imagesByLocation[product.getIdProduit()] %}
+                        {% if images is not empty %}
+                            <div class="image-gallery">
+                                <div class="main-image-container">
+                                    <img id="mainImage" src="{{ asset(images[0].getUrl()) }}" class="main-image" alt="{{ product.labelle }}">
                                 </div>
-                            {% else %}
-                                <!-- Si aucune image n'est disponible, affichez une image par défaut -->
-                                <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
-                            {% endif %}
-                                {% if video is defined %}
+                                <div class="thumbnails-container">
+                                    {% for key, image in images %}
+                                        <img src="{{ asset(image.getUrl()) }}" class="thumbnail-image" alt="{{ product.labelle }}" onclick="switchImage('{{ asset(image.getUrl()) }}')">
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Si aucune image n'est disponible, affichez une image par défaut -->
+                            <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
+                        {% endif %}
+                             {% if video is defined %}
                             {% set videoIdParts = video|split('v=') %}
                             {% if videoIdParts|length > 1 %}
                                 <div id="product-video" class="embed-responsive embed-responsive-16by9">
@@ -256,7 +283,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Link Swiper JS -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
+<script>
+    function switchImage(newImageUrl) {
+        document.getElementById('mainImage').src = newImageUrl;
+    }
+</script>
 </body>
 </html>
 

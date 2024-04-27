@@ -302,50 +302,50 @@
             </div>
             <div class="row d-flex" id="containerr">
                 <div id="search"></div>
+
+                
+            <span>          <h5 class="card-title">({{listArticles | length}} annonces trouvées)</span></h5>
+
+                 
+
                 <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Status</button>
             <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">New Cars</button>
-              </div>
+                </div>
+
           
                 <div class="row justify-content-center">
                
                 <div class="row">
                 <!-- Single Item -->
                 {% for p in listS %}
-                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                 <div class="card h-100 product-card">
                 
-                {% set images = imagesByLocation[p.getIdProduit()] %}
-                {% if images is not empty %}
-                    <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="1500">
+                      {% set images = imagesByLocation[p.getIdProduit()] %}
+                      {% if images is not empty %}
+                        <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="1500">
                        
-{#
-<div class="carousel-item {% if loop.first %}active{% endif %}">
-    <div class="image-container" style="width: 250px; height: 250px; overflow: hidden;">
-        <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ p.labelle }}" style="object-fit: cover; width: 100%; height: 100%;">
-    </div>
-</div>
-#}
 
-                    <div class="carousel-inner">
+                          <div class="carousel-inner">
                             {% for key, image in images %}
-                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                              <div class="carousel-item {% if loop.first %}active{% endif %}">
                                     <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ p.labelle }}">
-                                </div>
+                              </div>
                             {% endfor %}
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
+                          </div>
+                          <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
+                          </button>
+                          <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                {% else %}
+                          </button>
+                        </div>
+                      {% else %}
                     <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
-                {% endif %}
+                      {% endif %}
                 
                 <!-- Autres détails de la carte -->
             
@@ -362,28 +362,47 @@
                 <div class="card-body">
                             <h5 class="card-title">{{ p.labelle }}</h5>
                             <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
-                            <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
-                        <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
+                          <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
+                          <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
     
-   
-        </div>
-        <hr>
-                        <div class="card-footer text-center">
-                            {% if p.getIdProduit() in existingArticles %}
-                            <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
-                            {% else %}
-                            <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
-                                <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
-                            </a>
-                            {% endif %}
-                            
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            
+<!-- Formulaire de notation -->
+<form action="{{ path('submit_rating') }}" method="post" class="rating-form">
+    <input type="hidden" name="product_id" value="{{ p.getIdProduit() }}">
+    <div class="rating-stars">
+        <input type="radio" id="star5" name="rating" value="5">
+        <label for="star5" title="5 stars"></label>
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4" title="4 stars"></label>
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3" title="3 stars"></label>
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2" title="2 stars"></label>
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1" title="1 star"></label>
+    </div>
+    <button type="submit">Submit Rating</button>
+</form>
+ <p>Average Rating: {{ p.getAverageRating() }}</p>
 
+   
+                        </div>
+                        <hr>
+                        <div class="card-footer text-center">
+                          {% if p.getIdProduit() in existingArticles %}
+                            <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
+                          {% else %}
+                            <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
+                              <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
+                            </a>
+                          {% endif %}
+                            
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            
+              
             
     </section>
     {% for flash_message in app.session.flashbag.get('success') %}
