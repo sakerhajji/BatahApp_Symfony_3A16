@@ -23,17 +23,18 @@ class TestController extends AbstractController
     {
 //        $emailSender = new EmailSender();
 //        $emailSender->sendEmail();
-dd($session->get('user'))  ;
-        return $this->render('utilisateur/profile.html.twig');
+
+        return $this->render('utilisateur/csvfileimport.html.twig');
 
     }
     #[Route('/MisAjour', name: 'MisAjour', methods: ['POST'])]
 
     public function MisAjour(Request $request, EntityManagerInterface $entityManager, SessionInterface $session , PictureService $pictureService ): Response
     {
-        $imageFile = $request->files->get('image');
+
         $user = $session->get('user');
         $data = $request->request->all();
+        $imageFile = $request->files->get('image');
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $newFilename = uniqid().'.'.$imageFile->guessExtension();
         try {
@@ -104,46 +105,7 @@ dd($session->get('user'))  ;
 
 
 
-    #[Route('/search', name: 'search_users')]
-    public function search(Request $request): Response
-    {
-        // Retrieve the search query from the request
-        $query = $request->query->get('query');
 
-        // Check if the search query is null or empty
-        if ($query === null || trim($query) === '') {
-            // Return a JSON response with an error message indicating invalid search query
-            return $this->json(['error' => 'Invalid search query']);
-        }
-
-        // Query the database for users matching the search query
-        $repository = $this->getDoctrine()->getRepository(Utilisateur::class);
-        $utilisateurs = $repository->createQueryBuilder('u')
-            ->where('u.nomutilisateur LIKE :query')
-            ->andWhere('u.nomutilisateur IS NOT NULL')
-            ->orWhere('u.prenomutilisateur LIKE :query')
-            ->andWhere('u.prenomutilisateur IS NOT NULL')
-            ->orWhere('u.adresseemail LIKE :query')
-            ->andWhere('u.adresseemail IS NOT NULL')
-            ->setParameter('query', '%'.$query.'%')
-            ->getQuery()
-            ->getResult();
-
-        // Serialize the user data to an array
-        $jsonData = [];
-        foreach ($utilisateurs as $utilisateur) {
-            $jsonData[] = [
-                'id' => $utilisateur->getId(),
-                'nomutilisateur' => $utilisateur->getNomutilisateur(),
-                'prenomutilisateur' => $utilisateur->getPrenomutilisateur(),
-                'adresseemail' => $utilisateur->getAdresseemail(),
-                // Add more fields if needed
-            ];
-        }
-
-        // Return a JSON response with the user data
-        return $this->json($jsonData);
-    }
 
 
 }

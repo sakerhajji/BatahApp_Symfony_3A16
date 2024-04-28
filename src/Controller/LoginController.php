@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
@@ -8,60 +7,74 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LoginController extends AbstractController
 {
-    private   $session;
-    public function __construct(SessionInterface $session)
+    private SessionInterface $session;
+    private HttpClientInterface $client;  // Inject HttpClient
+
+    public function __construct(SessionInterface $session, HttpClientInterface $client)
     {
         $this->session = $session;
+        $this->client = $client;
     }
 
-    #[Route('/loginPage', name: 'app_login' ,methods: ['GET','POST'])]
-    public function index(Request $request ): Response
+    #[Route('/loginPage', name: 'app_login', methods: ['GET', 'POST'])]
+    public function index(Request $request): Response
     {
-
-        $errorMsg=$request->get('errorMsg') ;
+        $errorMsg = $request->get('errorMsg');
         return $this->render('login/loginPage.html.twig', [
             'errorMsg' => $errorMsg,
+            'site_key' => $this->getParameter('recaptcha_site_key')
         ]);
     }
+
     #[Route('/deconnection', name: 'app_logout', methods: ['GET'])]
     public function logout(): Response
     {
-        // Clear the session
         $this->session->clear();
-
-        // Redirect to the login page
         return $this->redirectToRoute('app_login');
     }
 
     #[Route('/Login', name: 'Login', methods: ['POST'])]
-    public function Login(Request $request, EntityManagerInterface $entityManager, UtilisateurRepository $repository ): Response
+    public function login(Request $request, EntityManagerInterface $entityManager, UtilisateurRepository $repository): Response
     {
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $recaptchaResponse = $request->request->get('g-recaptcha-response');
+        $remoteIp = $request->getClientIp();
+        $secret = $this->getParameter('recaptcha_secret_key');
 
-        $check = new InputControl();
-        $data = $request->request->all();
-        $utilisateur = new Utilisateur();
-        $utilisateur->setAdresseemail($data['email']);
-        $utilisateur->setMotdepasse($data['password']);
-        $plainPassword= $data['password'] ;
-        $utilisateur = $repository->login($utilisateur->getAdresseemail(), $utilisateur->getMotdepasse());
-
-        if ($utilisateur != null && password_verify( $plainPassword , $utilisateur->getMotdepasse() )) {
-
-            $this->session->set('user',$utilisateur) ;
-            return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+        if (!$recaptchaResponse) {
+            return $this->redirectToRoute('app_login', ['errorMsg' => 'reCAPTCHA response not found.']);
         }
-        else {
-            $errorMsg = "Ecrire mail et motdepass valid svp";
-            return $this->redirectToRoute('app_login', [
-                'errorMsg' => $errorMsg,
-            ]);
+
+        $response = $this->client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'body' => [
+                'secret' => $secret,
+                'response' => $recaptchaResponse,
+                'remoteip' => $remoteIp
+            ]
+        ]);
+
+        $result = $response->toArray();
+        if (!($result['success'] ?? false)) {
+            return $this->redirectToRoute('app_login', ['errorMsg' => 'Invalid reCAPTCHA.']);
         }
+
+
+        $user = $repository->findOneBy(['adresseemail' => $email]);
+
+
+        if ($user && password_verify($password, $user->getMotdepasse())) {
+            $this->session->set('user', $user);
+            return $this->redirectToRoute('app_utilisateur_index');
+        }
+
+        return $this->redirectToRoute('app_login', ['errorMsg' => 'Invalid email or password.']);
     }
 }
+

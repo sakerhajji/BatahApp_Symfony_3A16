@@ -6,13 +6,21 @@
     <li class="user_setting">
         <div class="dropdown">
             <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                <img class="rounded-circle mr10" src="{{ asset('/image/uploads/' ~ user.getAvatar()) }}" height="40px" width="40px" alt="{{ user.getAvatar() }}">
+                {% if user.getAvatar() is not null %}
+                    <img class="rounded-circle mr10" src="{{ asset('/image/uploads/' ~ user.getAvatar()) }}" height="40px" width="40px" alt="{{ user.getAvatar() }}">
+                {% else %}
+                    <img class="rounded-circle mr10" src="{{ asset('/image/uploads/upload_photo.png') }}" height="40px" width="40px" alt="Default Avatar">
+                {% endif %}
                 <span class="dn-1366">{{ user.getNomutilisateur() ~ " " ~ user.getPrenomutilisateur() }} <span class="fas fa-angle-down ml5"></span></span>
             </a>
 
             <div class="dropdown-menu">
                 <div class="user_set_header">
-                    <img class="float-start rounded-circle" src="{{ asset('/image/uploads/' ~ user.getAvatar()) }}" alt="{{ user.getAvatar() }}" height="40px" width="40px">
+                    {% if user.getAvatar() is not null %}
+                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/' ~ user.getAvatar()) }}" alt="{{ user.getAvatar() }}" height="40px" width="40px">
+                    {% else %}
+                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/upload_photo.png') }}" alt="Default Avatar" height="40px" width="40px">
+                    {% endif %}
                     <p>{{ user.getNomutilisateur() ~ " " ~ user.getPrenomutilisateur() }} <br><span class="address">{{ user.getAdresseemail() }}</span></p>
                 </div>
                 <div class="user_setting_content">
@@ -27,19 +35,25 @@
     </li>
 {% endblock %}
 
+
 {% block pane %}
     <h1>Utilisateur index</h1>
 
-    <input type="text" id="searchInput" placeholder="Search...">
+{#    <input type="text" id="searchInput" placeholder="Search...">#}
+
+    <div class="input-group">
+        <input class="form-control border-end-0 border rounded-pill" type="search"  placeholder="Search..."  id="searchInput">
+
+    </div>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover" id="users">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Idgoogle</th>
-                <th>Nomutilisateur</th>
-                <th>Prenomutilisateur</th>
+                <th>profile</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Addresse email</th>
                 <th>Sexe</th>
                 <th>Datedenaissance</th>
                 <th>Actions</th> <!-- Added column for actions -->
@@ -48,10 +62,17 @@
             <tbody id="utilisateursTableBody">
             {% for utilisateur in utilisateurs %}
                 <tr>
-                    <td>{{ utilisateur.id }}</td>
-                    <td>{{ utilisateur.idgoogle }}</td>
+                    <td>
+                        {% if utilisateur.avatar is not null %}
+                            <img class="float-start rounded-circle" src="{{ asset('/image/uploads/' ~ utilisateur.avatar) }}" alt="{{ utilisateur.avatar }}" height="40px" width="40px">
+                        {% else %}
+                            <img class="float-start rounded-circle" src="{{ asset('/image/uploads/upload_photo.png') }}" alt="Default Image" height="40px" width="40px">
+                        {% endif %}
+                    </td>
+
                     <td>{{ utilisateur.nomutilisateur }}</td>
                     <td>{{ utilisateur.prenomutilisateur }}</td>
+                    <td>{{ utilisateur.adresseemail }}</td>
                     <td>{{ utilisateur.sexe }}</td>
                     <td>{{ utilisateur.datedenaissance ? utilisateur.datedenaissance|date('Y-m-d') : '' }}</td>
                     <td>

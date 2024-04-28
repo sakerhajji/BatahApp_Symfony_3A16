@@ -8,13 +8,19 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\String\ByteString;
 
 #[Route('/utilisateur')]
 class UtilisateurController extends AbstractController
+
+
 {
     private   $session;
     public function __construct(SessionInterface $session)
@@ -22,7 +28,55 @@ class UtilisateurController extends AbstractController
         $this->session = $session;
     }
 
+    #[Route('/csv', name: 'app_csv_import', methods: ['POST'])]
+    public function csvImport(Request $request): Response
+    {
+        // Retrieve the uploaded CSV file from the request
+        $csvFile = $request->files->get('csvfile');
 
+        // Check if a file was uploaded
+        if (!$csvFile) {
+            throw new \InvalidArgumentException('No CSV file uploaded.');
+        }
+
+        // Get the path to the temporary uploaded file
+        $tmpFilePath = $csvFile->getPathname();
+
+        // Read the CSV file into an array
+        $csvData = array_map('str_getcsv', file($tmpFilePath));
+
+        // Dump the CSV data for debugging
+        dd($csvData);
+
+        // Further processing of the CSV data (e.g., storing in database)
+
+        // Return a response (if needed)
+        return new Response('CSV file uploaded and processed successfully.');
+    }
+    private function readCsvFile(Request $request): array
+    {
+        // Get the uploaded CSV file from the request
+        $csvFile = $request->files->get('csvFile');
+
+        // Check if a file was uploaded
+        if (!$csvFile instanceof UploadedFile) {
+            throw new \RuntimeException('No file uploaded.');
+        }
+
+        // Check if the file is valid
+        if (!$csvFile->isValid()) {
+            throw new FileException('Invalid file uploaded.');
+        }
+
+        // Open the CSV file and read its content
+        $fileContent = ByteString::fromPath($csvFile->getPathname())->toString();
+
+        // Decode CSV content
+        $csvEncoder = new CsvEncoder();
+        $csvData = $csvEncoder->decode($fileContent, 'csv');
+
+        return $csvData;
+    }
     #[Route('/ajouter', name: 'ajouter', methods: ['POST'])]
     public function ajouter(Request $request, EntityManagerInterface $entityManager): Response
     {

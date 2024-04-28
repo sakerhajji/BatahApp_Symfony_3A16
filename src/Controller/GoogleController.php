@@ -29,9 +29,8 @@ class GoogleController extends AbstractController
     {
         // Authenticate the user using the GoogleAuthenticator
         $user = $authenticator->authenticate($request);
-
         // Redirect to the homepage or a protected page
-        return $this->redirectToRoute('user_profile');
+        return $this->redirectToRoute('app_login');
     }
 
 }

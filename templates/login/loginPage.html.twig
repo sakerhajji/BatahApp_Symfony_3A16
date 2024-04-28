@@ -22,6 +22,7 @@
                                 <label class="custom-control-label" for="exampleCheck3">Remember me</label>
                                 <a class="btn-fpswd float-end" href="#">Lost your password?</a>
                             </div>
+                            <input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
                             <button type="submit" class="btn btn-log btn-thm mt5">Sign in</button>
                         </form>
                     </div>
@@ -41,6 +42,14 @@
 
             {% block jsControle %}
 {#                <script src="{{ asset('js/LogControl.js') }}"></script>#}
+                <script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>
+                <script>
+                    grecaptcha.ready(function() {
+                        grecaptcha.execute('{{ site_key }}', {action: 'submit'}).then(function(token) {
+                            document.getElementById('recaptchaResponse').value = token;
+                        });
+                    });
+                </script>
             {% endblock %}
 
     </section>

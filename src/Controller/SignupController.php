@@ -13,13 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SignupController extends AbstractController
 {
+
     #[Route('/signUp', name: 'app_signup', methods: ['GET', 'POST'])]
     public function index(request $request): Response
     {
-
+        $recaptchaSiteKey = $this->getParameter('recaptcha.site_key');
         $errorMsg = $request->get('errorMsg');
         return $this->render('signup/signUp.html.twig', [
             'errorMsg' => $errorMsg,
+            'recaptcha_site_key' => $recaptchaSiteKey ,
         ]);
 
     }
@@ -27,6 +29,7 @@ class SignupController extends AbstractController
     #[Route('/Iscription', name: 'Iscription', methods: ['POST'])]
     public function Iscription(Request $request, EntityManagerInterface $entityManager ,UtilisateurRepository $repository , SessionInterface $session): Response
     {
+
         $errorMsg = "Invalide formulaire d'inscription. Veuillez vérifier vos informations.";
         $check = new InputControl();
         $data = $request->request->all();
@@ -63,6 +66,7 @@ class SignupController extends AbstractController
 
             return $this->redirectToRoute('app_signup', [
                 'errorMsg' => $errorMsg,
+
             ],Response::HTTP_SEE_OTHER );
         }
     }

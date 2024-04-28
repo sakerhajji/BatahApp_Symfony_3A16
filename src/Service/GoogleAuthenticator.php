@@ -1,6 +1,6 @@
 <?php
-# src/Security/GoogleAuthenticator.php
-namespace App\Security;
+# src/service/GoogleAuthenticator.php
+
 
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
@@ -57,14 +57,14 @@ class GoogleAuthenticator extends OAuth2Authenticator
                 $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
                 if (!$existingUser) {
-                    $user = new User();
-                    $user->setEmail($googleUser->getEmail());
-                    $user->setPrenom($googleUser->getFirstName());
-                    $user->setNom($googleUser->getLastName());
+                    $user = new Utilisateur();
+                    $user->setAdresseemail($googleUser->getEmail());
+                    $user->setNomutilisateur($googleUser->getFirstName());
+                    $user->setPrenomutilisateur($googleUser->getLastName());
 
                     $imageUrl = $googleUser->getAvatar();
 
-                    $directory = 'C:\Users\PC\Desktop\SymfonyFinFolio\public\imagesUser';
+                    $directory = '..\public\images\uploads';
 
                     $imageContent = file_get_contents($imageUrl);
 
@@ -82,17 +82,11 @@ class GoogleAuthenticator extends OAuth2Authenticator
                     if ($result === false) {
                         dd("habetch tetsab");
                     }
-                    $user->setImage($randomFileName);
-                    $user->setPassword(sha1("Ahmed+2002"));
-                    $user->setAdresse("Tunisie");
-                    $user->setNumtel("+21652327720");
-                    $user->setStatut("active");
-                    $user->setNbcredit(0);
-                    $user->setRole("user");
-                    $user->setSolde(2000);
-                    $user->setRate(2);
-                    $user->setDatepunition(new \DateTime('0000-00-00'));
-                    $user->setTotalTax(0);
+                    $user->setAvatar($randomFileName);
+                    $user->setMotdepasse(sha1("Ahmed+2002"));
+                    $user->setAdressepostale("Tunisie");
+                    $user->setNumerotelephone("+21652327720");
+
                     // $existingUser->setHostedDomain($googleUser->getHostedDomain());
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
@@ -132,25 +126,11 @@ class GoogleAuthenticator extends OAuth2Authenticator
         $user = $token->getUser();
         $userIdentifier = $user->getUserIdentifier();
         $users = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $userIdentifier]);
-        if ($users->getRole() === "user") {
-            return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
-        }
-        if ($users->getRole() === "admin") {
-            return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
-        }
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
+        return new RedirectResponse($this->urlGenerator->generate('app_utilisateur_index'));
 
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app_login'));
-        // change "app_dashboard" to some route in your app
-        return new RedirectResponse(
-            $this->router->generate('app_login')
-        );
 
-        // or, on success, let the request continue to be handled by the controller
-        //return null;
+
+
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
