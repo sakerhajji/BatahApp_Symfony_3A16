@@ -22,10 +22,10 @@
 
                 <td>
                     {% if livraison.statut != 'en attente' %}
-                    <a href="{{ path('app_avis_livraison_new', {'idLivraison': livraison.idLivraison}) }}" class="btn btn-primary">Commenter</a>
+                    <a href="{{ path('app_avis_livraison_new', {'idLivraison': livraison.idLivraison}) }}" class="btn dbxshad btn-lg btn-thm2 circle">Commenter</a>
                     {% endif %}
                     {% if livraison.statut not in ['Récupéré', 'en attente'] %}
-                        <a href="{{ path('recuperer_livraison', {'idLivraison': livraison.idLivraison}) }}" class="btn btn-success">Récupérer</a>
+                        <a href="{{ path('recuperer_livraison', {'idLivraison': livraison.idLivraison}) }}" class="btn btn-lg btn-success">Récupérer</a>
                     {% endif %}
                 </td>
             </tr>

@@ -9,7 +9,7 @@ use Symfony\Component\Mailer\Transport\Dsn;
 
 class EmailSender
 {
-    public function sendEmail(string $to , string $subject , string $text)
+    public function sendEmail(string $to , string $subject , string $html,string $imagePath)
     {
         // Create a Transport object
         $transport = Transport::fromDsn('smtp://batahapp@gmail.com:gpay%20ypxn%20mcnf%20uiod@smtp.gmail.com:587');
@@ -22,9 +22,10 @@ class EmailSender
             ->from('batahapp@gmail.com')
             ->to($to)
             ->subject($subject)
-            ->text($text);
-
+            ->html($html);
+        $email->embedFromPath($imagePath, 'logo');
         // Send the email
         $mailer->send($email);
     }
+
 }

@@ -198,8 +198,83 @@ class LivraisonController extends AbstractController
             // Envoyer un e-mail au partenaire
             $partnerEmail = $selectedPartner->getEmail();
             $partnerNom = $selectedPartner->getNom();
+            $adresseCommande = $livraison->getCommande()->getAdresse();
+            $lienMaps = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($adresseCommande);
+            $urlLogo = $this->getParameter('kernel.project_dir') . '/public/images/batah.jpg';
+            $message = '
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affectation de service</title>
+    <style>
+        body {
+            font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 100px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="cid:logo" alt="Logo BATAH" class="logo">
+        <div class="content">
+            <p>Bonjour <strong>'. $partnerNom .'</strong>,</p>
+            <p>Vous avez été affecté à une nouvelle livraison. Veuillez suivre le lien ci-dessous pour consulter les détails et l\'itinéraire de la livraison.</p>
+            <a href="' .$lienMaps.'" class="button">Voir l\'itinéraire</a>
+            <p>Merci de faire partie de notre réseau de partenaires.</p>
+        </div>
+        <div class="footer">
+            Pour toute assistance, contactez-nous au : +21623456789<br>
+            <small>© BATAH - Tous droits réservés</small>
+        </div>
+    </div>
+</body>
+</html>
+
+
+';
             $email=new EmailSender();
-            $email->sendEmail($partnerEmail,"affectation","$partnerNom vous avez affecter à un service");
+            $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
 
             // Enregistrer les modifications dans la base de données
             $entityManager->persist($selectedPartner);

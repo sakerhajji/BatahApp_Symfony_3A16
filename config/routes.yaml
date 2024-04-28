@@ -1,3 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+search_partenaires:
+  path: /partenaires/search
+  controller: App\Controller\PartenairesController::search

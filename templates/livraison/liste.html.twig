@@ -27,7 +27,7 @@
                 <td>{{ commande.adresse }}</td>
                 <td>
                     {% if not commandeLivree %}
-                        <a href="{{ path('livrer_commande', {'id': commande.id}) }}" class="btn btn-primary">Livrer</a>
+                        <a href="{{ path('livrer_commande', {'id': commande.id}) }}" class="btn btn-lg btn-transparent">Livrer</a>
                     {% endif %}
                 </td>
             </tr>

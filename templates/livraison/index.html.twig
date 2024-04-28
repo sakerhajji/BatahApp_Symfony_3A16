@@ -4,73 +4,121 @@
 
 {% block body %}
 <div class="c_container">
-<div class="col-md-6">
-    <h1>Livraison index</h1>
+        <div class="col-md-6">
+            <h1>Liste des livraisons</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>DateLivraison</th>
-                <th>Statut</th>
-                <th>Adresse</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for livraison in livraisons %}
-            <tr>
-                <td>{{ livraison.dateLivraison ? livraison.dateLivraison|date('Y-m-d') : '' }}</td>
-                <td>{{ livraison.statut }}</td>
-                <td>{{ livraison.commande.adresse }}</td>
-                <td>
-                    <a href="{{ path('app_livraison_show', {'idLivraison': livraison.idLivraison}) }}">show</a>
-                    <a href="{{ path('app_livraison_edit', {'idLivraison': livraison.idLivraison}) }}">edit</a>
-                    <a href="{{ path('affecter_partenaire', {'idLivraison': livraison.idLivraison}) }}">affecter</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-    <div class="col-md-6">
-        <h2>Statistique des livraisons</h2>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <canvas id="livraisonChart" width="400" height="200"></canvas>
-        <script>
-            let statuts = [];
-            let nbLivraisons = [];
+            <table class="table" id="tableId">
+                <thead>
+                    <tr>
+                        <th><button onclick="sortTableByDate()" class="btn btn-sm btn-outline-secondary">DateLivraison</button></th>
+                        <th>Statut</th>
+                        <th>Adresse</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for livraison in livraisons %}
+                    <tr>
+                        <td>{{ livraison.dateLivraison ? livraison.dateLivraison|date('Y-m-d') : '' }}</td>
+                        <td>{{ livraison.statut }}</td>
+                        <td>{{ livraison.commande.adresse }}</td>
+                        <td>
+                            <a href="{{ path('app_livraison_show', {'idLivraison': livraison.idLivraison}) }}">show</a>
+                            <a href="{{ path('app_livraison_edit', {'idLivraison': livraison.idLivraison}) }}">edit</a>
+                            {% if livraison.statut == 'en attente' or livraison.statut == 'en cours' %}
+                                <a href="{{ path('affecter_partenaire', {'idLivraison': livraison.idLivraison}) }}">affecter</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h2>Statistique des livraisons</h2>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <canvas id="livraisonChart" width="400" height="200"></canvas>
+            <script>
+                let statuts = [];
+                let nbLivraisons = [];
+                let backgroundColors = [];
 
-            {% for livraisonStat in livraisonsStats %}
-            statuts.push('{{ livraisonStat.statut }}');
-            nbLivraisons.push('{{ livraisonStat.nbLivraisons }}');
-            {% endfor %}
+                {% for livraisonStat in livraisonsStats %}
+                statuts.push('{{ livraisonStat.statut }}');
+                nbLivraisons.push('{{ livraisonStat.nbLivraisons }}');
 
-            let ctx = document.getElementById('livraisonChart').getContext('2d');
-            let chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: statuts,
-                    datasets: [{
-                        label: 'Nombre de livraisons',
-                        data: nbLivraisons,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                // Assigner des couleurs en fonction du statut
+                switch ('{{ livraisonStat.statut }}'.toLowerCase()) {
+                    case 'en cours':
+                        backgroundColors.push('rgba(255, 206, 86, 0.2)');
+                        break;
+                    case 'en attente':
+                        backgroundColors.push('rgba(255, 99, 132, 0.2)');
+                        break;
+                    case 'Récupéré':
+                        backgroundColors.push('rgba(75, 192, 192, 0.2)');
+                        break;
+                    default:
+                        backgroundColors.push('rgba(201, 203, 207, 0.2)');
+                        break;
+                }
+                {% endfor %}
+
+                let ctx = document.getElementById('livraisonChart').getContext('2d');
+                let chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: statuts,
+                        datasets: [{
+                            label: 'Nombre de livraisons',
+                            data: nbLivraisons,
+                            backgroundColor: backgroundColors,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
-        </script>
-    </div>
+                });
+            </script>
+
+        </div>
 </div>
+    <script>
+        function sortTableByDate() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("tableId");
+            switching = true;
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[0];
+                    y = rows[i + 1].getElementsByTagName("td")[0];
+                    // Vérifier si les deux lignes doivent changer de place
+                    if (new Date(x.innerHTML) < new Date(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+
 {% endblock %}

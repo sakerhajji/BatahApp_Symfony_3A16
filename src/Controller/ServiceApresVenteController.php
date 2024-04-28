@@ -122,8 +122,77 @@ class ServiceApresVenteController extends AbstractController
             // Envoyer un e-mail au partenaire
             $partnerEmail = $selectedPartner->getEmail();
             $partnerNom = $selectedPartner->getNom();
+            $urlLogo = $this->getParameter('kernel.project_dir') . '/public/images/batah.jpg';
+            $message = '
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affectation de service</title>
+     <style>
+       
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333; /* Default text color */
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff; /* Container background color */
+            border: 1px solid #ddd; /* Container border */
+            border-radius: 5px; /* Container border radius */
+        }
+        .logo {
+            max-width: 150px;
+            float: left;
+            margin-right: 20px; /* Add some spacing between the image and text */
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* Custom styles */
+        .message {
+            color: #555; /* Message text color */
+        }
+        .description {
+            color: #f00; /* Description text color */
+        }
+    </style>
+</head>
+<body>
+ <div class="container">
+    <div style="text-align: center;">
+        <img src="cid:logo" alt="Logo de l\'application" class="logo">
+    </div>
+   
+    <p>Bonjour ' . $partnerNom . ',</p>
+    <p class="message">Vous avez été affecté à un service</p>
+    <p>Merci,</p>
+    <p >Votre équipe d\'application BATAH</p>
+    <div style="text-align: center;">
+        <p class="description">Pour toute assistance, veuillez nous contacter au numéro suivant : +21623456789</p>
+    </div>
+    </div>
+</body>
+</html>
+
+';
             $email=new EmailSender();
-            $email->sendEmail($partnerEmail,"affectation","$partnerNom vous avez affecter à un service");
+            $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
 
             // Enregistrer les modifications dans la base de données
             $entityManager->persist($selectedPartner);
