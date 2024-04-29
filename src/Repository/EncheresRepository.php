@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Encheres;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
+
 
 
 /**
@@ -98,5 +100,42 @@ public function countByDateRange($startDate, $endDate): int
         ->getQuery()
         ->getSingleScalarResult();
 }
+
+
+// Dans EncheresRepository.php
+public function findEncheresByUserAndConfirmation($userId, $confirmation, $limit, $offset)
+{
+    return $this->createQueryBuilder('e')
+        ->leftJoin('e.reservation_enchere', 're') // Utilisez le nom correct de la relation
+        ->andWhere('re.idUser = :userId') // Utilisez le nom correct de la relation
+        ->andWhere('re.confirmation = :confirmation') // Utilisez le nom correct de la relation
+        ->setParameter('userId', $userId)
+        ->setParameter('confirmation', $confirmation)
+        ->setMaxResults($limit)
+        ->setFirstResult($offset)
+        ->getQuery()
+        ->getResult();
+}
+
+
+public function getEncheresByDate(): array
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('date', 'date');
+        $rsm->addScalarResult('count', 'count');
+    
+        $query = $this->getEntityManager()->createNativeQuery('
+            SELECT DATE_FORMAT(e.dateDebut, \'%Y-%m-%d\') as date, COUNT(e.idEnchere) as count
+            FROM encheres e
+            GROUP BY e.dateDebut
+        ', $rsm);
+    
+        return $query->getResult();
+    }
+
+
+
+
+
 
 }

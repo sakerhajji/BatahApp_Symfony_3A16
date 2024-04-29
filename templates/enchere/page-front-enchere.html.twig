@@ -80,7 +80,11 @@
 
                             <!-- Bouton Réserver -->
                             <div class="reservation-button">
-                                <button type="button" class="btn btn-primary reserve-btn" data-url="{{ path('app_reserverwala') }}" data-enchere-id="{{ enchere.idEnchere }}">Réserver</button>
+                                <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
+       
+        <button type="submit" class="btn btn-primary">Reserver</button>
+    </form>
+
                             </div>
                         </div>
                     </div>

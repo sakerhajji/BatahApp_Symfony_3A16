@@ -11,6 +11,15 @@ use App\Form\ReservationEnchereType;
 use App\Service\ReservationService;
 use App\Repository\ReservationEnchereRepository;
 use App\Entity\Enchere;
+use App\Entity\Encheres;
+use App\Repository\EncheresRepository;
+use App\Repository\UtilisateurRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Twilio\Exceptions\ConfigurationException;
+use Twilio\Exceptions\TwilioException;
+use Twilio\Rest\Client;
+
+
 
 
 class ReservationEnchereController extends AbstractController
@@ -86,41 +95,77 @@ class ReservationEnchereController extends AbstractController
         return $this->redirectToRoute('app_afficahge_produits');
     }
 
-    #[Route('/reserverwala', name: 'app_reserverwala')]
-public function reserver(Request $request, EntityManagerInterface $entityManager): Response
-{
-    // Récupérer l'ID de l'enchère à partir de la requête POST
-    $enchereId = $request->request->get('enchereId');
+    #[Route('/reserverwala/{idp}/{iduser}', name: 'app_reserverwala')]
+    public function reserver(int $idp, int $iduser, EncheresRepository $encheresRepository, Request $request, UtilisateurRepository $userRepository, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'ID de l'enchère à partir de la requête POST
+       
+        $iduser = 3;
+        $user = $userRepository->find($iduser);
+    
+        $enchere = $encheresRepository->find($idp);
 
-    // Récupérer l'objet Enchere correspondant à l'ID donné
-    $enchere = $entityManager->getRepository(Enchere::class)->find($enchereId);
 
-    // Vérifier si l'enchère a été trouvée
-    if (!$enchere) {
-        // Enchère non trouvée, retourner une réponse avec un code d'erreur approprié
-        return new Response('Enchère non trouvée', Response::HTTP_NOT_FOUND);
+        // Vérifier si l'enchère a été trouvée
+        if (!$enchere) {
+            // Enchère non trouvée, retourner une réponse avec un code d'erreur approprié
+            return new Response('Enchère non trouvée', Response::HTTP_NOT_FOUND);
+        }
+
+        // Créer une nouvelle instance de ReservationEnchere
+        $reservation = new ReservationEnchere();
+
+        // Récupérer l'ID de l'utilisateur connecté (vous devrez implémenter cette partie)
+
+
+        // Définir les valeurs de la réservation
+        $reservation->setIdEnchere($enchere);
+        $reservation->setIdUser($user);
+        $reservation->setDateReservation(new \DateTime());
+        $reservation->setConfirmation(true); // ou 1
+
+        // Enregistrer la réservation en base de données
+        $entityManager->persist($reservation);
+        $entityManager->flush();
+
+        // Rediriger ou effectuer toute autre action nécessaire
+        // Vous pouvez rediriger vers une page de confirmation ou une autre page appropriée
+
+        $this->sendTwilioMessage($reservation);
+        return $this->redirectToRoute('app_Afficheclient_enchere',[],Response::HTTP_SEE_OTHER);
     }
 
-    // Créer une nouvelle instance de ReservationEnchere
-    $reservation = new ReservationEnchere();
+    /**
+     * @throws ConfigurationException
+     * @throws TwilioException
+     */
+    private function sendTwilioMessage(ReservationEnchere $reservation): void
+    {
+        $twilioAccountSid = $this->getParameter('twilio_account_sid');
+        $twilioAuthToken = $this->getParameter('twilio_auth_token');
+        $twilioPhoneNumber = $this->getParameter('twilio_phone_number');
 
-    // Récupérer l'ID de l'utilisateur connecté (vous devrez implémenter cette partie)
-    $idUser = 3;
+        $twilioClient = new Client($twilioAccountSid, $twilioAuthToken);
 
-    // Définir les valeurs de la réservation
-    $reservation->setIdEnchere($enchere);
-    $reservation->setIdUser($idUser);
-    $reservation->setDate(new \DateTime());
-    $reservation->setConfirmation(true); // ou 1
+        $messageBody = sprintf(
+            'Your affectation has been successfully registered with the following details:' .
+            "\nDescription: %s\nType: %s\nDate: %s\nStatus: %s",
+            $reservation->getConfirmation(),
+            $reservation->getDateReservation()->format('Y-m-d H:i:s'),
+            $reservation->getIdReservation(),
+            $reservation->getIdReservation(),
+            $reservation->getIdReservation()
 
-    // Enregistrer la réservation en base de données
-    $entityManager->persist($reservation);
-    $entityManager->flush();
+        );
 
-    // Rediriger ou effectuer toute autre action nécessaire
-    // Vous pouvez rediriger vers une page de confirmation ou une autre page appropriée
-    return $this->redirectToRoute('nom_de_votre_route_de_redirection');
-}
+        $twilioClient->messages->create(
+            '+21621834550', // Replace with the recipient's phone number
+            [
+                'from' => $twilioPhoneNumber,
+                'body' => $messageBody
+            ]
+        );
+    }
 
 
 
