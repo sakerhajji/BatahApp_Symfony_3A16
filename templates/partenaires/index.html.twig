@@ -11,6 +11,7 @@
                         <h4 class="card-title">Liste des partenaires</h4>
                         <div class="form-group">
                             <input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom">
+                            <button onclick="startDictation()" class="btn btn-info">&#x1F3A4;</button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped" id="users">
@@ -90,6 +91,34 @@
         </div>
     </div>
     <script>
+        // Function to start voice recognition
+        function startDictation() {
+            if ('webkitSpeechRecognition' in window) {
+                var recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;  // Stops capturing after the first pause
+                recognition.interimResults = false;  // We only want the final result
+                recognition.lang = "fr-FR";  // Set the recognition language to French
+
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    // Remove any trailing punctuation such as periods, commas, etc.
+                    transcript = transcript.replace(/[\.,\?!]$/, '').trim();
+                    document.getElementById('searchInput').value = transcript;  // Set the cleaned text as the value of 'searchInput'
+                    recognition.stop();  // Stop the recognition
+
+                    searchTable();  // Assuming 'searchTable' is your search function that triggers the search
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    recognition.stop();
+                };
+
+                recognition.start();  // Start the speech recognition
+            } else {
+                alert('Speech recognition not supported in this browser.');
+            }
+        }
         // Function to perform search
         function searchTable() {
             var input, filter, table, tr, td, i;
@@ -111,6 +140,7 @@
 
 
         document.getElementById("searchInput").addEventListener("input", searchTable);
+
     </script>
 
     <script>

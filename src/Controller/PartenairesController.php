@@ -101,15 +101,28 @@ class PartenairesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('logo')->getData(); // Ensure 'logo' is the correct field name
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // Update the 'logo' property to store the new filename
+                $partenaire->setLogo($newFilename);
+            }
 
             $entityManager->persist($partenaire);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_partenaires_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        // Récupérer les erreurs de validation
-        $errors = $form->getErrors(true);
 
         return $this->render('partenaires/edit.html.twig', [
             'partenaire' => $partenaire,

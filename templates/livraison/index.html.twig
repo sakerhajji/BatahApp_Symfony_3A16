@@ -20,12 +20,20 @@
                 {% for livraison in livraisons %}
                     <tr>
                         <td>{{ livraison.dateLivraison ? livraison.dateLivraison|date('Y-m-d') : '' }}</td>
-                        <td>{{ livraison.statut }}</td>
+                        {% if livraison.statut == 'en attente' %}
+                        <td>{{ livraison.statut }} <i class="fa-solid fa-hourglass-start"></i></td>
+                        {% endif %}
+                        {% if livraison.statut == 'en cours' %}
+                        <td>{{ livraison.statut }} <i class="fa-solid fa-spinner"></i></td>
+                        {% endif %}
+                        {% if livraison.statut == 'Récupéré' %}
+                        <td>{{ livraison.statut }} <i class="fa-solid fa-check"></i></td>
+                        {% endif %}
                         <td>{{ livraison.commande.adresse }}</td>
                         <td>
                             <a href="{{ path('app_livraison_show', {'idLivraison': livraison.idLivraison}) }}">show</a>
                             <a href="{{ path('app_livraison_edit', {'idLivraison': livraison.idLivraison}) }}">edit</a>
-                            {% if livraison.statut == 'en attente' or livraison.statut == 'en cours' %}
+                            {% if livraison.statut == 'en attente'  %}
                                 <a href="{{ path('affecter_partenaire', {'idLivraison': livraison.idLivraison}) }}">affecter</a>
                             {% endif %}
                         </td>

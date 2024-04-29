@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>IdAvis</th>
+                <th>Utilisateur</th>
                 <th>Commentaire</th>
                 <th>actions</th>
             </tr>
@@ -16,7 +16,7 @@
         <tbody>
         {% for avis_livraison in avis_livraisons %}
             <tr>
-                <td>{{ avis_livraison.idAvis }}</td>
+                <td>{{ avis_livraison.livraison.commande.idClient.nomutilisateur }} {{ avis_livraison.livraison.commande.idClient.prenomutilisateur }}</td>
                 <td>{{ avis_livraison.commentaire }}</td>
 
                 <td>

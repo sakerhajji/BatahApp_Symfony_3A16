@@ -17,7 +17,15 @@
         {% for livraison in livraisons %}
             <tr>
                 <td>{{ livraison.dateLivraison|date('Y-m-d') }}</td>
-                <td>{{ livraison.statut }}</td>
+                {% if livraison.statut == 'en attente' %}
+                    <td>{{ livraison.statut }} <i class="fa-solid fa-hourglass-start"></i></td>
+                {% endif %}
+                {% if livraison.statut == 'en cours' %}
+                    <td>{{ livraison.statut }} <i class="fa-solid fa-spinner"></i></td>
+                {% endif %}
+                {% if livraison.statut == 'Récupéré' %}
+                    <td>{{ livraison.statut }} <i class="fa-solid fa-check"></i></td>
+                {% endif %}
                 <td>{{ livraison.commande.adresse }}</td>
 
                 <td>

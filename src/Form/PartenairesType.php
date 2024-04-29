@@ -72,7 +72,22 @@ class PartenairesType extends AbstractType
             ])
 
             ->add('logo', FileType::class, [
-                'attr' => ['class' => 'form-style', 'placeholder' => 'Votre image'],])
+                'label' => 'Logo (Image file)',
+                'mapped' => false, // Important: logo is not automatically mapped to entity
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image file',
+                    ])
+                ],
+            ])
 
         ;
 
