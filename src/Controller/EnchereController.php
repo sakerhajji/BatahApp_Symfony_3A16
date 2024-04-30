@@ -225,6 +225,10 @@ public function waloutalmahboula(Request $request, EncheresRepository $encheresR
 
 
 
+   
+
+
+
 
 }
 

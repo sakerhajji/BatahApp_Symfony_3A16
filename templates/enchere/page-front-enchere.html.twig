@@ -21,7 +21,11 @@
                 <div class="col-12">
                     <div class="full">
                         <h3>Vente aux encheres, En routes pour les bonnes affaires</h3>
+                        
                     </div>
+                    {% for flashMessage in app.flashes('success') %}
+                        <div class="alert alert-success">{{ flashMessage }}</div>
+                    {% endfor %}
                 </div>
                 <div class="col-md-12">
                     <form method="get" action="{{ path('app_Afficheclient_enchere') }}">

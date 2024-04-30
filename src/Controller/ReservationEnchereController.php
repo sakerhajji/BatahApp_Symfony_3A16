@@ -131,6 +131,9 @@ class ReservationEnchereController extends AbstractController
         // Rediriger ou effectuer toute autre action nécessaire
         // Vous pouvez rediriger vers une page de confirmation ou une autre page appropriée
 
+        // Ajouter un message flash de succès
+    $this->addFlash('success', 'La réservation a été ajoutée avec succès et un sms contenant la date de enchere est envoye.');
+
         $this->sendTwilioMessage($reservation);
         return $this->redirectToRoute('app_Afficheclient_enchere',[],Response::HTTP_SEE_OTHER);
     }
