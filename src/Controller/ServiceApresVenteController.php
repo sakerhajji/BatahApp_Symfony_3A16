@@ -6,7 +6,7 @@ use App\Entity\Partenaires;
 use App\Entity\ServiceApresVente;
 use App\Form\ServiceApresVenteType;
 use App\Repository\ServiceApresVenteRepository;
-use App\Services\EmailSender;
+use App\Services\EmailSender2;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -191,7 +191,7 @@ class ServiceApresVenteController extends AbstractController
 </html>
 
 ';
-            $email=new EmailSender();
+            $email=new EmailSender2();
             $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
 
             // Enregistrer les modifications dans la base de données

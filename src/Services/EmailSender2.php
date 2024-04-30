@@ -7,7 +7,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Transport\Dsn;
 
-class EmailSender
+class EmailSender2
 {
     public function sendEmail(string $to , string $subject , string $html,string $imagePath)
     {

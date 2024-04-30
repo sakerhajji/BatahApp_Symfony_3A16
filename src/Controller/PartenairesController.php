@@ -7,7 +7,7 @@ use App\Form\PartenairesType;
 use App\Repository\LivraisonRepository;
 use App\Repository\PartenairesRepository;
 use App\Repository\ServiceApresVenteRepository;
-use App\Services\EmailSender;
+use App\Services\EmailSender2;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -57,7 +57,6 @@ class PartenairesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('logo')->getData();
-            // if($imageFile){
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
             try {

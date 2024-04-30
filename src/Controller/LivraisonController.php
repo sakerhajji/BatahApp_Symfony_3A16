@@ -10,7 +10,7 @@ use App\Entity\ServiceApresVente;
 use App\Form\LivraisonType;
 use App\Repository\CommandsRepository;
 use App\Repository\LivraisonRepository;
-use App\Services\EmailSender;
+use App\Services\EmailSender2;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -273,7 +273,7 @@ class LivraisonController extends AbstractController
 
 
 ';
-            $email=new EmailSender();
+            $email=new EmailSender2();
             $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
 
             // Enregistrer les modifications dans la base de données
