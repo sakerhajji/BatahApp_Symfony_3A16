@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
+
+use App\Controller\DateTime;
 
 class InputControl
 {

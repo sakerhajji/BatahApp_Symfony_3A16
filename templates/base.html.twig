@@ -491,11 +491,11 @@
                                         <div class="ed_menu_list">
                                             <ul>
                                                 {% block dashboard %}
-                                                    <li><a href="/home"><span class="flaticon-dashboard"></span>Dashboard</a></li>
+                                                    <li><a href="{{ path('app_utilisateur_index') }}"><span class="flaticon-dashboard"></span>Dashboard</a></li>
                                                 {% endblock %}
 
                                                 {% block profile %}
-                                                    <li><a href="{{ path('app_utilisateur_index') }}"><span class="flaticon-user-2"></span>Profile</a></li>
+                                                    <li><a href="{{ path('profile') }}"><span class="flaticon-user-2"></span>Profile</a></li>
                                                 {% endblock %}
 
                                                 {% block my_listing %}
@@ -512,6 +512,10 @@
 
                                                 {% block messages %}
                                                     <li><a href="page-dashboard-messages.html"><span class="flaticon-message"></span>Messages</a></li>
+                                                {% endblock %}
+
+                                                {% block csv %}
+                                                    <li><a href="{{ path('test') }}"><span class="flaticon-message"></span>csv import</a></li>
                                                 {% endblock %}
 
                                                 {% block partenaires %}

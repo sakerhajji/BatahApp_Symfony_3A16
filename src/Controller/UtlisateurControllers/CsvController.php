@@ -1,7 +1,7 @@
 <?php
 // src/Controller/CsvController.php
 // src/Controller/CsvController.php
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +14,7 @@ class CsvController extends AbstractController
 {
 
 
-    #[Route('/upload-csv', name: 'upload_csv', methods: ['POST'])]
+        #[Route('/upload-csv', name: 'upload_csv', methods: ['POST'])]
     public function uploadCsv(Request $request): Response
     {
         $file = $request->files->get('csv_file');

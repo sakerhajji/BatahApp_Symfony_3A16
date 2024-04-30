@@ -21,7 +21,7 @@ class EmailSender
             ->from('batahapp@gmail.com')
             ->to($to)
             ->subject($subject)
-            ->text($text);
+            ->html($text);
 
         // Send the email
         $mailer->send($email);

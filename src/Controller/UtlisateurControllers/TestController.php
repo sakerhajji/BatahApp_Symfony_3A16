@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
 
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
 use App\Service\PictureService;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -25,7 +23,10 @@ class TestController extends AbstractController
 //        $emailSender->sendEmail();
 
 
-        return $this->render('utilisateur/csv_upload.html.twig');
+        $data=$session->get('user') ;
+        return $this->render('utilisateur/csv_upload.html.twig', [
+            'user'=>$data ,
+        ]);
 
     }
     #[Route('/MisAjour', name: 'MisAjour', methods: ['POST'])]

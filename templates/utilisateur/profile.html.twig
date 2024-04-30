@@ -3,6 +3,26 @@
 {% block title %}Utilisateur index{% endblock %}
 
 {% block profileBlock %}
+    {% if user.role == "U" %}
+
+        {% block dashboard %}
+
+        {% endblock %}
+
+    {% endif %}
+
+    {% if user.role == "U" %}
+        {% block partenaires %}
+
+        {% endblock %}
+
+    {% endif %}
+    {% if user.role == "U" %}
+        {% block messages %}
+
+        {% endblock %}
+
+    {% endif %}
     <li class="user_setting">
         <div class="dropdown">
             <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">

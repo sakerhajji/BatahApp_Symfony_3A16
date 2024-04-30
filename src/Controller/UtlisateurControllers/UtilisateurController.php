@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
 
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
 use App\Service\EmailSender;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -109,7 +108,36 @@ class UtilisateurController extends AbstractController
         ['user'=>$user]);
     }
 
+    #[Route('/update-password', name: 'update_password', methods: ['POST'])]
+    public function updatePassword(Request $request, UtilisateurRepository $repository, SessionInterface $session): Response
+    {
+        $data = $request->request->all();
+        $newPassword = $data['password'];
+        $newPasswordConfirmation = $data['confirm_password'];
+        $user = $session->get('user');
 
+        if ($newPassword !== $newPasswordConfirmation) {
+            return $this->redirectToRoute('forget_password_');
+        }
+
+        $repository->updatePasswor($user->getId(), $newPassword);
+        return $this->redirectToRoute('app_login');
+    }
+
+    #[Route('/resive', name: 'resive', methods: ['POST'])]
+    public function resivecode(Request $request, UtilisateurRepository $repository, SessionInterface $session): Response
+    {
+        $data = $request->request->all();
+        $code = $data['code'] ;
+        $codeSession=$session->get('code') ;
+
+
+        if (($code ==$codeSession) == true  ) {
+            return $this->render('utilisateur/newPassword.html.twig');
+        } else {
+            return $this->redirectToRoute('forget_password_');
+        }
+    }
 
 
     #[Route('/ForgetPassword', name: 'ForgetPassword', methods: ['POST'])]
@@ -137,13 +165,86 @@ class UtilisateurController extends AbstractController
         $session->set('user',$utilisateur);
 
 
-        $message = $randomNumber ;
+
+        $message = '
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modification de mot de passe</title>
+    <style>
+        body {
+            font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 100px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="cid:logo" alt="Logo de votre société" class="logo">
+        <div class="content">
+            <p>Bonjour <strong>'. $utilisateur->getNomUtilisateur() .'</strong>,</p>
+            <p>Vous avez demandé à réinitialiser votre mot de passe. Veuillez utiliser le code suivant pour procéder à la modification :</p>
+            <p>Votre code de réinitialisation est : <strong>'.$randomNumber.'</strong></p>
+            
+           <p>Merci de faire confiance à notre service.</p>
+        </div>
+        <div class="footer">
+            Pour toute assistance, contactez-nous au : +21623456789<br>
+            <small>© Nom de votre société - Tous droits réservés</small>
+        </div>
+    </div>
+</body>
+</html>
+';
+
+
 
         $emailSender = new EmailSender() ;
         $emailSender->sendEmail("saker.hajji13@gmail.com", "[Reset Password]", $message);
 
         $this->addFlash('success', 'A reset code has been sent to your email.');
-        return $this->redirectToRoute('resive');
+        return $this->render('utilisateur/resivecode.html.twig');
 
     }
 

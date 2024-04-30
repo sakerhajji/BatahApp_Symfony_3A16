@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
 
 use App\Entity\Partenaires;
 use App\Form\PartenairesType;

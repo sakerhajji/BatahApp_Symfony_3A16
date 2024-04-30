@@ -1,13 +1,13 @@
 <?php
 
 # Controller/GoogleController
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
 
+use App\Security\GoogleAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Security\GoogleAuthenticator;
 
 class GoogleController extends AbstractController
 {

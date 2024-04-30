@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\UtlisateurControllers;
 
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/forget-password', name: 'forget_password_')]
+
 class ForgetPasswordController extends AbstractController
 {
-    #[Route('/', name: 'index', methods: ['GET'])]
+    #[Route('/forget-password', name: 'forget_password_' , methods: ['GET'])]
     public function index(Request $request): Response
     {
         return $this->render('utilisateur/forgetPassword.html.twig');
@@ -25,16 +25,18 @@ class ForgetPasswordController extends AbstractController
     {
         $data = $request->request->all();
         $code = $data['code'] ?? null;
-
-        if ($code === $session->get('code')) {
+        $codeSession=$session->get('code') ;
+dd($code == $codeSession) ;
+        if ($code == $codeSession) {
             return $this->render('utilisateur/newPassword.html.twig');
         } else {
             return $this->render('utilisateur/forgetPassword.html.twig');
         }
     }
 
-    #[Route('/reset', name: 'reset_App', methods: ['POST'])]
+    #[Route('/reset', name: 'reset', methods: ['POST'])]
     public function reset(Request $request, UtilisateurRepository $repository, SessionInterface $session): Response
+
     {
         $data = $request->request->all();
 
@@ -73,22 +75,15 @@ class ForgetPasswordController extends AbstractController
     {
         $data = $request->request->all();
         $newPassword = $data['password'];
-        $newPasswordConfirmation = $data['cpassword'];
+        $newPasswordConfirmation = $data['confirm_password'];
         $user = $session->get('user');
 
         if ($newPassword !== $newPasswordConfirmation) {
-            $this->addFlash('error', 'Passwords do not match.');
-            return $this->redirectToRoute('your_form_route_name', ['userId' => $user->getId()]);
+            return $this->redirectToRoute('update_password');
         }
 
-        $affectedRows = $repository->updatePasswordDQL($user->getId(), $newPassword);
+        $affectedRows = $repository->updatePasswor($user->getId(), $newPassword);
 
-        if ($affectedRows === 0) {
-            $this->addFlash('error', 'No user found or password unchanged');
-            return $this->redirectToRoute('your_form_route_name', ['userId' => $user->getId()]);
-        }
-
-        $this->addFlash('success', 'Password updated successfully');
-        return $this->redirectToRoute('some_success_route');
+        return $this->redirectToRoute('app_login');
     }
 }
