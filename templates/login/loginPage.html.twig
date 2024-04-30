@@ -1,5 +1,5 @@
 {% extends 'front.html.twig' %}
-{% block title %}Incription{% endblock %}
+{% block title %}Login{% endblock %}
 {% block main %}
     <section class="our-log bgc-f9">
         <div class="container">
@@ -7,7 +7,7 @@
                 <div class="col-md-6 col-lg-6 col-xl-5">
                     <div class="login_form mt60-sm">
                         <h2 class="title">Sign in</h2>
-                        <p>New to Cars.com? <a href="page-register.html">Sign up.</a> Are you a dealer?</p>
+                        <p>New to Cars.com? <a href={{ path('app_signup') }}>Sign up.</a> Are you a dealer?</p>
                         <form action="{{ path('Login') }}" method="post" id="login_form">
                             <div class="mb-2 mr-sm-2">
                                 <label class="form-label">Username or email address  *</label>
@@ -31,8 +31,7 @@
                     <div class="login_with">
                         <h2 class="title">Connect With Social</h2>
                         <div class="social_btn">
-                            <a class="btn btn_fb" href="#"><span class="fab fa-facebook-f"></span>Log In via Facebook</a><br>
-                            <a class="btn btn_google" href="#"><span class="fab fa-google"></span>Log In via Google+</a>
+                            <a class="btn btn_google" href="{{ path('connect_google') }}"><span class="fab fa-google"></span>Log In via Google+</a>
                         </div>
                     </div>
                 </div>
@@ -41,7 +40,7 @@
         </div>
 
             {% block jsControle %}
-{#                <script src="{{ asset('js/LogControl.js') }}"></script>#}
+                <script src="{{ asset('js/LogControl.js') }}"></script>
                 <script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>
                 <script>
                     grecaptcha.ready(function() {

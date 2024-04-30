@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
+use App\Service\EmailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -116,17 +117,33 @@ class UtilisateurController extends AbstractController
     {
 
         $data = $request->request->all();
-        $utilisateur = new Utilisateur();
-        $utilisateur->setAdresseemail($data['email']);
-        $utilisateur = $repository->ForgetPassword($utilisateur->getAdresseemail());
-        if ($utilisateur != null) //return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
-        {
-            $session->set('user', $utilisateur);
-            dd($session->get('user'));
+        $email = $data['email'] ?? null;
 
-        } else
-            dd("mail n'existe pas");
+        if (!$email) {
+            // Assuming you have a flash message system or similar to notify the user
+            $this->addFlash('error', 'No email provided.');
+            return $this->redirectToRoute('your_fallback_route_here');
+        }
+        $utilisateur=new Utilisateur();
+        $utilisateur=$repository->ForgetPassword($email) ;
 
+        if ($utilisateur == null ) {
+            $this->addFlash('error', 'Email does not exist.');
+            return $this->render('utilisateur/forgetPassword.html.twig');
+        }
+
+        $randomNumber = rand(1000, 9999);
+        $session->set('code', $randomNumber);
+        $session->set('user',$utilisateur);
+
+
+        $message = $randomNumber ;
+
+        $emailSender = new EmailSender() ;
+        $emailSender->sendEmail("saker.hajji13@gmail.com", "[Reset Password]", $message);
+
+        $this->addFlash('success', 'A reset code has been sent to your email.');
+        return $this->redirectToRoute('resive');
 
     }
 

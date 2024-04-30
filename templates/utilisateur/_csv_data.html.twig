@@ -1,0 +1,65 @@
+{# templates/partials/_csv_data.html.twig #}
+{% if data is not empty %}
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="shortcode_widget_table">
+                <div class="ui_kit_table">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">
+                                <!-- Check all checkbox -->
+                                <input type="checkbox" id="check_all" onclick="toggleCheckboxes(this)">
+                            </th>
+                            <th scope="col">Firstname</th>
+                            <th scope="col">Lastname</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Sexe</th>
+                            <th scope="col">Telephone</th>
+                            <th scope="col">CIN</th>
+                            <th scope="col">Password</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in data %}
+                            <tr id="row-{{ loop.index }}">
+                                <td>
+                                    <!-- Individual row checkbox -->
+                                    <input type="checkbox" class="row_checkbox" data-row-id="{{ loop.index }}" data-row-data="{{ row|json_encode }}">
+                                </td>
+                                <td class="body-color">{{ row.firstname|e }}</td>
+                                <td class="body-color">{{ row.lastname|e }}</td>
+                                <td class="body-color">{{ row.email|e }}</td>
+                                <td class="body-color">{{ row.datedenaissance|e }}</td>
+                                <td class="body-color">{{ row.sexe|e }}</td>
+                                <td class="body-color">{{ row.telephone|e }}</td>
+                                <td class="body-color">{{ row.cin|e }}</td>
+                                <td class="body-color">{{ row.password|e }}</td>
+                                <td class="body-color">{{ row.role|e }}</td>
+                                <td>
+                                    <!-- Delete icon button -->
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow({{ loop.index }})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Button to send selected rows to controller -->
+                    <button type="button" class="btn btn-primary mt-3" onclick="sendSelectedRowsToController()">
+                        Send Selected to Controller
+                    </button>
+                    <button type="button" class="btn btn-danger mt-3" onclick="deleteSelectedRows()">
+                        Delete Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <p>No data to display.</p>
+{% endif %}

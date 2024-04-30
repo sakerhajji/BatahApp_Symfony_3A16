@@ -490,27 +490,41 @@
                                     <div class="extra-dashboard-menu dn-lg">
                                         <div class="ed_menu_list">
                                             <ul>
-                                                <li><a href="/home"><span class="flaticon-dashboard"></span>Dashboard</a>
-                                                </li>
-                                                <li><a href="{{ path('app_utilisateur_index') }}"><span
-                                                                class="flaticon-user-2"></span>Profile</a></li>
-                                                <li><a href="page-dashboard-listing.html"><span
-                                                                class="flaticon-list"></span>My Listing</a></li>
-                                                <li><a href="page-dashboard-favorites.html"><span
-                                                                class="flaticon-heart"></span>Favorites</a></li>
-                                                <li><a href="page-dashboard-add-listings.html"><span
-                                                                class="flaticon-plus"></span>Add Listing</a></li>
-                                                <li><a href="page-dashboard-messages.html"><span
-                                                                class="flaticon-message"></span>Messages</a></li>
-                                                <li><a href="{{ path('app_partenaires_index') }}"><span
-                                                                class="flaticon-list"></span>Partenaires</a></li>
-                                                <li><a href="{{path('app_login')}}"><span
-                                                                class="flaticon-logout"></span>Logout</a></li>
+                                                {% block dashboard %}
+                                                    <li><a href="/home"><span class="flaticon-dashboard"></span>Dashboard</a></li>
+                                                {% endblock %}
+
+                                                {% block profile %}
+                                                    <li><a href="{{ path('app_utilisateur_index') }}"><span class="flaticon-user-2"></span>Profile</a></li>
+                                                {% endblock %}
+
+                                                {% block my_listing %}
+                                                    <li><a href="page-dashboard-listing.html"><span class="flaticon-list"></span>My Listing</a></li>
+                                                {% endblock %}
+
+                                                {% block favorites %}
+                                                    <li><a href="page-dashboard-favorites.html"><span class="flaticon-heart"></span>Favorites</a></li>
+                                                {% endblock %}
+
+                                                {% block add_listing %}
+                                                    <li><a href="page-dashboard-add-listings.html"><span class="flaticon-plus"></span>Add Listing</a></li>
+                                                {% endblock %}
+
+                                                {% block messages %}
+                                                    <li><a href="page-dashboard-messages.html"><span class="flaticon-message"></span>Messages</a></li>
+                                                {% endblock %}
+
+                                                {% block partenaires %}
+                                                    <li><a href="{{ path('app_partenaires_index') }}"><span class="flaticon-list"></span>Partenaires</a></li>
+                                                {% endblock %}
+
+                                                <li><a href="{{ path('app_login') }}"><span class="flaticon-logout"></span>Logout</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="row">
                                 <div class="col-lg-12">

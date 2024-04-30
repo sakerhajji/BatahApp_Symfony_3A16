@@ -14,70 +14,72 @@ class Utilisateur
     private int $id;
 
     #[ORM\Column(name: "idGoogle", type: "string", length: 255, nullable: true)]
-    private ?string $idgoogle;
+    private ?string $idgoogle =null;
 
     #[ORM\Column(name: "nomUtilisateur", type: "string", length: 30, nullable: true)]
-    private ?string $nomutilisateur;
+    private ?string $nomutilisateur =null;
 
     #[ORM\Column(name: "prenomUtilisateur", type: "string", length: 50, nullable: true)]
-    private ?string $prenomutilisateur;
+    private ?string $prenomutilisateur=null;
 
     #[ORM\Column(name: "sexe", type: "string", length: 1, nullable: true, options: ["fixed" => true])]
-    private ?string $sexe;
+    private ?string $sexe = null;
 
     #[ORM\Column(name: "dateDeNaissance", type: "date", nullable: true)]
-    private ?\DateTimeInterface $datedenaissance;
+    private ?\DateTimeInterface $datedenaissance = null;
 
     #[ORM\Column(name: "adresseEmail", type: "string", length: 100, nullable: true)]
-    private ?string $adresseemail;
+    private ?string $adresseemail = null;
 
     #[ORM\Column(name: "motDePasse", type: "string", length: 30, nullable: true)]
-    private ?string $motdepasse;
+    private ?string $motdepasse = null;
 
     #[ORM\Column(name: "adressePostale", type: "string", length: 60, nullable: true)]
-    private ?string $adressepostale;
+    private ?string $adressepostal = null;
 
     #[ORM\Column(name: "numeroTelephone", type: "string", length: 30, nullable: true)]
-    private ?string $numerotelephone;
+    private ?string $numerotelephone = null;
 
     #[ORM\Column(name: "numeroCin", type: "string", length: 9, nullable: true)]
-    private ?string $numerocin;
+    private ?string $numerocin = null;
 
     #[ORM\Column(name: "pays", type: "string", length: 50, nullable: true)]
-    private ?string $pays;
+    private ?string $pays = null;
 
     #[ORM\Column(name: "nbrProduitAchat", type: "integer", nullable: true)]
-    private ?int $nbrproduitachat;
+    private ?int $nbrproduitachat = null;
 
     #[ORM\Column(name: "nbrProduitVendu", type: "integer", nullable: true)]
-    private ?int $nbrproduitvendu;
+    private ?int $nbrproduitvendu = null;
 
     #[ORM\Column(name: "nbrProduit", type: "integer", nullable: true)]
-    private ?int $nbrproduit;
+    private ?int $nbrproduit = null;
 
     #[ORM\Column(name: "nbrPoint", type: "integer", nullable: true)]
-    private ?int $nbrpoint;
+    private ?int $nbrpoint = null;
 
     #[ORM\Column(name: "languePreferree", type: "string", length: 50, nullable: true)]
-    private ?string $languepreferree;
+    private ?string $languepreferree = null;
 
     #[ORM\Column(name: "evaluationUtilisateur", type: "float", precision: 10, scale: 0, nullable: true)]
-    private ?float $evaluationutilisateur;
+    private ?float $evaluationutilisateur = null;
 
     #[ORM\Column(name: "statutVerificationCompte", type: "boolean", nullable: true)]
-    private ?bool $statutverificationcompte;
+    private ?bool $statutverificationcompte = null;
 
     #[ORM\Column(name: "avatar", type: "string", length: 255, nullable: true)]
-    private ?string $avatar;
+    private ?string $avatar = null;
 
     #[ORM\Column(name: "dateInscription", type: "datetime", nullable: true)]
-    private ?\DateTimeInterface $dateinscription;
+    private ?\DateTimeInterface $dateinscription = null;
 
     #[ORM\Column(name: "role", type: "string", length: 1, nullable: true, options: ["fixed" => true])]
-    private ?string $role;
+    private ?string $role = "U";
 
     public function __construct()
     {
+        $this->dateinscription = new \DateTime(); // Définit la date actuelle
+
     }
 
     public function getId(): int

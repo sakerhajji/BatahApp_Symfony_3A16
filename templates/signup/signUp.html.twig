@@ -7,7 +7,7 @@
                 <div class="col-md-6 col-lg-6 col-xl-5">
                     <div class="sign_up_form mt60-sm">
                         <h2 class="title">Sign up</h2>
-                        <p>Already have a profile? <a href="page-login.html">Sign in.</a></p>
+                        <p>Already have a profile? <a href={{ path('app_login') }}>Sign in.</a></p>
                         <form action="{{ path('Iscription') }}" method="post" id="singUp">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -56,9 +56,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
-                            </div>
+                            <input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
+
                             <button type="submit" class="btn btn-signup btn-thm mb0">Sign Up</button>
                         </form>
                     </div>
@@ -67,8 +66,8 @@
                     <div class="login_with signup_page mt0-sm">
                         <h2 class="title">Connect With Social</h2>
                         <div class="social_btn">
-                            <a class="btn btn_fb" href="#"><span class="fab fa-facebook-f"></span>Log In via Facebook</a><br>
-                            <a class="btn btn_google" href="#"><span class="fab fa-google"></span>Log In via Google+</a>
+{#                            <a class="btn btn_fb" href="#"><span class="fab fa-facebook-f"></span>Log In via Facebook</a><br>#}
+                            <a class="btn btn_google" href="{{ path('connect_google') }}"><span class="fab fa-google"></span>Log In via Google+</a>
                         </div>
                     </div>
                 </div>
@@ -76,12 +75,21 @@
         </div>
     </section>
     {% if errorMsg|length > 0 %}
+
         <div class="alert alert-danger" role="alert">
             {{ errorMsg }}
         </div>
     {% endif %}
     {% block jsControle %}
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>
+        <script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{ site_key }}', {action: 'submit'}).then(function(token) {
+                    document.getElementById('recaptchaResponse').value = token;
+                });
+            });
+        </script>
+
         <script src="{{ asset('js/SignUPControl.js') }}"></script>
     {% endblock %}
 {% endblock %}

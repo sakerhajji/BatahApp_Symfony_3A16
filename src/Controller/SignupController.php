@@ -10,18 +10,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SignupController extends AbstractController
 {
+    private HttpClientInterface $client;  // Inject HttpClient
+    public function __construct(HttpClientInterface $client)
+    {
 
+        $this->client = $client;
+    }
     #[Route('/signUp', name: 'app_signup', methods: ['GET', 'POST'])]
     public function index(request $request): Response
     {
-        $recaptchaSiteKey = $this->getParameter('recaptcha.site_key');
+
         $errorMsg = $request->get('errorMsg');
         return $this->render('signup/signUp.html.twig', [
             'errorMsg' => $errorMsg,
-            'recaptcha_site_key' => $recaptchaSiteKey ,
+            'site_key' => $this->getParameter('recaptcha_site_key'),
+
         ]);
 
     }
@@ -29,16 +36,35 @@ class SignupController extends AbstractController
     #[Route('/Iscription', name: 'Iscription', methods: ['POST'])]
     public function Iscription(Request $request, EntityManagerInterface $entityManager ,UtilisateurRepository $repository , SessionInterface $session): Response
     {
+        $recaptchaResponse = $request->request->get('g-recaptcha-response');
+        $remoteIp = $request->getClientIp();
+        $secret = $this->getParameter('recaptcha_secret_key');
+
+        if (!$recaptchaResponse) {
+            return $this->redirectToRoute('app_signup', ['errorMsg' => 'reCAPTCHA response not found.']);
+        }
+
+        $response = $this->client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'body' => [
+                'secret' => $secret,
+                'response' => $recaptchaResponse,
+                'remoteip' => $remoteIp
+            ]
+        ]);
+
+        $result = $response->toArray();
+        if (!($result['success'] ?? false)) {
+            return $this->redirectToRoute('app_signup', ['errorMsg' => 'Invalid reCAPTCHA.']);
+        }
+
+
+
+
 
         $errorMsg = "Invalide formulaire d'inscription. Veuillez vérifier vos informations.";
         $check = new InputControl();
         $data = $request->request->all();
-
-        // Find the Utilisateur object by its identifier
         $utilisateur = new Utilisateur();
-
-
-        // Proceed with your logic if the Utilisateur object exists
         $utilisateur->setNomutilisateur($data['first_name']);
         $utilisateur->setPrenomutilisateur($data['last_name']);
         $utilisateur->setAdresseemail($data['email']);
