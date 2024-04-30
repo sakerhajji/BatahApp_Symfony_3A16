@@ -66,4 +66,36 @@ class BasketService
 
         $this->entityManager->flush();
     }
+
+    public function applyPromoCode($userId, $promoCode)
+    {
+        // Vérifier si le code promo est "battah"
+        if ($promoCode === "battah") {
+            // Récupérer les articles dans le panier de l'utilisateur
+            $panier = $this->entityManager->getRepository(Basket::class)->findBy([
+                'idClient' => $userId
+            ]);
+
+            // Calculer la remise de 20% sur le prix total du panier
+            $totalPrice = 0;
+            foreach ($panier as $item) {
+                $totalPrice += $item->getIdProduit()->getPrix();
+            }
+            $discount = $totalPrice * 0.20; // 20% de remise
+
+            // Appliquer la remise à chaque article dans le panier
+            foreach ($panier as $item) {
+                $article = $item->getIdProduit();
+                $article->setPrix($article->getPrix() - ($discount / count($panier)));
+                $this->entityManager->persist($article);
+            }
+
+            // Sauvegarder les modifications dans la base de données
+            $this->entityManager->flush();
+
+            return true; // Remise appliquée avec succès
+        } else {
+            return false; // Code promo invalide
+        }
+    }
 }

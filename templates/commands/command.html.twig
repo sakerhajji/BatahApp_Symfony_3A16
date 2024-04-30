@@ -170,23 +170,18 @@
 						<hr style="margin-top: 5px;">
 
 						<div class="row" style="margin-top: -8px;">
-
-							<div class="col-md-9">
-								<h6 class="card-title">Total</h6>
-							</div>
-
-							<div class="col-md-3">
-								<h6 class="card-title">{{totalPrice + 8}} DT</h6>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-md-12">
-								<a id="sending" href="{{ path('app_confirmCommand', {'livMethod': 'livraison', 'payMethod': 'paiement', 'adress': 'mmmmm'}) }}">
-								<button type="button" class="btn btn-primary btn-round btn-block" style="margin-top: 12px; margin-left:40%; font-weight:bold;">Commander</button>
-								</a>
-							</div>
-						</div>
+    <div class="col-md-9">
+        <h6 class="card-title">Total</h6>
+    </div>
+    <div class="col-md-3">
+        <h6 class="card-title">{{ totalPrice + 8 }} DT</h6>
+    </div>
+    <div class="col-md-12"> <!-- Ajout d'une nouvelle colonne pour le bouton Commander -->
+        <a id="sending" href="{{ path('app_confirmCommand', {'livMethod': 'livraison', 'payMethod': 'paiement', 'adress': 'mmmmm'}) }}">
+            <button type="button" class="btn btn-primary btn-round btn-block" style="margin-top: 12px; margin-left:0%; font-weight:bold;">Commander</button>
+        </a>
+    </div>
+</div>
 					</div>
 
 

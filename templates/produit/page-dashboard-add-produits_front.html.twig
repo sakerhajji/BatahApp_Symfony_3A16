@@ -84,14 +84,7 @@
     {{ form_widget(form.periodeGarantie, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
     {{ form_errors(form.periodeGarantie) }}
 </div>
-{#
-<div class="mb-3">
-    {{ form_label(form.photo, "Photo", {'class': 'form-label'}) }}
-    {{ form_widget(form.photo, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)', 'required': 'required'}}) }}
-    <img id="imagePreview" src="#" alt="Preview" class="preview-image" style="max-width: 200px; display: none; margin-top: 10px;">
-    {{ form_errors(form.photo) }}
-</div>
-#}
+
 <div class="mb20">
     {{ form_label(form.images, "Images") }}
     {{ form_widget(form.images, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
@@ -110,6 +103,10 @@
     {{ form_errors(form.localisation) }}
     <iframe id="mapIframe" width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
 </div>
+
+ {# Champ de formulaire CAPTCHA #}
+ <img src="{{ path('captcha') }}" alt="CAPTCHA">
+ <input type="text" id="captcha" name="captcha">
 
 {% if is_granted('ROLE_USER') %}
 <!-- Champ caché pour stocker l'ID de l'utilisateur -->

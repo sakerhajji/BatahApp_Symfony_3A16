@@ -12,6 +12,8 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.18.0",
         "dompdf/dompdf": "^2.0",
+        "endroid/qr-code": "^5.0",
+        "gregwar/captcha": "^1.2",
         "knplabs/knp-paginator-bundle": "^5.9",
         "knplabs/knp-snappy": "^1.5",
         "phpdocumentor/reflection-docblock": "^5.3",

@@ -30,24 +30,41 @@ use App\Repository\BasketRepository;
 use App\Repository\ImageRepository;
 use App\Repository\UtilisateurRepository;
 use App\Repository\ViewsRepository;
+use App\Service\BasketService;
 use App\Service\EmailSender;
 use App\Service\TwilioService;
 use Dompdf\Dompdf;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mailer\MailerInterface;
+use Gregwar\Captcha\CaptchaBuilder;
+
+
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Color\Color;
+
+use Twilio\Rest\Client;
+
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class ProduitController extends AbstractController
 {
     private $session;
+    private $managerRegistry;
 
-    public function __construct(SessionInterface $session)
+
+
+    public function __construct(SessionInterface $session, ManagerRegistry $managerRegistry)
     {
         $this->session = $session;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/home', name: 'app_home')]
@@ -59,6 +76,26 @@ class ProduitController extends AbstractController
 
     /************************************************************************************************************************************************* */
     /**************************************************************CRUD-PRODUCT*********************************************************************************** */
+
+    public function captcha(Request $request): Response
+    {
+        // Crée un nouveau builder de CAPTCHA
+        $builder = new CaptchaBuilder();
+
+        // Génère le CAPTCHA
+        $builder->build();
+
+        // Stocke le texte du CAPTCHA dans la session
+        $request->getSession()->set('captcha', $builder->getPhrase());
+
+        // Crée une réponse avec l'image CAPTCHA
+        $response = new Response($builder->output());
+
+        // Définis le type de contenu de la réponse
+        $response->headers->set('Content-Type', 'image/jpeg');
+
+        return $response;
+    }
 
 
     #[Route('/ajout', name: 'app_produit')]
@@ -80,6 +117,10 @@ class ProduitController extends AbstractController
 
         // Choix de la template en fonction du rôle de l'utilisateur
         $template = $isAdmin ? 'produit/page-dashboard-add-produits.html.twig' : 'produit/page-dashboard-add-produits_front.html.twig';
+
+
+
+
 
 
         $prod = new Produits();
@@ -570,8 +611,34 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
 
 
+    #[Route('/likeReclamations/{idProduit}', name: 'likeReclamations', methods: ['POST'])]
+    public function likeReclamations(Request $request, $idProduit, SessionInterface $session): JsonResponse
+    {
+        $reponse = $this->managerRegistry->getRepository(Produits::class)->find($idProduit);
 
+        if (!$reponse) {
+            throw $this->createNotFoundException('Réponse non trouvée');
+        }
 
+        // Get the liked status from the session or default to false
+        $liked = $session->get('liked_' . $idProduit, false);
+
+        // Toggle the liked status
+        $liked = !$liked;
+
+        // Update the liked status in the session
+        $session->set('liked_' . $idProduit, $liked);
+
+        // Update the likes count in the database
+        $likesCount = $reponse->getLikes() + ($liked ? 1 : -1);
+        $reponse->setLikes($likesCount);
+
+        $em = $this->managerRegistry->getManager();
+        $em->persist($reponse);
+        $em->flush();
+
+        return new JsonResponse(['likesCount' => $likesCount]);
+    }
 
     /************************************************************************************************************************************************* */
     /************************************************************************************************************************************************* */
@@ -630,6 +697,8 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
 
 
+    /*
+**********************excel*************************
 
     #[Route('/exportExcel', name: 'exportExcel')]
     public function exportExcel(Request $request)
@@ -672,6 +741,74 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
         // Return the Excel file as a response
         return $this->file($filename);
+    }
+*/
+    #[Route('/excel', name: 'exportExcel')]
+    public function generate(Request $request): Response
+    {
+        // Récupère les données depuis la base de données
+        $activites = $this->getDoctrine()->getRepository(Produits::class)->findAll();
+
+        // Crée une nouvelle instance de la classe Spreadsheet
+        $spreadsheet = new Spreadsheet();
+
+        // Sélectionne la feuille active
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Charge le logo depuis le serveur
+        $logoPath = $this->getParameter('kernel.project_dir') . '/public/imagescopy/logoCampigo2.jpg';
+        $drawing = new Drawing();
+        $drawing->setPath($logoPath);
+        $drawing->setCoordinates('B1');
+
+
+
+        // Définit les dimensions du logo
+        $drawing->setWidth(250); // Largeur du logo en pixels
+        $drawing->setHeight(250); // Hauteur du logo en pixels
+
+        // Ajoute le logo à la feuille de calcul
+        $drawing->setWorksheet($sheet);
+
+        // Ajustement de la taille des colonnes
+        $sheet->getColumnDimension('B')->setWidth(20); // Ajuste la largeur de la colonne B
+        $sheet->getColumnDimension('C')->setWidth(20); // Ajuste la largeur de la colonne C
+        // Ajoute d'autres ajustements de taille de colonnes si nécessaire
+
+        // Ajustement de la taille des lignes
+        $sheet->getRowDimension(15)->setRowHeight(30);
+
+        // Décalage pour la première ligne après le logo
+        $rowOffset = 2;
+
+        // Ajoute les en-têtes des colonnes
+        $sheet->setCellValue('B15', 'labelle');
+        $sheet->setCellValue('C15', 'prix');
+        $sheet->setCellValue('D15', 'status');
+        $sheet->setCellValue('E15', 'periodegarantie');
+        $sheet->setCellValue('F15', 'description');
+
+        // Ajoute les données à la feuille de calcul
+        $row = 15 + $rowOffset; // Commence à la ligne 2 après le logo
+        foreach ($activites as $activite) {
+            $sheet->setCellValue('A' . $row, $activite->getLabelle());
+            $sheet->setCellValue('B' . $row, $activite->getPrix());
+            $sheet->setCellValue('C' . $row, $activite->getStatus());
+            $sheet->setCellValue('D' . $row, $activite->getPeriodeGarantie());
+            $sheet->setCellValue('E' . $row, $activite->getDescription());
+            $row++;
+        }
+
+        // Spécifie le nom du fichier Excel
+        $fileName = 'activites.xlsx';
+
+        // Sauvegarde le fichier Excel dans le répertoire d'export
+        $exportPath = $this->getParameter('kernel.project_dir') . '/public/exports/' . $fileName;
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($exportPath);
+
+        // Répond à la requête avec un message de succès
+        return new Response('Fichier Excel généré avec succès : <a href="/exports/' . $fileName . '">Télécharger</a>');
     }
 
 
@@ -1123,5 +1260,68 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
         // Réponse à l'utilisateur
         return new Response('SMS envoyé avec succès!');
+    }
+
+    /* *************************************************** code promo ************************ */
+    #[Route('/appliquer-code-promo', name: 'app_applyPromoCode')]
+    public function applyPromoCode(Request $request, BasketService $basketService): Response
+    {
+        $promoCode = $request->request->get('promoCode');
+        $userId = $request->getSession()->get('user')->getId(); // Supposons que tu utilises la session pour stocker l'utilisateur connecté
+
+        // Appeler la méthode applyPromoCode du service BasketService
+        if ($basketService->applyPromoCode($userId, $promoCode)) {
+            // Rediriger vers le panier avec un message de succès
+            $this->addFlash('success', 'Code promo appliqué avec succès.');
+        } else {
+            // Code promo invalide, afficher un message d'erreur
+            $this->addFlash('error', 'Code promo invalide.');
+        }
+
+        return $this->redirectToRoute('app_panier');
+    }
+    /* *************************************************** QrCode ************************ */
+
+
+    #[Route('/{id}/participate', name: 'app_evenement_participate', methods: ['POST'])]
+    public function participate(Request $request, Produits $service, EntityManagerInterface $entityManager): Response
+    {
+        // Create a new participationé& ²
+        // $participation = new Participation();
+        //$participation->setIds($service->getIdProduit()); // Set service ID
+        //$participation->setNbrDeParticipant($participation->getNbrDeParticipant() + 1); // Increment number of participants
+
+        // Persist the participation-0  
+        //$entityManager->persist($participation);
+        //  $entityManager->flush();
+
+        // Send a QR code to the user
+        $qrCodeText = "Model: " . $service->getDescription();
+        $qr_code = QrCode::create($qrCodeText)
+            ->setSize(600)
+            ->setMargin(40)
+            ->setForegroundColor(new Color(255, 128, 0))
+            ->setBackgroundColor(new Color(155, 204, 255));
+        $writer = new PngWriter;
+        $result = $writer->write($qr_code);
+        $response = new Response($result->getString());
+        $response->headers->set('Content-Type', $result->getMimeType());
+
+        // Send SMS notification
+        $number = '+21695316683'; // Assuming this is the user's phone number
+        $account_id = "AC3490868f23a7ed5ad7fba1dceb54a27f";
+        $auth_token = "63488d173ace1256ff133392db521501";
+        $client = new Client($account_id, $auth_token);
+        $twilio_number = "+19292961852";
+
+        $client->messages->create(
+            $number,
+            [
+                "from" => $twilio_number,
+                "body" => $qrCodeText
+            ]
+        );
+
+        return $response;
     }
 }

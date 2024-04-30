@@ -71,6 +71,12 @@
                     <td>{{ prod.status }}</td>
                     <td>{{ prod.localisation }}</td>
                         <td>
+                          <form method="post" action="{{ path('app_evenement_participate', {'id': prod.idProduit}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('participate' ~ prod.idProduit) }}">
+                            <input type="submit" class="btn btn-success btn-sm btn-margin reserve-btn" value="Scan QrCode">
+                        </form>
+                    </td>
+                        <td>
                             <div class="d-flex button-group">
                         <a href="{{ path('detailProduitFront', {'idp': prod.idProduit()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Visualiser" class="me-2 btn btn-custom"><i class="fas fa-eye"></i></a>
                         <a href="{{ path('app_modifier_produit', {'idp': prod.idProduit}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier" class="me-2 btn btn-custom"><i class="fas fa-edit"></i></a>
@@ -107,15 +113,17 @@
                                 </a>
     </div>
 </div>
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        {% for page in 1..totalPages %}
-            <li class="page-item {% if page == currentPage %}active{% endif %}">
-                <a class="page-link" href="{{ path('app_back_affiche', {'page': page}) }}">{{ page }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-</nav>
+{% if totalPages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for page in 1..totalPages %}
+                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path('app_back_affiche', {'page': page}) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}
 
 <div class="text-center mt-4">
     <a href="{{ path('app_produit') }}" class="btn btn-primary">Ajouter un produit</a>
