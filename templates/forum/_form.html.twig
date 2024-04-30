@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forum{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {{ form_start(form, {'attr': {'class': 'row g-3 needs-validation', 'novalidate': 'novalidate'}}) }}
+
+        <div class="col-md-6">
+            {{ form_label(form.title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.title, {'attr': {'class': 'form-control' ~ (form_errors(form.title)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomTitle'}}) }}
+            {% if form_errors(form.title)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.title) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_label(form.prix, 'Price', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'form-control' ~ (form_errors(form.prix)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomPrice'}}) }}
+            {% if form_errors(form.prix)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.prix) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12">
+            {{ form_label(form.content, 'Content', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.content, {'attr': {'class': 'form-control' ~ (form_errors(form.content)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomContent'}}) }}
+            {% if form_errors(form.content)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.content) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.username, {'attr': {'class': 'form-control' ~ (form_errors(form.username)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomUsername'}}) }}
+            {% if form_errors(form.username)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.username) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

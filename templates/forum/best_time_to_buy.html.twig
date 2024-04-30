@@ -1,0 +1,9 @@
+{# best_time_to_buy.html.twig #}
+
+{% if lowestPrice and bestTimeToBuy %}
+    <h1>Best Time to Buy</h1>
+    <p>Lowest Price: {{ lowestPrice }}</p>
+    <p>Best Time to Buy: {{ bestTimeToBuy|date('Y-m-d H:i:s') }}</p>
+{% else %}
+    <p>No data available.</p>
+{% endif %}

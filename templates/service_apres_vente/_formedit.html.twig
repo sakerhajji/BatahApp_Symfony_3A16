@@ -1,0 +1,79 @@
+{# templates/form.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        {{ form_start(form, {'attr': {'class': 'row g-3 needs-validation', 'novalidate': 'novalidate'}}) }}
+        {{ form_errors(form) }}
+
+        <div class="col-md-6">
+            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form_errors(form.description)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomDescription'}}) }}
+            {% if form_errors(form.description)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.description) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.type, {'attr': {'class': 'form-control' ~ (form_errors(form.type)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomType'}}) }}
+            {% if form_errors(form.type)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.type) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.date, {'attr': {'class': 'form-control' ~ (form_errors(form.date)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomDate'}}) }}
+            {% if form_errors(form.date)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.date) }}
+                </div>
+            {% endif %}
+        </div>
+<br>
+        <br>
+        <div class="col-md-6">
+            {{ form_label(form.status, 'Status', {'label_attr': {'class': 'form-label'}}) }}
+            <div class="form-check form-switch"> {# Use form-switch class for switch style #}
+                {{ form_widget(form.status, {'attr': {'class': 'form-check-input' ~ (form_errors(form.status)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomStatus'}}) }}
+                {{ form_label(form.status, '    ', {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+            {% if form_errors(form.status)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.status) }}
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="col-md-6">
+            {{ form_label(form.achats, 'Achats', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.achats, {'attr': {'class': 'form-control' ~ (form_errors(form.achats)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomAchats'}}) }}
+            {% if form_errors(form.achats)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.achats) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_label(form.idPartenaire, 'Partenaire', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.idPartenaire, {'attr': {'class': 'form-control' ~ (form_errors(form.idPartenaire)|length ? ' is-invalid' : (form.vars.valid ? ' is-valid' : '')), 'id': 'validationCustomIdPartenaire'}}) }}
+            {% if form_errors(form.idPartenaire)|length %}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.idPartenaire) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">{{ button_label|default('Save') }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forum{% endblock %}
+
+{% block pane %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Forum Details</h1>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th scope="row">Id</th>
+                        <td>{{ forum.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Title</th>
+                        <td>{{ forum.title }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Content</th>
+                        <td>{{ forum.content }}</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Username</th>
+                        <td>{{ forum.username }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a href="{{ path('app_forum_index') }}" class="btn btn-primary">Back to List</a>
+                <a href="{{ path('app_forum_edit', {'id': forum.id}) }}" class="btn btn-warning">Edit</a>
+                {{ include('forum/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

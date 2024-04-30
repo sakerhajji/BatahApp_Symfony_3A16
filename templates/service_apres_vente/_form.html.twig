@@ -1,0 +1,52 @@
+{# templates/service_apres_vente/form.html.twig #}
+
+        {{ form_start(form, {'attr': {'class': 'row g-3 needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="mb-3">
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form_errors(form.description)|length ? ' is-invalid' : '')}}) }}
+        {% if form_errors(form.description)|length %}
+            <div class="invalid-feedback">
+                {{ form_errors(form.description) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-control' ~ (form_errors(form.type)|length ? ' is-invalid' : '')}}) }}
+        {% if form_errors(form.type)|length %}
+            <div class="invalid-feedback">
+                {{ form_errors(form.type) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.date, {'attr': {'class': 'form-control' ~ (form_errors(form.date)|length ? ' is-invalid' : '')}}) }}
+        {% if form_errors(form.date)|length %}
+            <div class="invalid-feedback">
+                {{ form_errors(form.date) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.achats, 'Achats', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.achats, {'attr': {'class': 'form-control' ~ (form_errors(form.achats)|length ? ' is-invalid' : '')}}) }}
+        {% if form_errors(form.achats)|length %}
+            <div class="invalid-feedback">
+                {{ form_errors(form.achats) }}
+            </div>
+        {% endif %}
+    </div>
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Are you not a robot?</label>
+            {{ form_widget(form.captchaCode, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+</div>
+
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    {{ form_end(form) }}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Show Partenaire{% endblock %}
+
+{% block pane %}
+    <h1>Show Partenaire</h1>
+    <!-- Display Partenaire details here -->
+    <p>ID: {{ partenaire.idpartenaire }}</p>
+    <p>Nom: {{ partenaire.nom }}</p>
+    <p>Type: {{ partenaire.type }}</p>
+    <p>Adresse: {{ partenaire.adresse }}</p>
+    <p>Telephone: {{ partenaire.telephone }}</p>
+    <p>Email: {{ partenaire.email }}</p>
+
+    <p>Logo: {{ partenaire.logo }}</p>
+    <p>Points: {{ partenaire.points }}</p>
+
+    <!-- Button to close modal -->
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"onclick="window.history.back();">Close</button>
+{% endblock %}

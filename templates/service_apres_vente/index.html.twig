@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ServiceApresVente index{% endblock %}
+
+{% block pane %}
+    <h1>ServiceApresVente index</h1>
+    {# Search Form #}
+    <form action="{{ path('search') }}" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search by type or status">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    <div class="table-responsive"> {# Make the table responsive #}
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark"> {# Apply dark theme to the table header #}
+            <tr>
+                <th>IdService</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th> {# Correct typo in table header #}
+            </tr>
+            </thead>
+            <tbody>
+            {% for service_apres_vente in service_apres_ventes %}
+                <tr>
+                    <td>{{ service_apres_vente.idService }}</td>
+                    <td>{{ service_apres_vente.description }}</td>
+                    <td>{{ service_apres_vente.type }}</td>
+                    <td>{{ service_apres_vente.date ? service_apres_vente.date|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ service_apres_vente.status ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <a href="{{ path('app_service_apres_vente_show', {'idService': service_apres_vente.idService}) }}" class="btn btn-info">Show</a> {# Add Bootstrap button style #}
+                        <a href="{{ path('app_sav_pdf', {'id': service_apres_vente.idService}) }}" class="btn btn-info">Pdf</a>
+                        <a href="{{ path('app_service_apres_vente_edit', {'idService': service_apres_vente.idService}) }}" class="btn btn-primary">Edit</a> {# Add Bootstrap button style #}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination justify-content-center">
+        {{ knp_pagination_render(service_apres_ventes) }}
+    </div>
+    <a href="{{ path('app_service_apres_vente_new') }}" class="btn btn-success">Create new</a> {# Add Bootstrap button style #}
+    <a href="{{ path('services_plus_achetes') }}" class="btn btn-primary btn-sm">Stat</a>
+
+{% endblock %}

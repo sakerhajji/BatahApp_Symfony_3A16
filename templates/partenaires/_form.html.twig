@@ -1,0 +1,45 @@
+{{ form_start(form, {'attr': {'class': 'form'}}) }}
+
+<div class="form-group">
+    {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.nom) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.type, 'Type', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.type) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.adresse) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.telephone, 'Telephone', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.telephone) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.email, 'Email', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.email) }}
+</div>
+
+
+<div class="form-group">
+    {{ form_label(form.logo, 'Logo', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.logo, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.logo) }}
+</div>
+<button type="submit" class="btn btn-success">save</button>
+<a href="#" class="btn btn-secondary" onclick="window.history.back();">Cancel</a>
+{{ form_end(form) }}
+
+
+
+

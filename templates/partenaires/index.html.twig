@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Partenaires index{% endblock %}
+
+{% block pane %}
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Partenaires</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nom</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Adresse</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Telephone</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Logo</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Points</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for partenaire in partenaires %}
+                                        <tr>
+                                            <td>{{ partenaire.nom }}</td>
+                                            <td>{{ partenaire.type }}</td>
+                                            <td>{{ partenaire.adresse }}</td>
+                                            <td>{{ partenaire.telephone }}</td>
+                                            <td>{{ partenaire.email }}</td>
+
+                                            <td>{{ partenaire.logo }}</td>
+                                            <td>{{ partenaire.points }}</td>
+                                            <td>
+                                                <a href="{{ path('app_partenaires_show', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Show</a>
+                                                <a href="{{ path('app_partenaires_edit', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Edit</a>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="10">No records found</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <a href="{{ path('app_partenaires_new') }}" class="btn btn-success">Create new</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
