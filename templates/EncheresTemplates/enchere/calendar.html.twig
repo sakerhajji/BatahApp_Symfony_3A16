@@ -1,0 +1,30 @@
+{% extends '../../base.html.twig' %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block body %}
+    <div id="calendar"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('bundles/beelabfullcalendar/js/fullcalendar.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: [
+                    // Your events data will go here
+                    // Example:
+                    // { title: 'Event 1', start: '2024-04-30' },
+                    // { title: 'Event 2', start: '2024-05-01' },
+                ]
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}

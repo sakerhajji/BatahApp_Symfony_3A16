@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Show Encheres{% endblock %}
+  
+{% block body %}
+<div class="container mt-5">
+    <h1>Liste des Encheres</h1>
+    <form action="{{ path('app_Affiche_enchere') }}" method="GET" class="form-inline mb-3">
+        <div class="form-group mr-2">
+            <label for="start_date" class="mr-2">Date de début :</label>
+            <input type="date" id="start_date" name="start_date" class="form-control">
+        </div>
+        <div class="form-group mr-2">
+            <label for="end_date" class="mr-2">Date de fin :</label>
+            <input type="date" id="end_date" name="end_date" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
+    
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>STATUS</th>
+                <th>DATE DEBUT</th>
+                <th>DATE FIN</th>
+                <th>Nbr Participant</th>
+                <th>PRIX MIN</th>
+                <th>PRIX MAX</th>
+                <th>PRIX ACTUELLE</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for encheres in event %}
+                <tr>
+                    <td>{{ encheres.idEnchere }}</td>
+                    <td>{{ encheres.status }}</td>
+                    <td>{{ encheres.dateDebut | date('Y-m-d') }}</td>
+                    <td>{{ encheres.dateFin | date('Y-m-d') }}</td>
+                    <td>{{ encheres.nbrParticipants }}</td>
+                    <td>{{ encheres.prixMin }}</td>
+                    <td>{{ encheres.prixMax }}</td>
+                    <td>{{ encheres.prixActuelle }}</td>
+                    <td>
+                        <a href="{{ path('app_modifier_enchere', {'id': encheres.idEnchere}) }}" class="btn btn-primary">Modifier</a>
+                        <a href="{{ path('app_supprimerenchere', {'ide': encheres.idEnchere}) }}" class="btn btn-primary">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% for page in 1..totalPages %}
+                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path('app_Affiche_enchere', {'page': page, 'start_date': startDate, 'end_date': endDate}) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ path('app_Add_enchere') }}" class="btn btn-primary">Ajouter nouveau enchere</a>
+</div>
+{% endblock %}

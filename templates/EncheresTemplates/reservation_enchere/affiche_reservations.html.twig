@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des réservations{% endblock %}
+  
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <form method="GET" action="{{ path('app_affiche_reservations') }}">
+                    <div class="input-group mb-3">
+                        <input type="date" class="form-control" placeholder="Rechercher par date" name="searchDate" value="{{ app.request.query.get('searchDate') }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Rechercher</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date de réservation</th>
+                    <th>Confirmation</th>
+                    <th>Utilisateur</th>
+                    <th>Enchère</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.idReservation }}</td>
+                        <td>{{ reservation.dateReservation ? reservation.dateReservation|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ reservation.confirmation ? 'Confirmée' : 'En attente' }}</td>
+                        <td>{{ reservation.idUser.id }}: {{ reservation.idUser.nomUtilisateur }}</td>
+                        <td>{{ reservation.idEnchere.idEnchere }}: {{ reservation.idEnchere.produit.type }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% for page in 1..totalPages %}
+                            <li class="page-item {% if page == currentPage %}active{% endif %}">
+                                <a class="page-link" href="{{ path('app_affiche_reservations', {'page': page, 'searchDate': app.request.query.get('searchDate')}) }}">{{ page }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}

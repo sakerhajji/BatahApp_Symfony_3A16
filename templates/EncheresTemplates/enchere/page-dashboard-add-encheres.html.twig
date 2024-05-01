@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une enchère{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .error-message {
+    color: red !important;
+}
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4">Ajouter une enchère</h1>
+
+           {% for message in app.flashes('error') %}
+    <div class="alert alert-danger error-message">{{ message }}</div>
+{% endfor %}
+
+            {{ form_start(f, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-3">
+                {{ form_label(f.dateDebut, "Date de début") }}
+                {{ form_widget(f.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.dateDebut) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.dateFin, "Date de fin") }}
+                {{ form_widget(f.dateFin, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.dateFin) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.status, "Statut") }}
+                {{ form_widget(f.status,{'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.status) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.prixMin, "Prix minimum") }}
+                {{ form_widget(f.prixMin, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.prixMin) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.prixMax, "Prix maximum") }}
+                {{ form_widget(f.prixMax, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.prixMax) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.prixActuelle, "Prix actuel") }}
+                {{ form_widget(f.prixActuelle, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.prixActuelle) }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form_label(f.nbrParticipants, "Nombre de participants") }}
+                {{ form_widget(f.nbrParticipants, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.nbrParticipants) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(f.produit, "Produit") }}
+                {{ form_widget(f.produit, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(f.produit) }}
+            </div>
+
+            <div class="h-captcha" data-sitekey="fe0e9dbb-d362-4f98-ba78-8e7b6910ec47"></div>
+
+            <button type="submit" class="btn btn-primary" onclick="submitForm()">Soumettre</button>
+
+            <a href="{{ path('app_Affiche_enchere') }}" class="btn btn-secondary">Retour à la liste</a>
+
+            {{ form_end(f) }}
+        </div>
+    </div>
+</div>
+
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>      
+    <script>
+        function submitForm() {
+            var response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert('Veuillez résoudre le reCAPTCHA.');
+                return false;
+            } else {
+                document.getElementById('reclamation_form').submit();
+            }
+        }
+    </script>
+{% endblock %}

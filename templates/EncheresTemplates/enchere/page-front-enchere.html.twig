@@ -1,0 +1,161 @@
+{% extends 'frontP.html.twig' %}
+
+{% block title %}HOME{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .btn.btn-primary {
+            padding: 0.5em 1.5em; /* Ajuste la taille du bouton */
+        }
+        .mise-enchere {
+            color: red; /* Change la couleur du texte "Mise à enchère" en rouge */
+        }
+    </style>
+{% endblock %}
+
+{% block encheres %}
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="full">
+                        <h3>Vente aux encheres, En routes pour les bonnes affaires</h3>
+                        
+                    </div>
+                    {% for flashMessage in app.flashes('success') %}
+                        <div class="alert alert-success">{{ flashMessage }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    <form method="get" action="{{ path('app_Afficheclient_enchere') }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="dateDebut">Date de début :</label>
+                                    <input type="date" id="dateDebut" name="dateDebut" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="dateFin">Date de fin :</label>
+                                    <input type="date" id="dateFin" name="dateFin" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary mt-4">Rechercher</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des enchères -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                {% for item in encheres %}
+                    {% set enchere = item.enchere %}
+                    <div class="col-sm-6 col-xl-6">
+                        <div class="car-listing list_style">
+                            <div class="thumb">
+                                <div class="tag">FEATURED</div>
+                                {% if enchere.getProduit().getPhoto() is not null %}
+                                    <img class="h100p" src="{{ asset('uploads/' ~ enchere.getProduit().getPhoto()) }}" alt="Image par défaut">
+                                {% else %}
+                                    <!-- Image par défaut -->
+                                    <img class="h100p" src="{{ asset('uploads/default_image.jpg') }}" alt="Image par défaut">
+                                {% endif %}
+                                <div class="thmb_cntnt2">
+                                    <ul class="mb0">
+                                        <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="listign_review">
+                                <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+                            </div>
+                            <!-- Utilisez une balise <span> avec un attribut style pour définir la couleur du texte "Mise à enchère" -->
+                            <span style="color: red;">Mise à enchère</span>
+                            <p>début: {{ item.dateDebutFormatted }}</p>
+                            <p>fin: {{ item.dateFinFormatted }}</p>
+
+                            <!-- Bouton Réserver -->
+                            <div class="reservation-button">
+                                <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
+       
+        <button type="submit" class="btn btn-primary">Reserver</button>
+    </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fenêtre modale pour afficher les détails du produit -->
+                    <div class="modal fade" id="modal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_{{ loop.index }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel_{{ loop.index }}">Détails du Produit</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Contenu des détails du produit -->
+                                    <img src="{{ asset('uploads/' ~ enchere.getProduit().getPhoto()) }}" alt="Image du produit">
+                                    <p>Nom du Produit: {{ enchere.getProduit().getLabelle() }}</p>
+                                    <p>Description: {{ enchere.getProduit().getDescription() }}</p>
+                                    <p>Prix: {{ enchere.getProduit().getPrix() }}</p>
+                                    <p>Type: {{ enchere.getProduit().getType() }}</p>
+                                    <p>Status: {{ enchere.getProduit().getStatus() }}</p>
+                                    <p>Période de garantie: {{ enchere.getProduit().getPeriodeGarantie() }} mois</p>
+                                    <p>Localisation: {{ enchere.getProduit().getLocalisation() }}</p>
+                                    <!-- Ajoutez d'autres informations du produit selon vos besoins -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin de la fenêtre modale -->
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Fin de la liste des enchères -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // JavaScript pour récupérer l'ID de l'enchère lors du clic sur le bouton Réserver
+        document.querySelectorAll('.reserve-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var enchereId = this.getAttribute('data-enchere-id');
+                var url = this.getAttribute('data-url');
+
+                // Vous pouvez effectuer des opérations supplémentaires ici, comme l'envoi de la demande Ajax
+                console.log('ID de l\'enchère:', enchereId);
+                console.log('URL de réservation:', url);
+                
+                // Exemple d'envoi de la demande Ajax
+                /*
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ enchereId: enchereId }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Erreur:', error));
+                */
+            });
+        });
+    </script>
+{% endblock %}

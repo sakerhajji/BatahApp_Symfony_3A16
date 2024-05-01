@@ -56,6 +56,9 @@
             "ref": "c51ce07c10331d506762efe25b6f5843c1a5ea17"
         }
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.9.0"
+    },
     "knpuniversity/oauth2-client-bundle": {
         "version": "2.18",
         "recipe": {
