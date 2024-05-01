@@ -1,9 +1,10 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\EncheresRepository\PartenairesRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PartenairesRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: PartenairesRepository::class)]
 class Partenaires
 {

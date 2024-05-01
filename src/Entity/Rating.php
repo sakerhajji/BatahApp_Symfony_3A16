@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\RatingRepository;
+use App\Repository\EncheresRepository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]

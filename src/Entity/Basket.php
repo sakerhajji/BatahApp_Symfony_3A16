@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\BasketRepository;
+use App\Repository\EncheresRepository\BasketRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BasketRepository::class)]

@@ -2,13 +2,12 @@
 
 namespace App\Service;
 
-use App\Repository\ArticleRepository;
-use App\Repository\UtilisateurRepository;
-use App\Repository\BasketRepository;
-
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Basket;
-use App\Repository\ProduitsRepository;
+use App\Repository\ArticleRepository;
+use App\Repository\EncheresRepository\BasketRepository;
+use App\Repository\EncheresRepository\ProduitsRepository;
+use App\Repository\EncheresRepository\UtilisateurRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BasketService
 {

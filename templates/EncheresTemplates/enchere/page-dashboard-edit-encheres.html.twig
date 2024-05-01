@@ -1,0 +1,80 @@
+{% extends '../../base.html.twig' %}
+
+{% block title %}Modifier Enchère{% endblock %}
+
+{% block pane %}
+    <h1 class="text-center">Modifier Enchère</h1>
+
+    <section class="our-dashbord dashbord bgc-f9">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="breadcrumb_content">
+                        <h2 class="breadcrumb_title text-center">Modifier Enchère</h2>
+                        <p class="text-center">Ready to jump back in?</p>
+                    </div>
+
+                    <div class="new_property_form">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <h4 class="title mb-3">Enchère</h4>
+
+                        <div class="mb-3">
+                            {{ form_label(form.dateDebut, "Date de début", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.dateDebut) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.dateFin, "Date de fin", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.dateFin) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.status, "Status", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.prixMin, "Prix minimum", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.prixMin, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.prixMin) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.prixMax, "Prix maximum", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.prixMax, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.prixMax) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.prixActuelle, "Prix actuelle", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.prixActuelle, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.prixActuelle) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.nbrParticipants, "Nombre de participants", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.nbrParticipants, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.nbrParticipants) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.produit, "Produit", {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.produit, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.produit) }}
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="{{ path('app_Affiche_enchere') }}" class="btn btn-secondary">Back to list</a>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

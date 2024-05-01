@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Repository\EncheresRepository\ServiceApresVenteRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ServiceApresVenteRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceApresVenteRepository::class)]

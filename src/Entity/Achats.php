@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\AchatsRepository;
+use App\Repository\EncheresRepository\AchatsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AchatsRepository::class)]
