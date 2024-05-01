@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @method ServiceApresVente|null find($id, $lockMode = null, $lockVersion = null)
  * @method ServiceApresVente|null findOneBy(array $criteria, array $orderBy = null)
- * @method ServiceApresVente[]    findAll()
+
  * @method ServiceApresVente[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ServiceApresVenteRepository extends ServiceEntityRepository
