@@ -59,9 +59,6 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v5.9.0"
     },
-    "knplabs/knp-paginator-bundle": {
-        "version": "v5.9.0"
-    },
     "knplabs/knp-snappy-bundle": {
         "version": "1.10",
         "recipe": {
@@ -82,9 +79,6 @@
             "version": "1.20",
             "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
         }
-    },
-    "mercuryseries/flashy-bundle": {
-        "version": "v5.1.0"
     },
     "phpunit/phpunit": {
         "version": "9.6",
