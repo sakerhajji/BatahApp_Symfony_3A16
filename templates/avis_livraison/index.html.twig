@@ -1,0 +1,35 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}AvisLivraison index{% endblock %}
+
+{% block body %}
+    <h1>Avis Livraison </h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Commentaire</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for avis_livraison in avis_livraisons %}
+            <tr>
+                <td>{{ avis_livraison.livraison.commande.idClient.nomutilisateur }} {{ avis_livraison.livraison.commande.idClient.prenomutilisateur }}</td>
+                <td>{{ avis_livraison.commentaire }}</td>
+
+                <td>
+                    <a href="{{ path('app_avis_livraison_show', {'idAvis': avis_livraison.idAvis}) }}">show</a>
+                    <a href="{{ path('app_avis_livraison_edit', {'idAvis': avis_livraison.idAvis}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

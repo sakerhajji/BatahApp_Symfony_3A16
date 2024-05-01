@@ -1,45 +1,79 @@
-{{ form_start(form, {'attr': {'class': 'form'}}) }}
+{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
 
+{% if form_errors(form) %}
+    <div class="alert alert-danger" role="alert">
+        {{ form_errors(form) }}
+    </div>
+{% endif %}
 <div class="form-group">
     {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'control-label'}}) }}
-    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.nom) }}
+    {{ form_widget(form.nom, {'attr': {'class': 'form-control ' ~ (form_errors(form.nom) ? 'is-invalid' : '') }}) }}
+    {% if form_errors(form.nom) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.nom)|first }}
+        </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
     {{ form_label(form.type, 'Type', {'label_attr': {'class': 'control-label'}}) }}
-    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.type) }}
+    {{ form_widget(form.type, {'attr': {'class': 'form-control ' ~ (form_errors(form.type) ? 'is-invalid' : '') }}) }}
+    {% if form_errors(form.type) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.type)|first }}
+        </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
     {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'control-label'}}) }}
-    {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.adresse) }}
+    {{ form_widget(form.adresse, {'attr': {'class': 'form-control ' ~ (form_errors(form.adresse) ? 'is-invalid' : '') }}) }}
+    {% if form_errors(form.adresse) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.adresse)|first }}
+        </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
-    {{ form_label(form.telephone, 'Telephone', {'label_attr': {'class': 'control-label'}}) }}
-    {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.telephone) }}
+    {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.telephone, {'attr': {'class': 'form-control ' ~ (form_errors(form.telephone) ? 'is-invalid' : '') }}) }}
+    {% if form_errors(form.telephone) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.telephone)|first }}
+        </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
-    {{ form_label(form.email, 'EmailSender', {'label_attr': {'class': 'control-label'}}) }}
-    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.email) }}
+    {{ form_label(form.email, 'Email', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.email, {'attr': {'class': 'form-control ' ~ (form_errors(form.email) ? 'is-invalid' : '') }}) }}
+    {% if form_errors(form.email) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.email)|first }}
+        </div>
+    {% endif %}
 </div>
 
+{% if partenaire.logo %}
+    <div class="form-group">
+        <label for="form_logo" class="control-label">Current Logo</label>
+        <div>
+            <img src="{{ asset('image/uploads/partenaires/' ~ partenaire.logo) }}" alt="Current Logo" style="max-height: 100px;">
+        </div>
+    </div>
+{% endif %}
 
 <div class="form-group">
     {{ form_label(form.logo, 'Logo', {'label_attr': {'class': 'control-label'}}) }}
-    {{ form_widget(form.logo, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.logo) }}
+    {{ form_widget(form.logo, {'attr': {'class': 'form-control-file'}}) }}
+    {% if form_errors(form.logo) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.logo)|first }}
+        </div>
+    {% endif %}
 </div>
-<button type="submit" class="btn btn-success">save</button>
-<a href="#" class="btn btn-secondary" onclick="window.history.back();">Cancel</a>
+
+<button type="submit" class="btn dbxshad btn-lg btn-thm3 circle">Enregistrer</button>
+<a href="#" class="btn dbxshad btn-lg btn-thm2 circle" onclick="window.history.back();">Annuler</a>
 {{ form_end(form) }}
-
-
-
-

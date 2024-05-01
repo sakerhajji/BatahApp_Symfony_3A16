@@ -11,7 +11,7 @@
     <meta name="CreativeLayers" content="ATFN">
 
     <!-- Title -->
-    <title>{% block title %}Voiture - Automotive & Car Dealer HTML Template{% endblock %}</title>
+    <title>{% block title %}BATAH{% endblock %}</title>
 
     <!-- CSS files -->
     {% block css %}
@@ -22,8 +22,8 @@
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 
         <!-- Favicon -->
-        <link href="{{ asset('images/favicon.ico') }}" sizes="128x128" rel="shortcut icon" type="image/x-icon"/>
-        <link href="{{ asset('images/favicon.ico') }}" sizes="128x128" rel="shortcut icon"/>
+        <link href="{{ asset('images/iconbatah.png') }}" sizes="128x128" rel="shortcut icon" type="image/x-icon"/>
+        <link href="{{ asset('images/iconbatah.png') }}" sizes="128x128" rel="shortcut icon"/>
     {% endblock %}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -36,7 +36,7 @@
 </head>
 
 <body>
-{% block body %}
+
     <div class="wrapper">
         <div class="preloader"></div>
 
@@ -90,11 +90,11 @@
                             <span class="icon-bar"></span>
                         </button>
                     </div>
-                    <a href="index.html" class="navbar_brand float-start dn-md">
-                        <img class="logo1 img-fluid" src="{{ asset('images/header-logo2.svg') }}"
-                             alt="header-logo2.png">
-                        <img class="logo2 img-fluid" src="{{ asset('images/header-logo2.svg') }}"
-                             alt="header-logo2.svg">
+                    <a href="/front" class="navbar_brand float-start dn-md">
+                        <img class="logo1 img-fluid" src="{{ asset('images/batah.jpg') }}"
+                             alt="header-logo2.png" style="width: 100px; height: auto;">
+                        <img class="logo2 img-fluid" src="{{ asset('images/batah.jpg') }}"
+                             alt="header-logo2.svg" style="width: 100px; height: auto;">
                     </a>
                     <!-- Responsive Menu Structure-->
                     <ul id="respMenu" class="ace-responsive-menu menu_list_custom_code wa text-end"
@@ -490,39 +490,46 @@
                                     <div class="extra-dashboard-menu dn-lg">
                                         <div class="ed_menu_list">
                                             <ul>
-                                                {% block dashboard %}
+
+
+                                                    {% block bouton %}
+
                                                     <li><a href="{{ path('app_utilisateur_index') }}"><span class="flaticon-dashboard"></span>Dashboard</a></li>
-                                                {% endblock %}
 
-                                                {% block profile %}
-                                                    <li><a href="{{ path('profile') }}"><span class="flaticon-user-2"></span>Profile</a></li>
-                                                {% endblock %}
-
-                                                {% block my_listing %}
-                                                    <li><a href="page-dashboard-listing.html"><span class="flaticon-list"></span>My Listing</a></li>
-                                                {% endblock %}
-
-                                                {% block favorites %}
-                                                    <li><a href="page-dashboard-favorites.html"><span class="flaticon-heart"></span>Favorites</a></li>
-                                                {% endblock %}
-
-                                                {% block add_listing %}
-                                                    <li><a href="page-dashboard-add-listings.html"><span class="flaticon-plus"></span>Add Listing</a></li>
-                                                {% endblock %}
-
-                                                {% block messages %}
-                                                    <li><a href="page-dashboard-messages.html"><span class="flaticon-message"></span>Messages</a></li>
-                                                {% endblock %}
-
-                                                {% block csv %}
                                                     <li><a href="{{ path('test') }}"><span class="flaticon-message"></span>csv import</a></li>
-                                                {% endblock %}
 
-                                                {% block partenaires %}
                                                     <li><a href="{{ path('app_partenaires_index') }}"><span class="flaticon-list"></span>Partenaires</a></li>
+
+                                                    <li><a href="{{ path('app_login') }}"><span class="flaticon-logout"></span>Logout</a></li>
+
+                                                    <li><a href="{{ path('app_partenaires_index') }}"><span
+                                                                class="fa-solid fa-handshake"></span>Partenaires</a></li>
+
+                                                    <li><a href="{{ path('app_service_apres_vente_index') }}"><span
+                                                                class="fa-solid fa-badge-check"></span>Apres Vente</a></li>
+
+                                                    <li><a href="{{ path('liste_commandes') }}"><span
+                                                                class="fa-regular fa-bags-shopping"></span>Liste commandes</a></li>
+
+                                                    <li><a href="{{ path('app_livraison_index') }}"><span
+                                                                class="fa-solid fa-truck-fast"></span>Liste Livraisons</a></li>
+
+                                                    <li><a href="{{ path('app_avis_livraison_index') }}"><span
+                                                                class="fa-solid fa-comment"></span>Avis</a></li>
+
                                                 {% endblock %}
 
-                                                <li><a href="{{ path('app_login') }}"><span class="flaticon-logout"></span>Logout</a></li>
+
+                                                {% block utilisateur %}
+                                                    <li><a href="{{ path('liste_livraisons_utilisateur') }}"><span
+                                                                    class="fa-solid fa-truck-fast"></span>mes Livraisons</a></li>
+                                                {% endblock %}
+
+                                                <li><a href="{{ path('profile') }}"><span class="flaticon-user-2"></span>Profile</a></li>
+
+                                                    <li><a href="{{path('app_login')}}"><span
+                                                                class="flaticon-logout"></span>Logout</a></li>
+
                                             </ul>
                                         </div>
                                     </div>
@@ -550,15 +557,14 @@
                                                                 class="flaticon-plus"></span>Add Listing</a></li>
                                                 <li><a href="page-dashboard-messages.html"><span
                                                                 class="flaticon-message"></span>Messages</a></li>
-                                                <li><a href="{{path('app_login')}}"><span
-                                                                class="flaticon-logout"></span>Logout</a></li>
+
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                {% block pane %}
+                                {% block body %}
                                 <div class="col-xl-8">
                                     <div class="breadcrumb_content mb50">
                                         <h2 class="breadcrumb_title">Hello, Cameron!</h2>
@@ -670,7 +676,7 @@
     <script src="{{ asset('js/script.js') }}"></script>
 
 {% endblock %}
-{% endblock %}
+
 
 </body>
 

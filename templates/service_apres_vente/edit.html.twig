@@ -1,0 +1,13 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Edit ServiceApresVente{% endblock %}
+
+{% block body %}
+    <h1>Edit ServiceApresVente</h1>
+
+    {{ include('service_apres_vente/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_service_apres_vente_index') }}" class="btn btn-primary">back to list</a>
+
+    {{ include('service_apres_vente/_delete_form.html.twig') }}
+{% endblock %}

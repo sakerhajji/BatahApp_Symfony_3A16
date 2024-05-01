@@ -1,0 +1,13 @@
+
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Assigner un partenaire{% endblock %}
+
+{% block body %}
+    <h1>Assigner un partenaire</h1>
+    {{ form_start(form) }}
+    {{ form_label(form.partner, 'Sélectionner un partenaire') }}
+    {{ form_widget(form.partner, { 'attr': {'class': 'form-control'} }) }}
+    {{ form_end(form) }}
+    <a href="javascript:history.go(-1)" >BACK</a>
+{% endblock %}

@@ -1,62 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'utilisateur/index.html.twig' %}
 
 {% block title %}Utilisateur index{% endblock %}
 
-{% block profileBlock %}
-    {% if user.role == "U" %}
-
-        {% block dashboard %}
-
-        {% endblock %}
-
-    {% endif %}
-
-    {% if user.role == "U" %}
-        {% block partenaires %}
-
-        {% endblock %}
-
-    {% endif %}
-    {% if user.role == "U" %}
-        {% block messages %}
-
-        {% endblock %}
-
-    {% endif %}
-    <li class="user_setting">
-        <div class="dropdown">
-            <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                {% if user.getAvatar() is not null %}
-                    <img class="rounded-circle mr10" src="{{ asset('/image/uploads/' ~ user.getAvatar()) }}" height="40px" width="40px" alt="{{ user.getAvatar() }}">
-                {% else %}
-                    <img class="rounded-circle mr10" src="{{ asset('/image/uploads/upload_photo.png') }}" height="40px" width="40px" alt="Default Avatar">
-                {% endif %}
-                <span class="dn-1366">{{ user.getNomutilisateur() ~ " " ~ user.getPrenomutilisateur() }} <span class="fas fa-angle-down ml5"></span></span>
-            </a>
-
-            <div class="dropdown-menu">
-                <div class="user_set_header">
-                    {% if user.getAvatar() is not null %}
-                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/' ~ user.getAvatar()) }}" alt="{{ user.getAvatar() }}" height="40px" width="40px">
-                    {% else %}
-                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/upload_photo.png') }}" alt="Default Avatar" height="40px" width="40px">
-                    {% endif %}
-                    <p>{{ user.getNomutilisateur() ~ " " ~ user.getPrenomutilisateur() }} <br><span class="address">{{ user.getAdresseemail() }}</span></p>
-                </div>
-                <div class="user_setting_content">
-                    <a class="dropdown-item active" href="{{ path('profile') }}">My Profile</a>
-                    <a class="dropdown-item" href="#">Messages</a>
-                    <a class="dropdown-item" href="#">My Listing</a>
-                    <a class="dropdown-item" href="#">Help</a>
-                    <a class="dropdown-item" href="#">Log out</a>
-                </div>
-            </div>
-        </div>
-    </li>
-{% endblock %}
 
 
-{% block pane %}
+
+{% block body %}
 
     <div class="row">
         <div class="col-lg-12">

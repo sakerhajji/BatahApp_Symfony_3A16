@@ -1,17 +1,13 @@
 {% extends 'utilisateur/index.html.twig' %}
 
-{% block title %}Edit Partenaires{% endblock %}
-
+{% block title %}New AvisLivraison{% endblock %}
 
 {% block body %}
-    <h1>Edit Partenaires</h1>
+    <h1>Create new AvisLivraison</h1>
 
-    {{ include('partenaires/_form.html.twig') }}
+    {{ include('avis_livraison/_form.html.twig') }}
 
-    {{ include('partenaires/_delete_form.html.twig') }}
-
-
-
+    <a href="{{ path('app_avis_livraison_index') }}">back to list</a>
     <script>
         // Sélectionner tous les champs du formulaire
         const formFields = document.querySelectorAll('.form-control');
@@ -34,5 +30,3 @@
 
     </script>
 {% endblock %}
-
-
