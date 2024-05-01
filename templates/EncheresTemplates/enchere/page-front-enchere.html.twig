@@ -1,18 +1,4 @@
-{% extends 'frontP.html.twig' %}
-
-{% block title %}HOME{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .btn.btn-primary {
-            padding: 0.5em 1.5em; /* Ajuste la taille du bouton */
-        }
-        .mise-enchere {
-            color: red; /* Change la couleur du texte "Mise à enchère" en rouge */
-        }
-    </style>
-{% endblock %}
+{% extends 'test/indexFront.html.twig' %}
 
 {% block encheres %}
     <section class="section">
@@ -63,10 +49,12 @@
                             <div class="thumb">
                                 <div class="tag">FEATURED</div>
                                 {% if enchere.getProduit().getPhoto() is not null %}
-                                    <img class="h100p" src="{{ asset('uploads/' ~ enchere.getProduit().getPhoto()) }}" alt="Image par défaut">
+                                    <img class="h100p" src="{{ asset('image/uploads/encheres/' ~ enchere.getProduit().getPhoto()) }}" alt="Image par défaut" style="width: 400px;">
                                 {% else %}
+
+
                                     <!-- Image par défaut -->
-                                    <img class="h100p" src="{{ asset('uploads/default_image.jpg') }}" alt="Image par défaut">
+                                    <img class="h100p" src="{{ asset('image/uploads/encheres/voiture3.jpg') }}" alt="Image par défaut" style="width: 400px;">
                                 {% endif %}
                                 <div class="thmb_cntnt2">
                                     <ul class="mb0">

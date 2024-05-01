@@ -498,8 +498,6 @@
 
                                                     <li><a href="{{ path('test') }}"><span class="flaticon-message"></span>csv import</a></li>
 
-                                                    <li><a href="{{ path('app_partenaires_index') }}"><span class="flaticon-list"></span>Partenaires</a></li>
-
                                                     <li><a href="{{ path('app_login') }}"><span class="flaticon-logout"></span>Logout</a></li>
 
                                                     <li><a href="{{ path('app_partenaires_index') }}"><span
@@ -515,7 +513,20 @@
                                                                 class="fa-solid fa-truck-fast"></span>Liste Livraisons</a></li>
 
                                                     <li><a href="{{ path('app_avis_livraison_index') }}"><span
-                                                                class="fa-solid fa-comment"></span>Avis</a></li>
+                                                                class="fa-solid fa-comment"></span>Avis Livraisons</a></li>
+
+                                                        <li><a href="{{ path('app_forum_index') }}"><span
+                                                                class="fa-solid fa-heart"></span>Forum</a></li>
+
+                                                        <li><a href="{{ path('app_Affiche_enchere') }}"><span
+                                                                        class="fa-solid fa-scale-balanced"></span>Encheres</a></li>
+
+                                                        <li><a href="{{ path('app_affiche_reservations') }}"><span
+                                                                        class="fa-solid fa-calendar-clock"></span>Reservation Encheres</a></li>
+
+                                                        <li><a href="{{ path('app_encheret_statistics') }}"><span
+                                                                        class="fa-sharp fa-solid fa-chart-simple"></span>Statistique Enchere</a></li>
+
 
                                                 {% endblock %}
 
@@ -523,6 +534,11 @@
                                                 {% block utilisateur %}
                                                     <li><a href="{{ path('liste_livraisons_utilisateur') }}"><span
                                                                     class="fa-solid fa-truck-fast"></span>mes Livraisons</a></li>
+
+                                                    <li><a href="{{ path('app_service_apres_vente_new') }}"><span
+                                                                    class="fa-solid fa-lightbulb-exclamation-on"></span>Ajouter reclamation</a></li>
+                                                    <li><a href="{{ path('app_forum_new') }}"><span
+                                                                    class="fa-solid fa-circle-xmark"></span>Ajouter Avis</a></li>
                                                 {% endblock %}
 
                                                 <li><a href="{{ path('profile') }}"><span class="flaticon-user-2"></span>Profile</a></li>
@@ -651,6 +667,7 @@
     </div>
     <!-- Wrapper End -->
 {% block js %}
+
     <script src="{{ asset('js/jquery-3.6.0.js') }}"></script>
     <script src="{{ asset('js/jquery-migrate-3.0.0.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>

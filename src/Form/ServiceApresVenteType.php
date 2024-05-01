@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\ServiceApresVente;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,10 +14,17 @@ class ServiceApresVenteType extends AbstractType
     {
         $builder
             ->add('description')
-            ->add('type')
-            ->add('date')
-            ->add('status')
-
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    // Add your choices here
+                    'voiture ' => 'voiture',
+                    'terrain ' => 'terrain',
+                    'maison ' => 'maison',
+                ],
+            ])              ->add('date')
+            // ->add('status')
+            ->add('achats')
+            //  ->add('idPartenaire')
         ;
     }
 

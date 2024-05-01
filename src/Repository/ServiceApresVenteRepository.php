@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @method ServiceApresVente|null find($id, $lockMode = null, $lockVersion = null)
  * @method ServiceApresVente|null findOneBy(array $criteria, array $orderBy = null)
-
+ * @method ServiceApresVente[]    findAll()
  * @method ServiceApresVente[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ServiceApresVenteRepository extends ServiceEntityRepository
@@ -20,20 +20,26 @@ class ServiceApresVenteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ServiceApresVente::class);
     }
-    public function findAll()
+    public function findByTypeOrStatus($search)
     {
         return $this->createQueryBuilder('s')
-            ->select('s.idService', 's.description', 's.type', 's.date', 's.status', 's.idAchats', 's.idPartenaire')
+            ->andWhere('s.type LIKE :search')
+            ->orWhere('s.status = :status')
+            ->setParameter('search', '%'.$search.'%')
+            ->setParameter('status', $search)
             ->getQuery()
             ->getResult();
     }
-
-
-
-
-
-
-
+    public function countMostPurchasedServices(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.idService, s.description, COUNT(s.idService) AS total')
+            ->groupBy('s.idService')
+            ->orderBy('total', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return ServiceApresVente[] Returns an array of ServiceApresVente objects
 //     */

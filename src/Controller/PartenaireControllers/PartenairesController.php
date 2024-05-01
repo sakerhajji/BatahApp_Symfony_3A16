@@ -7,7 +7,7 @@ use App\Form\PartenairesType;
 use App\Repository\LivraisonRepository;
 use App\Repository\PartenairesRepository;
 use App\Repository\ServiceApresVenteRepository;
-use App\Services\EmailSender2;
+use App\Service\EmailSender2;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,10 +18,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use App\Services\FileUploader;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+
 
 
 

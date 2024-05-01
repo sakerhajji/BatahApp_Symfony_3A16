@@ -23589,3 +23589,9 @@ input.quantity-num[type="number"]::-webkit-outer-spin-button {
   border-radius: 8px;
   overflow: hidden;
 }
+.btn.btn-primary {
+  padding: 0.5em 1.5em; /* Ajuste la taille du bouton */
+}
+.mise-enchere {
+  color: red; /* Change la couleur du texte "Mise à enchère" en rouge */
+}

@@ -5,12 +5,11 @@ namespace App\Controller\EncheresControllers;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\ReservationEnchere;
 use App\Form\ReservationEnchereType;
-use App\Service\ReservationService;
 use App\Repository\ReservationEnchereRepository;
-use App\Entity\Enchere;
 use App\Entity\Encheres;
 use App\Repository\EncheresRepository;
 use App\Repository\UtilisateurRepository;
@@ -24,11 +23,18 @@ use Twilio\Rest\Client;
 
 class ReservationEnchereController extends AbstractController
 {
+    private $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
     #[Route('/reservation/enchere', name: 'app_reservation_enchere')]
     public function index(): Response
     {
         return $this->render('EncheresTemplates/reservation_enchere/index.html.twig', [
             'controller_name' => 'ReservationEnchereController',
+            'user'=>$this->session->get('user'),
         ]);
     }
 
@@ -55,6 +61,7 @@ class ReservationEnchereController extends AbstractController
             'reservations' => $reservations,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
+            'user'=>$this->session->get('user'),
         ]);
     }
 
@@ -80,27 +87,18 @@ class ReservationEnchereController extends AbstractController
 
         return $this->render('EncheresTemplates/reservation_enchere/add_reservation_enchere.html.twig', [
             'form' => $form->createView(),
+            'user'=>$this->session->get('user'),
         ]);
     }
 
-    #[Route('/addToBasket/{idp}', name: 'app_addToBasket')]
-    public function addToBasket(Request $request, $idp, BasketService $basketService, UtilisateurRepository $userRep, ProduitsRepository $pr): Response
-    {
 
-        $basketService->addToCart($connectedUser->getId(), $idp, $userRep, $pr);
-
-        // add flash message
-        $this->addFlash('command_ajoute', 'Article ajouté au panier');
-
-        return $this->redirectToRoute('app_afficahge_produits');
-    }
 
     #[Route('/reserverwala/{idp}/{iduser}', name: 'app_reserverwala')]
     public function reserver(int $idp, int $iduser, EncheresRepository $encheresRepository, Request $request, UtilisateurRepository $userRepository, EntityManagerInterface $entityManager): Response
     {
         // Récupérer l'ID de l'enchère à partir de la requête POST
 
-        $iduser = 3;
+
         $user = $userRepository->find($iduser);
 
         $enchere = $encheresRepository->find($idp);
@@ -162,7 +160,7 @@ class ReservationEnchereController extends AbstractController
         );
 
         $twilioClient->messages->create(
-            '+21621834550', // Replace with the recipient's phone number
+            '+21699425500', // Replace with the recipient's phone number
             [
                 'from' => $twilioPhoneNumber,
                 'body' => $messageBody

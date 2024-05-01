@@ -12,17 +12,24 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 
 class EnchereController extends AbstractController
 {
+    private $session;
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
     #[Route('/enchere', name: 'app_enchere')]
     public function index(): Response
     {
         return $this->render('EncheresTemplates/enchere/index.html.twig', [
             'controller_name' => 'EnchereController',
+            'user'=>$this->session->get('user'),
         ]);
     }
     #[Route('/add', name: 'app_Add_enchere')]
@@ -44,6 +51,7 @@ class EnchereController extends AbstractController
 
         return $this->render('EncheresTemplates/enchere/page-dashboard-add-encheres.html.twig', [
             'f' => $form->createView(),
+            'user'=>$this->session->get('user'),
         ]);
     }
 
@@ -75,6 +83,7 @@ public function affiche(Request $request, EncheresRepository $encheresRepository
         'endDate' => $endDate,
         'currentPage' => $currentPage,
         'totalPages' => $totalPages,
+        'user'=>$this->session->get('user'),
     ]);
 }
 
@@ -112,17 +121,13 @@ public function affiche(Request $request, EncheresRepository $encheresRepository
 
         return $this->render('EncheresTemplates/enchere/page-dashboard-edit-encheres.html.twig', [
             'form' => $form->createView(),
+            'user'=>$this->session->get('user'),
         ]);
     }
 
     #[Route('/afficheclient', name: 'app_Afficheclient_enchere')]
     public function afficheclient(Request $request, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer): Response
     {
-
-        $userId = 5;
-        $user = $em->getRepository(Utilisateur::class)->find($userId);
-
-
 
         $currentPage = $request->query->getInt('page', 1);
         $itemsPerPage = 5;
@@ -162,11 +167,13 @@ public function affiche(Request $request, EncheresRepository $encheresRepository
 
         return $this->render('EncheresTemplates/enchere/page-front-enchere.html.twig', [
             'encheres' => $formattedEncheresItems,
-            'products' => $products, // Pass products to Twig
+            'products' => $products,
             'searchQuery' => $searchQuery,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
-            'user' => $user,
+            'user'=>$this->session->get('user'),
+            'partenaires' => $this->session->get('partenaires'),
+            'avis' => $this->session->get('avis'),
         ]);
     }
 
@@ -191,6 +198,7 @@ public function waloutalmahboula(Request $request, EncheresRepository $encheresR
                 'enchere' => $enchere,
                 'dateDebutFormatted' => $enchere->getDateDebut() ? $enchere->getDateDebut()->format('Y-m-d H:i:s') : 'Date de début non disponible',
                 'dateFinFormatted' => $enchere->getDateFin() ? $enchere->getDateFin()->format('Y-m-d H:i:s') : 'Date de fin non disponible',
+                'user'=>$this->session->get('user'),
             ];
         }
     }
@@ -206,6 +214,7 @@ public function waloutalmahboula(Request $request, EncheresRepository $encheresR
         'products' => $products, // Pass products to Twig
         'currentPage' => $currentPage,
         'totalPages' => $totalPages,
+        'user'=>$this->session->get('user'),
     ]);
 }
 
@@ -219,6 +228,7 @@ public function waloutalmahboula(Request $request, EncheresRepository $encheresR
         // Rendre la vue avec les données des statistiques
         return $this->render('EncheresTemplates/enchere/statistics.html.twig', [
             'statisticsData' => $statisticsData,
+            'user'=>$this->session->get('user'),
         ]);
     }
 

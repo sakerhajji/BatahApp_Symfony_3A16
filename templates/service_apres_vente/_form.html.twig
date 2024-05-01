@@ -1,4 +1,61 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{# templates/service_apres_vente/form.html.twig #}
+
+{{ form_start(form, {'attr': {'class': 'row g-3 needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<div class="mb-3">
+    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form_errors(form.description)|length ? ' is-invalid' : '')}}) }}
+    {% if form_errors(form.description)|length %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.description) }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.type, {'attr': {'class': 'form-control' ~ (form_errors(form.type)|length ? ' is-invalid' : '')}}) }}
+    {% if form_errors(form.type)|length %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.type) }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.date, {'attr': {'class': 'form-control' ~ (form_errors(form.date)|length ? ' is-invalid' : '')}}) }}
+    {% if form_errors(form.date)|length %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.date) }}
+        </div>
+    {% endif %}
+</div>
+<div class="mb-3">
+    {{ form_label(form.achats, 'Achats', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.achats, {'attr': {'class': 'form-control' ~ (form_errors(form.achats)|length ? ' is-invalid' : '')}}) }}
+    {% if form_errors(form.achats)|length %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.achats) }}
+        </div>
+    {% endif %}
+</div>
+<div class="h-captcha" data-sitekey="3f8fdf3a-dbd7-4f88-8e5f-54b055b5d51f"></div>
+<button class="btn btn-primary" type ="submit" onclick="submitForm()">Save</button>
+
 {{ form_end(form) }}
+
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+
+<script>
+    function submitForm() {
+        var response = grecaptcha.getResponse();
+        if (response.length === 0) {
+            alert('Veuillez résoudre le reCAPTCHA.');
+            return false;
+        } else {
+            document.getElementById('new_form').submit();
+        }
+    }
+</script>

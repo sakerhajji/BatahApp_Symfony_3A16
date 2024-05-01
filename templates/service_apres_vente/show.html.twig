@@ -3,37 +3,34 @@
 {% block title %}ServiceApresVente{% endblock %}
 
 {% block body %}
-    <h1>ServiceApresVente</h1>
+    <div class="container">
+        <h1 class="mb-4">ServiceApresVente Details</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>IdService</th>
-                <td>{{ service_apres_vente.idService }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ service_apres_vente.description }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>{{ service_apres_vente.type }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ service_apres_vente.date ? service_apres_vente.date|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ service_apres_vente.status ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>idPartenaire</th>
-                <td>{{ service_apres_vente.idPartenaire }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="card mb-4">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">IdService</dt>
+                    <dd class="col-sm-9">{{ service_apres_vente.idService }}</dd>
 
-    <a href="javascript:history.go(-1)">back to list</a>
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">{{ service_apres_vente.description }}</dd>
 
+                    <dt class="col-sm-3">Type</dt>
+                    <dd class="col-sm-9">{{ service_apres_vente.type }}</dd>
+
+                    <dt class="col-sm-3">Date</dt>
+                    <dd class="col-sm-9">{{ service_apres_vente.date ? service_apres_vente.date|date('Y-m-d H:i:s') : '' }}</dd>
+
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">{{ service_apres_vente.status ? 'Yes' : 'No' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <a href="{{ path('app_service_apres_vente_index') }}" class="btn btn-secondary mb-2">Back to List</a>
+
+        <a href="{{ path('app_service_apres_vente_edit', {'idService': service_apres_vente.idService}) }}" class="btn btn-primary mb-2">Edit</a>
+
+        {{ include('service_apres_vente/_delete_form.html.twig') }}
+    </div>
 {% endblock %}
