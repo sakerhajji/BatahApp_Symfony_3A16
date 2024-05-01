@@ -80,6 +80,9 @@
             "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
         }
     },
+    "mercuryseries/flashy-bundle": {
+        "version": "v5.1.0"
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {

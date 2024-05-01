@@ -17,4 +17,5 @@ return [
     Scheb\TwoFactorBundle\SchebTwoFactorBundle::class => ['all' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
+    MercurySeries\FlashyBundle\MercurySeriesFlashyBundle::class => ['all' => true],
 ];
