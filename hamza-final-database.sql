@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 20 avr. 2024 à 17:52
+-- Généré le : jeu. 02 mai 2024 à 21:11
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -28,8 +28,27 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `achats` (
-  `id` int(11) NOT NULL
+  `idAchats` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `avislivraison`
+--
+
+CREATE TABLE `avislivraison` (
+  `idAvis` int(11) NOT NULL,
+  `commentaire` varchar(200) NOT NULL,
+  `idLivraison` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `avislivraison`
+--
+
+INSERT INTO `avislivraison` (`idAvis`, `commentaire`, `idLivraison`) VALUES
+(1, 'good', 1);
 
 -- --------------------------------------------------------
 
@@ -54,7 +73,7 @@ INSERT INTO `basket` (`id_client`, `id_produit`, `idBasket`, `remise`, `date_ajo
 (8, 1, 8, '', '2024-04-11 09:29:51'),
 (8, 3, 9, '', '2024-04-11 09:29:57'),
 (10, 1, 10, '', '2024-04-11 18:55:46'),
-(38, 1, 15, NULL, '2024-04-16 07:37:56');
+(38, 1, 15, '', '2024-04-16 07:37:56');
 
 -- --------------------------------------------------------
 
@@ -78,14 +97,12 @@ CREATE TABLE `commands` (
 --
 
 INSERT INTO `commands` (`id`, `id_client`, `date_commande`, `mode_livraison`, `mode_paiement`, `cout_totale`, `etat_commande`, `adresse`) VALUES
-(15, 8, '2024-04-11 09:30:13', 'livraison', 'paiement', 100008, 'En Attente', '7 boulevard Habib Bourguiba'),
+(15, 40, '2024-04-11 09:30:13', 'livraison', 'paiement', 100008, 'En Attente', '7 boulevard Habib Bourguiba'),
 (16, 8, '2024-04-11 09:31:03', 'livraison', 'paiement', 100008, 'En Attente', '7 boulevard Habib Bourguiba'),
 (18, 38, '2024-04-16 06:50:41', 'livraison', 'paiement', 80008, 'En Attente', '4111 bardo, somrane'),
 (19, 38, '2024-04-16 07:38:16', 'livraison', 'paiement', 40008, 'En Attente', '4111 bardo, somrane'),
 (20, 1, '2024-04-20 13:38:32', 'livraison', 'paiement', 40008, 'En Attente', '4111 bardo, somrane'),
-(21, 1, '2024-04-20 13:42:32', 'livraison', 'paiement', 40008, 'En Attente', '4111 bardo, somrane'),
-(22, 1, '2024-04-20 13:47:09', 'livraison', 'paiement', 40008, 'En Attente', '4111 bardo, somrane'),
-(23, 1, '2024-04-20 14:07:41', 'livraison', 'paiement', 40008, 'En Attente', '4111 bardo, somrane');
+(104, 1, '2024-05-02 17:40:42', 'livraison', 'paiement', 77808, 'En Attente', '4111 bardo, somrane');
 
 -- --------------------------------------------------------
 
@@ -108,12 +125,8 @@ INSERT INTO `command_articles` (`id`, `article_id`, `command_id`) VALUES
 (23, 3, 15),
 (24, 1, 16),
 (25, 3, 16),
-(27, 7, 18),
-(28, 1, 19),
-(29, 1, 20),
-(30, 1, 21),
-(31, 1, 22),
-(32, 1, 23);
+(119, 1, 104),
+(120, 4, 104);
 
 -- --------------------------------------------------------
 
@@ -125,19 +138,42 @@ CREATE TABLE `comment` (
   `id` int(11) NOT NULL,
   `id_client` int(11) DEFAULT NULL,
   `id_produit` int(11) DEFAULT NULL,
-  `commentaire` varchar(255) DEFAULT NULL,
-  `date` datetime NOT NULL
+  `commentaire` varchar(255) NOT NULL,
+  `date` datetime NOT NULL,
+  `parent_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `comment`
 --
 
-INSERT INTO `comment` (`id`, `id_client`, `id_produit`, `commentaire`, `date`) VALUES
-(1, 2, 1, 'haha', '2024-04-14 12:12:55'),
-(8, 1, 1, 'helloooo', '2024-04-20 09:45:54'),
-(9, 1, 1, 'helloooo', '2024-04-20 09:52:12'),
-(10, 1, 1, 'helloooo', '2024-04-20 09:53:06');
+INSERT INTO `comment` (`id`, `id_client`, `id_produit`, `commentaire`, `date`, `parent_id`) VALUES
+(24, 1, 1, 'bad car 0/10 🤬🤬🤬', '2024-04-24 13:09:14', NULL),
+(25, 1, 1, 'hello', '2024-04-24 13:09:41', NULL),
+(26, 1, 1, 'helloooo', '2024-04-24 13:09:47', NULL),
+(31, 3, 1, '', '2024-04-24 13:39:48', NULL),
+(32, 3, 1, '', '2024-04-24 13:39:59', NULL),
+(35, 2, 1, 'hi', '2024-04-24 13:42:41', NULL),
+(48, 3, 1, 'good', '2024-04-30 11:25:24', 25);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `contact`
+--
+
+CREATE TABLE `contact` (
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `contact`
+--
+
+INSERT INTO `contact` (`id`) VALUES
+(1),
+(2),
+(3);
 
 -- --------------------------------------------------------
 
@@ -160,7 +196,8 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20240411043623', '2024-04-11 06:36:40', 93),
 ('DoctrineMigrations\\Version20240411044853', '2024-04-11 06:48:59', 63),
 ('DoctrineMigrations\\Version20240411045111', '2024-04-11 06:51:16', 53),
-('DoctrineMigrations\\Version20240414091116', '2024-04-14 11:11:23', 106);
+('DoctrineMigrations\\Version20240414091116', '2024-04-14 11:11:23', 106),
+('DoctrineMigrations\\Version20240425102758', '2024-04-25 12:28:06', 283);
 
 -- --------------------------------------------------------
 
@@ -179,6 +216,28 @@ CREATE TABLE `encheres` (
   `nbrParticipants` int(11) NOT NULL,
   `idProduit` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `forum`
+--
+
+CREATE TABLE `forum` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `created_at` date NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `prix` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `forum`
+--
+
+INSERT INTO `forum` (`id`, `title`, `content`, `created_at`, `username`, `prix`) VALUES
+(1, 'test', 'test text', '2024-05-02', 'hamza', 200);
 
 -- --------------------------------------------------------
 
@@ -213,16 +272,31 @@ INSERT INTO `image` (`idImage`, `url`, `idProduits`, `idLocations`) VALUES
 (26, '/uploads/661e0b8998d4e.jpg', 5, NULL),
 (27, '/uploads/661e0b8999146.jpg', 5, NULL),
 (28, '/uploads/661e0b899b9f2.jpg', 5, NULL),
-(32, '/uploads/661e0c84e6e68.jpg', 7, NULL),
-(33, '/uploads/661e0c84e73e6.jpg', 7, NULL),
-(34, '/uploads/661e0c84e7c29.webp', 7, NULL),
-(35, '/uploads/661e0c84e8cb6.jpg', 7, NULL),
 (36, '/uploads/661e0cf9c7d71.webp', 6, NULL),
 (37, '/uploads/661e0cf9c8480.webp', 6, NULL),
-(38, '/uploads/661e0cf9c89ac.webp', 6, NULL),
-(39, '/uploads/661e3f71acc62.jpg', 12, NULL),
-(40, '/uploads/661e3f71ae3bc.webp', 12, NULL),
-(41, '/uploads/661e3f71aeed5.jpg', 12, NULL);
+(38, '/uploads/661e0cf9c89ac.webp', 6, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `livraison`
+--
+
+CREATE TABLE `livraison` (
+  `idLivraison` int(11) NOT NULL,
+  `dateLivraison` date NOT NULL,
+  `statut` varchar(50) NOT NULL DEFAULT 'en attente',
+  `idPartenaire` int(11) DEFAULT NULL,
+  `idCommande` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `livraison`
+--
+
+INSERT INTO `livraison` (`idLivraison`, `dateLivraison`, `statut`, `idPartenaire`, `idCommande`) VALUES
+(1, '2024-05-02', 'en attente', 1, 15),
+(2, '2024-05-02', 'en attente', NULL, 104);
 
 -- --------------------------------------------------------
 
@@ -269,9 +343,16 @@ CREATE TABLE `partenaires` (
   `adresse` varchar(20) NOT NULL,
   `telephone` int(11) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `logo` varchar(200) NOT NULL,
+  `logo` varchar(200) DEFAULT NULL,
   `points` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `partenaires`
+--
+
+INSERT INTO `partenaires` (`idPartenaire`, `nom`, `type`, `adresse`, `telephone`, `email`, `logo`, `points`) VALUES
+(1, 'ayari', 'livreur', 'bardo', 95316683, 'hamza@gmail', 'aaa.png', 1);
 
 -- --------------------------------------------------------
 
@@ -287,12 +368,13 @@ CREATE TABLE `produits` (
   `labelle` varchar(300) NOT NULL,
   `status` varchar(255) NOT NULL,
   `periodeGarantie` int(11) NOT NULL,
-  `photo` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) NOT NULL,
   `video` varchar(250) DEFAULT NULL,
   `localisation` varchar(255) NOT NULL,
   `nombreDeVues` int(11) NOT NULL,
   `likes` int(11) DEFAULT 0,
   `dislikes` int(11) DEFAULT 0,
+  `average_rating` double DEFAULT NULL,
   `idUtilisateur` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -300,14 +382,12 @@ CREATE TABLE `produits` (
 -- Déchargement des données de la table `produits`
 --
 
-INSERT INTO `produits` (`idProduit`, `type`, `description`, `prix`, `labelle`, `status`, `periodeGarantie`, `photo`, `video`, `localisation`, `nombreDeVues`, `likes`, `dislikes`, `idUtilisateur`) VALUES
-(1, 'Voiture', 'Renault Megane 2023, essence, boîte automatique, 5 places', 40000, 'Renault Megane 2023', 'disponible', 0, 'Renault_Megane_2023.jpg', 'https://www.youtube.com/watch?v=AQ8Wj_RSz6g', 'https://maps.google.com/maps?q=tunis&t=&z=13&ie=UTF8&iwloc=&output=embed', 5, 0, 0, 2),
-(3, 'Voiture', 'Audi A4 2023, essence, boîte automatique, 5 places', 60000, 'Audi A4', 'disponible', 0, 'audi_a4.jpg', 'https://www.youtube.com/watch?v=xdct9lGOl_U', 'https://maps.google.com/maps?q=tunis&t=&z=13&ie=UTF8&iwloc=&output=embed', 2, 0, 0, 1),
-(4, 'Voiture', 'BMW Serie 3 2022, diesel, boîte manuelle, 5 portes', 55000, 'BMW Serie 3', 'disponible', 1, 'bmw_serie_3.jpg', 'https://www.youtube.com/watch?v=hGdNday0NFo', 'https://maps.google.com/maps?q=Sousse&t=&z=13&ie=UTF8&iwloc=&output=embed', 2, 0, 0, 3),
-(5, 'maison', 'Villa moderne, 4 chambres, 2 salles de bains, jardin spacieux', 350000, 'Villa Moderne', 'disponible', 0, 'villa_moderne.jpg', 'https://www.youtube.com/watch?v=n3wtxcO_0GQ', 'https://maps.google.com/maps?q=Hammamet&t=&z=13&ie=UTF8&iwloc=&output=embed', 0, 0, 0, 5),
-(6, 'maison', 'Appartement de 3 pièces, rénové, avec balcon', 120000, 'Appartement Rénové', 'disponible', 0, 'appartement_renove.jpg', 'https://www.youtube.com/watch?v=klVQdwiuGbA', 'https://maps.google.com/maps?q=Sfax&t=&z=13&ie=UTF8&iwloc=&output=embed', 1, 0, 0, 7),
-(7, 'terrain', 'Terrain constructible de 500 m², proche du centre-ville', 80000, 'Terrain Constructible', 'disponible', 0, 'terrain_constructible.jpg', 'https://www.youtube.com/watch?v=JfeNLL2cUb4', 'https://maps.google.com/maps?q=Nabeul&t=&z=13&ie=UTF8&iwloc=&output=embed', 1, 0, 0, 9),
-(12, 'maison', 'aa', 55, 'aa', 'disponible', 0, 'aa.jpg', NULL, 'https://maps.google.com/maps?q=bardo&t=&z=13&ie=UTF8&iwloc=&output=embed', 0, 0, 0, 39);
+INSERT INTO `produits` (`idProduit`, `type`, `description`, `prix`, `labelle`, `status`, `periodeGarantie`, `photo`, `video`, `localisation`, `nombreDeVues`, `likes`, `dislikes`, `average_rating`, `idUtilisateur`) VALUES
+(1, 'Voiture', 'Renault Megane 2023, essence, boîte automatique, 5 places', 22800, 'Renault Megane 2023', 'disponible', 0, 'Renault_Megane_2023.jpg', 'https://www.youtube.com/watch?v=AQ8Wj_RSz6g', 'https://maps.google.com/maps?q=tunis&t=&z=13&ie=UTF8&iwloc=&output=embed', 6, 3, 0, 5, 2),
+(3, 'Voiture', 'Audi A4 2023, essence, boîte automatique, 5 places', 50800, 'Audi A4', 'disponible', 0, 'audi_a4.jpg', 'https://www.youtube.com/watch?v=xdct9lGOl_U', 'https://maps.google.com/maps?q=tunis&t=&z=13&ie=UTF8&iwloc=&output=embed', 3, 8, 0, 5, 1),
+(4, 'Voiture', 'BMW Serie 3 2022, diesel, boîte manuelle, 5 portes', 55000, 'BMW Serie 3', 'disponible', 1, 'bmw_serie_3.jpg', 'https://www.youtube.com/watch?v=hGdNday0NFo', 'https://maps.google.com/maps?q=Sousse&t=&z=13&ie=UTF8&iwloc=&output=embed', 3, 1, 0, NULL, 3),
+(5, 'maison', 'Villa moderne, 4 chambres, 2 salles de bains, jardin spacieux', 350000, 'Villa Moderne', 'disponible', 0, 'villa_moderne.jpg', 'https://www.youtube.com/watch?v=n3wtxcO_0GQ', 'https://maps.google.com/maps?q=Hammamet&t=&z=13&ie=UTF8&iwloc=&output=embed', 0, 0, 0, 0, 5),
+(6, 'maison', 'Appartement de 3 pièces, rénové, avec balcon', 120000, 'Appartement Rénové', 'disponible', 0, 'appartement_renove.jpg', 'https://www.youtube.com/watch?v=klVQdwiuGbA', 'https://maps.google.com/maps?q=Sfax&t=&z=13&ie=UTF8&iwloc=&output=embed', 1, 0, 0, 0, 7);
 
 -- --------------------------------------------------------
 
@@ -319,9 +399,16 @@ CREATE TABLE `ratings` (
   `id_rating` int(11) NOT NULL,
   `id_produit` int(11) DEFAULT NULL,
   `id_user` int(11) DEFAULT NULL,
-  `rating` double NOT NULL,
-  `commentaire` varchar(255) DEFAULT NULL
+  `rating` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `ratings`
+--
+
+INSERT INTO `ratings` (`id_rating`, `id_produit`, `id_user`, `rating`) VALUES
+(13, 1, 1, 5),
+(14, 3, 3, 5);
 
 -- --------------------------------------------------------
 
@@ -330,7 +417,11 @@ CREATE TABLE `ratings` (
 --
 
 CREATE TABLE `reservation_enchere` (
-  `idReservation` int(11) NOT NULL
+  `idReservation` int(11) NOT NULL,
+  `dateReservation` date DEFAULT NULL,
+  `confirmation` tinyint(1) DEFAULT NULL,
+  `idUser` int(11) DEFAULT NULL,
+  `idEnchere` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -341,11 +432,11 @@ CREATE TABLE `reservation_enchere` (
 
 CREATE TABLE `service_apres_vente` (
   `idService` int(11) NOT NULL,
-  `description` varchar(200) NOT NULL,
-  `type` varchar(50) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
   `date` datetime NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `idAchats` int(11) DEFAULT NULL,
+  `idAchats` int(11) NOT NULL,
   `idPartenaire` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -385,8 +476,8 @@ CREATE TABLE `utilisateur` (
 --
 
 INSERT INTO `utilisateur` (`id`, `idGoogle`, `nomUtilisateur`, `prenomUtilisateur`, `sexe`, `dateDeNaissance`, `adresseEmail`, `motDePasse`, `adressePostale`, `numeroTelephone`, `numeroCin`, `pays`, `nbrProduitAchat`, `nbrProduitVendu`, `nbrProduit`, `nbrPoint`, `languePreferree`, `evaluationUtilisateur`, `statutVerificationCompte`, `avatar`, `dateInscription`, `role`) VALUES
-(1, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'hamza@gmail.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'hamzaPic.jpg', '2019-04-02 20:20:00', 'U'),
-(2, 'google1', 'Doe', 'John', 'M', '1990-01-01', 'john.doe@example.com', 'motdepasse1', '1 rue de Tunis', '123456789', '123456789', 'Tunisie', 0, 0, 0, 0, 'Français', 0, 1, NULL, '2024-04-11 04:37:36', 'U'),
+(1, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'hamza@gmail.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'avatar.png', '2019-04-02 20:20:00', 'U'),
+(2, 'google1', 'Doe', 'John', 'M', '1990-01-01', 'john.doe@example.com', 'password123', '1 rue de Tunis', '123456789', '123456789', 'Tunisie', 0, 0, 0, 0, 'Français', 0, 1, NULL, '2024-04-11 04:37:36', 'U'),
 (3, 'google2', 'Smith', 'Emily', 'F', '1995-02-02', 'emily.smith@example.com', 'motdepasse2', '2 avenue Habib Bourguiba', '234567890', '234567890', 'Tunisie', 0, 0, 0, 0, 'Arabe', 0, 1, NULL, '2024-04-11 04:37:36', 'A'),
 (4, 'google3', 'Garcia', 'Carlos', 'M', '1985-03-03', 'carlos.garcia@example.com', 'motdepasse3', '3 rue de Sousse', '345678901', '345678901', 'Tunisie', 0, 0, 0, 0, 'Anglais', 0, 1, NULL, '2024-04-11 04:37:36', 'U'),
 (5, 'google4', 'Kim', 'Soo', 'F', '1980-04-04', 'soo.kim@example.com', 'motdepasse4', '4 boulevard Habib Thameur', '456789012', '456789012', 'Tunisie', 0, 0, 0, 0, 'Français', 0, 1, NULL, '2024-04-11 04:37:36', 'U'),
@@ -399,7 +490,8 @@ INSERT INTO `utilisateur` (`id`, `idGoogle`, `nomUtilisateur`, `prenomUtilisateu
 (36, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'hamza@gmail.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'hamzaPic.jpg', '2019-04-02 20:20:00', 'U'),
 (37, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'hamza@gmail.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'hamzaPic.jpg', '2019-04-02 20:20:00', 'U'),
 (38, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'hamza@gmail.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'hamzaPic.jpg', '2019-04-02 20:20:00', 'U'),
-(39, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'hamza@gmail.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'hamzaPic.jpg', '2019-04-02 20:20:00', 'U');
+(39, '100', 'ayari', 'hamza', 'm', '2020-04-02', 'john.doe@example.com', '0000', '4111 bardo, somrane', '95316683', '123', 'tunisia', 2, 1, 2, 2, 'francais', 10, 0, 'hamzaPic.jpg', '2019-04-02 20:20:00', 'U'),
+(40, NULL, 'leo', 'messi', 'H', '2001-02-02', 'messi@gmail.com', '$2y$10$b0LfFTPW2FsNTqWT7wtbUuQ', NULL, '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '6633d388dace9.jpg', '2024-05-02 19:52:10', 'A');
 
 -- --------------------------------------------------------
 
@@ -430,12 +522,15 @@ INSERT INTO `views` (`utilisateur_id`, `produit_id`, `idViews`, `likes`, `dislik
 (4, NULL, 9, 0, 0),
 (10, 1, 10, 0, 0),
 (10, NULL, 11, 0, 0),
-(38, 7, 12, 0, 0),
 (38, NULL, 13, 0, 0),
 (38, 1, 14, 0, 0),
 (38, 3, 15, 0, 0),
 (38, 6, 16, 0, 0),
-(38, 4, 17, 0, 0);
+(38, 4, 17, 0, 0),
+(2, 1, 18, 0, 0),
+(2, NULL, 19, 0, 0),
+(1, 3, 20, 0, 0),
+(1, 4, 21, 0, 0);
 
 --
 -- Index pour les tables déchargées
@@ -445,7 +540,14 @@ INSERT INTO `views` (`utilisateur_id`, `produit_id`, `idViews`, `likes`, `dislik
 -- Index pour la table `achats`
 --
 ALTER TABLE `achats`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`idAchats`);
+
+--
+-- Index pour la table `avislivraison`
+--
+ALTER TABLE `avislivraison`
+  ADD PRIMARY KEY (`idAvis`),
+  ADD KEY `IDX_E375FE795AE6B449` (`idLivraison`);
 
 --
 -- Index pour la table `basket`
@@ -476,7 +578,14 @@ ALTER TABLE `command_articles`
 ALTER TABLE `comment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_9474526CE173B1B8` (`id_client`),
-  ADD KEY `IDX_9474526CF7384557` (`id_produit`);
+  ADD KEY `IDX_9474526CF7384557` (`id_produit`),
+  ADD KEY `IDX_9474526C727ACA70` (`parent_id`);
+
+--
+-- Index pour la table `contact`
+--
+ALTER TABLE `contact`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `doctrine_migration_versions`
@@ -492,12 +601,26 @@ ALTER TABLE `encheres`
   ADD KEY `IDX_8B89031D391C87D5` (`idProduit`);
 
 --
+-- Index pour la table `forum`
+--
+ALTER TABLE `forum`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Index pour la table `image`
 --
 ALTER TABLE `image`
   ADD PRIMARY KEY (`idImage`),
   ADD KEY `IDX_C53D045FED8EF5D7` (`idProduits`),
   ADD KEY `IDX_C53D045FEB0C61EC` (`idLocations`);
+
+--
+-- Index pour la table `livraison`
+--
+ALTER TABLE `livraison`
+  ADD PRIMARY KEY (`idLivraison`),
+  ADD KEY `IDX_A60C9F1F3D498C26` (`idCommande`),
+  ADD KEY `fk_livraisonPartenaire` (`idPartenaire`);
 
 --
 -- Index pour la table `location`
@@ -540,13 +663,17 @@ ALTER TABLE `ratings`
 -- Index pour la table `reservation_enchere`
 --
 ALTER TABLE `reservation_enchere`
-  ADD PRIMARY KEY (`idReservation`);
+  ADD PRIMARY KEY (`idReservation`),
+  ADD KEY `IDX_5F443C8AFE6E88D7` (`idUser`),
+  ADD KEY `IDX_5F443C8A2868ECFD` (`idEnchere`);
 
 --
 -- Index pour la table `service_apres_vente`
 --
 ALTER TABLE `service_apres_vente`
-  ADD PRIMARY KEY (`idService`);
+  ADD PRIMARY KEY (`idService`),
+  ADD KEY `IDX_E8A0B369FA313AD4` (`idAchats`),
+  ADD KEY `IDX_E8A0B369B00BBD99` (`idPartenaire`);
 
 --
 -- Index pour la table `utilisateur`
@@ -570,31 +697,43 @@ ALTER TABLE `views`
 -- AUTO_INCREMENT pour la table `achats`
 --
 ALTER TABLE `achats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idAchats` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `avislivraison`
+--
+ALTER TABLE `avislivraison`
+  MODIFY `idAvis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `basket`
 --
 ALTER TABLE `basket`
-  MODIFY `idBasket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `idBasket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT pour la table `commands`
 --
 ALTER TABLE `commands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT pour la table `command_articles`
 --
 ALTER TABLE `command_articles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT pour la table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT pour la table `contact`
+--
+ALTER TABLE `contact`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `encheres`
@@ -603,10 +742,22 @@ ALTER TABLE `encheres`
   MODIFY `idEnchere` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `forum`
+--
+ALTER TABLE `forum`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT pour la table `image`
 --
 ALTER TABLE `image`
   MODIFY `idImage` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+
+--
+-- AUTO_INCREMENT pour la table `livraison`
+--
+ALTER TABLE `livraison`
+  MODIFY `idLivraison` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `location`
@@ -624,7 +775,7 @@ ALTER TABLE `messenger_messages`
 -- AUTO_INCREMENT pour la table `partenaires`
 --
 ALTER TABLE `partenaires`
-  MODIFY `idPartenaire` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idPartenaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `produits`
@@ -636,7 +787,7 @@ ALTER TABLE `produits`
 -- AUTO_INCREMENT pour la table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id_rating` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_rating` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT pour la table `reservation_enchere`
@@ -654,17 +805,23 @@ ALTER TABLE `service_apres_vente`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT pour la table `views`
 --
 ALTER TABLE `views`
-  MODIFY `idViews` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `idViews` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `avislivraison`
+--
+ALTER TABLE `avislivraison`
+  ADD CONSTRAINT `FK_E375FE795AE6B449` FOREIGN KEY (`idLivraison`) REFERENCES `livraison` (`idLivraison`);
 
 --
 -- Contraintes pour la table `basket`
@@ -690,6 +847,7 @@ ALTER TABLE `command_articles`
 -- Contraintes pour la table `comment`
 --
 ALTER TABLE `comment`
+  ADD CONSTRAINT `FK_9474526C727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `comment` (`id`),
   ADD CONSTRAINT `FK_9474526CE173B1B8` FOREIGN KEY (`id_client`) REFERENCES `utilisateur` (`id`),
   ADD CONSTRAINT `FK_9474526CF7384557` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`idProduit`);
 
@@ -703,8 +861,15 @@ ALTER TABLE `encheres`
 -- Contraintes pour la table `image`
 --
 ALTER TABLE `image`
-  ADD CONSTRAINT `FK_C53D045FEB0C61EC` FOREIGN KEY (`idLocations`) REFERENCES `location` (`idLocation`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_C53D045FED8EF5D7` FOREIGN KEY (`idProduits`) REFERENCES `produits` (`idProduit`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_C53D045FEB0C61EC` FOREIGN KEY (`idLocations`) REFERENCES `location` (`idLocation`),
+  ADD CONSTRAINT `FK_C53D045FED8EF5D7` FOREIGN KEY (`idProduits`) REFERENCES `produits` (`idProduit`);
+
+--
+-- Contraintes pour la table `livraison`
+--
+ALTER TABLE `livraison`
+  ADD CONSTRAINT `FK_A60C9F1F3D498C26` FOREIGN KEY (`idCommande`) REFERENCES `commands` (`id`),
+  ADD CONSTRAINT `fk_livraisonPartenaire` FOREIGN KEY (`idPartenaire`) REFERENCES `partenaires` (`idPartenaire`);
 
 --
 -- Contraintes pour la table `location`
@@ -726,11 +891,25 @@ ALTER TABLE `ratings`
   ADD CONSTRAINT `FK_CEB607C9F7384557` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`idProduit`);
 
 --
+-- Contraintes pour la table `reservation_enchere`
+--
+ALTER TABLE `reservation_enchere`
+  ADD CONSTRAINT `FK_5F443C8A2868ECFD` FOREIGN KEY (`idEnchere`) REFERENCES `encheres` (`idEnchere`),
+  ADD CONSTRAINT `FK_5F443C8AFE6E88D7` FOREIGN KEY (`idUser`) REFERENCES `utilisateur` (`id`);
+
+--
+-- Contraintes pour la table `service_apres_vente`
+--
+ALTER TABLE `service_apres_vente`
+  ADD CONSTRAINT `FK_E8A0B369B00BBD99` FOREIGN KEY (`idPartenaire`) REFERENCES `partenaires` (`idPartenaire`),
+  ADD CONSTRAINT `FK_E8A0B369FA313AD4` FOREIGN KEY (`idAchats`) REFERENCES `achats` (`idAchats`);
+
+--
 -- Contraintes pour la table `views`
 --
 ALTER TABLE `views`
-  ADD CONSTRAINT `FK_11F09C87F347EFB` FOREIGN KEY (`produit_id`) REFERENCES `produits` (`idProduit`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_11F09C87FB88E14F` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_11F09C87F347EFB` FOREIGN KEY (`produit_id`) REFERENCES `produits` (`idProduit`),
+  ADD CONSTRAINT `FK_11F09C87FB88E14F` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
