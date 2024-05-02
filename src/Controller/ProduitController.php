@@ -77,26 +77,6 @@ class ProduitController extends AbstractController
     /************************************************************************************************************************************************* */
     /**************************************************************CRUD-PRODUCT*********************************************************************************** */
 
-    public function captcha(Request $request): Response
-    {
-        // Crée un nouveau builder de CAPTCHA
-        $builder = new CaptchaBuilder();
-
-        // Génère le CAPTCHA
-        $builder->build();
-
-        // Stocke le texte du CAPTCHA dans la session
-        $request->getSession()->set('captcha', $builder->getPhrase());
-
-        // Crée une réponse avec l'image CAPTCHA
-        $response = new Response($builder->output());
-
-        // Définis le type de contenu de la réponse
-        $response->headers->set('Content-Type', 'image/jpeg');
-
-        return $response;
-    }
-
 
     #[Route('/ajout', name: 'app_produit')]
     public function addprod(UtilisateurRepository $userRepository, ManagerRegistry $em, Request $request, Security $security): Response
@@ -756,7 +736,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
         $sheet = $spreadsheet->getActiveSheet();
 
         // Charge le logo depuis le serveur
-        $logoPath = $this->getParameter('kernel.project_dir') . '/public/imagescopy/logoCampigo2.jpg';
+        $logoPath = $this->getParameter('kernel.project_dir') . '/public/imagescopy/batah.png';
         $drawing = new Drawing();
         $drawing->setPath($logoPath);
         $drawing->setCoordinates('B1');

@@ -95,102 +95,43 @@
 
                                 </div>
                               </div>
+
+                              
                             </section>
-                            <form action="{{ path('app_applyPromoCode') }}" method="post" class="mt-3 promo-form">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="promoCode">Code promo :</label>
-                                        <input type="text" id="promoCode" name="promoCode" class="form-control" placeholder="Entrez votre code promo ici">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary btn-block">Appliquer le code promo</button>
-                                </div>
-                            </div>
-                        </form>
-                            <!-- DELETE CONFIRMATION MODAL -->
-
-		  {# <div id="myModal{{basketItem.getId()}}" class="modal fade delete-modal" >
-                              <div class="modal-dialog modal-confirm">
-                                <div class="modal-content" style="z-index: 99999 !important;">
-                                  <div class="modal-header flex-column">
-                                    <div class="icon-box">
-                                      <i class="material-icons">
-                                        &#xE5CD;
-                                                                                                                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                              
-                                                                                                                                                                                                      
-                                                                                                                                                              
-                                                                                                                      
-                                                                              
-                                      </i>
-                                    </div>
-                                    <h4 class="modal-title w-100">
-                                      Vous êtes sure?
-                                                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                  
-                                                                                                                                                                                            
-                                                                                                                                                      
-                                                                                                                
-                                                                          
-                                    </h4>
-
-                                  </div>
-                                  <div class="modal-body">
-                                    <p>
-                                      Vous êtes sure vous voulez supprimer cet article de cette commande ?
-                                                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                  
-                                                                                                                                                                                            
-                                                                                                                                                      
-                                                                                                                
-                                                                          
-                                    </p>
-                                  </div>
-                                  <div class="modal-footer justify-content-center">
-                                    <button id="cancelDeleteArticle{{ basketItem.getIdBasket() }}" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                      Annuler
-                                                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                  
-                                                                                                                                                                                            
-                                                                                                                                                      
-                                                                                                                
-                                                                          
-                                    </button>
-                                    <a href="{{ path('app_removeFromBasket', {'idp': basketItem.getIdBasket()}) }}">
-                                      <button id="confirm-delete-btn{{ basketItem.getIdBasket() }}" type="button" class="btn btn-danger">
-                                        Supprimer
-                                                                                                                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                              
-                                                                                                                                                                                                      
-                                                                                                                                                              
-                                                                                                                      
-                                                                              
-                                      </button>
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-		  </div> #}
-                          <!-- DELETE CONFIRMATION MODAL -->
+                           <!-- DELETE CONFIRMATION MODAL -->
+                           <div id="myModal{{ basketItem.getIdbasket() }}" class="modal fade" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                           <div class="modal-dialog">
+                               <div class="modal-content">
+                                   <div class="modal-header">
+                                       <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                   </div>
+                                   <div class="modal-body">
+                                       Êtes-vous sûr de vouloir supprimer cet article de votre panier ?
+                                   </div>
+                                   <div class="modal-footer">
+                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                       <a href="{{ path('app_removeFromBasket', {'idp': basketItem.getIdBasket()}) }}" class="btn btn-danger">Supprimer</a>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+		<!-- DELETE CONFIRMATION MODAL -->
 
                           {% endfor %}
+                          <form action="{{ path('app_applyPromoCode') }}" method="post" class="mt-3 promo-form">
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="promoCode">Code promo :</label>
+                                      <input type="text" id="promoCode" name="promoCode" class="form-control" placeholder="Entrez votre code promo ici">
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                  <button type="submit" class="btn btn-primary btn-block">Appliquer le code promo</button>
+                              </div>
+                          </div>
+                      </form>
                         </div>
 
                         <div class="col-md-4" style="position: relative;">
@@ -239,7 +180,8 @@
               </div>
 
             {% endif %}
-
+<!-- Bouton "Retour au menu" -->
+<a href="{{ path('app_afficahge_produits') }}" class="btn btn-primary">Retour au menu</a>
             <style>
         .modal-backdrop {
             z-index: 0 !important;
@@ -577,6 +519,7 @@
 .promo-form button {
     margin-top: 10px;
 }
+
 
 </style>
 

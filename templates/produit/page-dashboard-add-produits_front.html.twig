@@ -104,9 +104,7 @@
     <iframe id="mapIframe" width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
 </div>
 
- {# Champ de formulaire CAPTCHA #}
- <img src="{{ path('captcha') }}" alt="CAPTCHA">
- <input type="text" id="captcha" name="captcha">
+
 
 {% if is_granted('ROLE_USER') %}
 <!-- Champ caché pour stocker l'ID de l'utilisateur -->
