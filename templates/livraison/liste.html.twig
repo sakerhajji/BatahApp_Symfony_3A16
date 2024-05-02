@@ -1,0 +1,37 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Liste des commandes{% endblock %}
+
+{% block body %}
+    <h1>Liste des commandes</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date de commande</th>
+            <th>Adresse</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            {% set commandeLivree = false %}
+            {% for livraison in livraisons %}
+                {% if livraison.commande.id == commande.id %}
+                    {% set commandeLivree = true %}
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.dateCommande|date('Y-m-d H:i:s') }}</td>
+                <td>{{ commande.adresse }}</td>
+                <td>
+                    {% if not commandeLivree %}
+                        <a href="{{ path('livrer_commande', {'id': commande.id}) }}" class="btn btn-lg btn-transparent">Livrer</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

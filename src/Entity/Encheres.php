@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EncheresRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EncheresRepository::class)]
@@ -121,5 +123,49 @@ class Encheres
     public function setProduit(?Produits $produit): void
     {
         $this->produit = $produit;
+    }
+
+    public function __construct()
+    {
+        $this->reservation_enchere = new ArrayCollection();
+    }
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=ReservationEnchere::class, mappedBy="idEnchere")
+     */
+    private $reservation_enchere;
+
+
+
+
+    /**
+     * @return Collection|ReservationEnchere[]
+     */
+    public function getReservationEnchere(): Collection
+    {
+        return $this->reservation_enchere;
+    }
+
+    public function addReservationEnchere(ReservationEnchere $reservationEnchere): self
+    {
+        if (!$this->reservation_enchere->contains($reservationEnchere)) {
+            $this->reservation_enchere[] = $reservationEnchere;
+            $reservationEnchere->setIdEnchere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationEnchere(ReservationEnchere $reservationEnchere): self
+    {
+        if ($this->reservation_enchere->removeElement($reservationEnchere)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationEnchere->getIdEnchere() === $this) {
+                $reservationEnchere->setIdEnchere(null);
+            }
+        }
+
+        return $this;
     }
 }

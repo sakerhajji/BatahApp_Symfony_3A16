@@ -1,0 +1,188 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Livraison index{% endblock %}
+
+{% block body %}
+<div class="c_container">
+        <div class="col-md-6">
+            <h1>Liste des livraisons</h1>
+            <div class="form-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom">
+                <button onclick="startDictation()" class="btn btn-info">&#x1F3A4;</button>
+            </div>
+            <table class="table" id="users">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th><button onclick="sortTableByDate()" class="btn btn-sm btn-outline-secondary">DateLivraison</button></th>
+                        <th>Statut</th>
+                        <th>Adresse</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for livraison in livraisons %}
+                    <tr>
+                        <td>{{ livraison.commande.idClient.nomutilisateur}} {{ livraison.commande.idClient.prenomutilisateur}}</td>
+                        <td>{{ livraison.dateLivraison ? livraison.dateLivraison|date('Y-m-d') : '' }}</td>
+                        {% if livraison.statut == 'en attente' %}
+                        <td>{{ livraison.statut }} <i class="fa-solid fa-hourglass-start"></i></td>
+                        {% endif %}
+                        {% if livraison.statut == 'en cours' %}
+                        <td>{{ livraison.statut }} <i class="fa-solid fa-spinner"></i></td>
+                        {% endif %}
+                        {% if livraison.statut == 'Récupéré' %}
+                        <td>{{ livraison.statut }} <i class="fa-solid fa-check"></i></td>
+                        {% endif %}
+                        <td>{{ livraison.commande.adresse }}</td>
+                        <td>
+                            <a href="{{ path('app_livraison_show', {'idLivraison': livraison.idLivraison}) }}">show</a>
+                            <a href="{{ path('app_livraison_edit', {'idLivraison': livraison.idLivraison}) }}">edit</a>
+                            {% if livraison.statut == 'en attente'  %}
+                                <a href="{{ path('affecter_partenaire', {'idLivraison': livraison.idLivraison}) }}">affecter</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h2>Statistique des livraisons</h2>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <canvas id="livraisonChart" width="400" height="200"></canvas>
+            <script>
+                let statuts = [];
+                let nbLivraisons = [];
+                let backgroundColors = [];
+
+                {% for livraisonStat in livraisonsStats %}
+                statuts.push('{{ livraisonStat.statut }}');
+                nbLivraisons.push('{{ livraisonStat.nbLivraisons }}');
+
+                // Assigner des couleurs en fonction du statut
+                switch ('{{ livraisonStat.statut }}'.toLowerCase()) {
+                    case 'en cours':
+                        backgroundColors.push('rgba(255, 206, 86, 0.2)');
+                        break;
+                    case 'en attente':
+                        backgroundColors.push('rgba(255, 99, 132, 0.2)');
+                        break;
+                    case 'Récupéré':
+                        backgroundColors.push('rgba(75, 192, 192, 0.2)');
+                        break;
+                    default:
+                        backgroundColors.push('rgba(201, 203, 207, 0.2)');
+                        break;
+                }
+                {% endfor %}
+
+                let ctx = document.getElementById('livraisonChart').getContext('2d');
+                let chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: statuts,
+                        datasets: [{
+                            label: 'Nombre de livraisons',
+                            data: nbLivraisons,
+                            backgroundColor: backgroundColors,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+
+        </div>
+</div>
+    <script>
+        function sortTableByDate() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("tableId");
+            switching = true;
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[0];
+                    y = rows[i + 1].getElementsByTagName("td")[0];
+                    // Vérifier si les deux lignes doivent changer de place
+                    if (new Date(x.innerHTML) < new Date(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+    <script>
+        // Function to start voice recognition
+        function startDictation() {
+            if ('webkitSpeechRecognition' in window) {
+                var recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;  // Stops capturing after the first pause
+                recognition.interimResults = false;  // We only want the final result
+                recognition.lang = "fr-FR";  // Set the recognition language to French
+
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    // Remove any trailing punctuation such as periods, commas, etc.
+                    transcript = transcript.replace(/[\.,\?!]$/, '').trim();
+                    document.getElementById('searchInput').value = transcript;  // Set the cleaned text as the value of 'searchInput'
+                    recognition.stop();  // Stop the recognition
+
+                    searchTable();  // Assuming 'searchTable' is your search function that triggers the search
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    recognition.stop();
+                };
+
+                recognition.start();  // Start the speech recognition
+            } else {
+                alert('Speech recognition not supported in this browser.');
+            }
+        }
+        // Function to perform search
+        function searchTable() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("users");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.textContent.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+
+        document.getElementById("searchInput").addEventListener("input", searchTable);
+
+    </script>
+{% endblock %}

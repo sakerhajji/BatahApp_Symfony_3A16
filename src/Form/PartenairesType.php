@@ -9,6 +9,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Finder\Finder;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class PartenairesType extends AbstractType
 {
@@ -28,12 +35,13 @@ class PartenairesType extends AbstractType
                 'choices' => [
                     'voiture' => 'voiture',
                     'maison' => 'maison',
-                    'terrain' => 'terrain'
+                    'terrain' => 'terrain',
+                    'livraison' => 'livraison'
                 ],
                 'constraints' => [
                     new Assert\NotBlank(['message' => "Le type ne peut pas être vide"]),
                     new Assert\Choice([
-                        'choices' => ["voiture", "maison", "terrain"],
+                        'choices' => ["voiture", "maison", "terrain", "livraison"],
                         'message' => "Le type doit être voiture, maison ou terrain"
                     ])
                 ]
@@ -62,14 +70,31 @@ class PartenairesType extends AbstractType
                     new Assert\Email(['message' => "L'email doit être valide"])
                 ]
             ])
-            ->add('logo')
-        ;
+
+            ->add('logo', FileType::class, [
+                'label' => 'Logo (Image file)',
+                'mapped' => false, // Important: logo is not automatically mapped to entity
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image file',
+                    ])
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Partenaires::class,
+            'attr' => ['enctype' => 'multipart/form-data'],
         ]);
     }
 }

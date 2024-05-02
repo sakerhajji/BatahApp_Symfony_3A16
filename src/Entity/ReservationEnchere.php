@@ -2,76 +2,45 @@
 
 namespace App\Entity;
 
-use App\Repository\ReservationEnchereRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ReservationEnchereRepository::class)]
-/**
- * ReservationEnchere
- *
- * @ORM\Table(name="reservation_enchere", indexes={@ORM\Index(name="idEnchere", columns={"idEnchere"}), @ORM\Index(name="idUser", columns={"idUser"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: "App\Repository\ReservationEnchereRepository")]
 class ReservationEnchere
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: "idReservation")]
-    private ?int $idreservation = null;
+    #[ORM\Column(name: "idReservation", type: "integer")]
+    private $idReservation;
 
+    #[ORM\Column(name: "dateReservation", type: "date", nullable: true)]
+    private $dateReservation;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="dateReservation", type="date", nullable=true)
-     */
-    private $datereservation;
-
-    /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="confirmation", type="boolean", nullable=true)
-     */
+    #[ORM\Column(name: "confirmation", type: "boolean", nullable: true)]
     private $confirmation;
 
-    /**
-     * @var Utilisateur
-     *
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idUser", referencedColumnName="id")
-     * })
-     */
-    private $iduser;
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+    #[ORM\JoinColumn(name: "idUser", referencedColumnName: "id")]
+    private $idUser;
 
-    /**
-     * @var Encheres
-     *
-     * @ORM\ManyToOne(targetEntity="Encheres")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idEnchere", referencedColumnName="idEnchere")
-     * })
-     */
-    private $idenchere;
+    #[ORM\ManyToOne(targetEntity: Encheres::class)]
+    #[ORM\JoinColumn(name: "idEnchere", referencedColumnName: "idEnchere")]
+    private $idEnchere;
 
-    public function getIdreservation(): int
+    public function getIdReservation(): ?int
     {
-        return $this->idreservation;
+        return $this->idReservation;
     }
 
-    public function setIdreservation(int $idreservation): void
+    public function getDateReservation(): ?\DateTimeInterface
     {
-        $this->idreservation = $idreservation;
+        return $this->dateReservation;
     }
 
-    public function getDatereservation(): ?\DateTime
+    public function setDateReservation(?\DateTimeInterface $dateReservation): self
     {
-        return $this->datereservation;
-    }
+        $this->dateReservation = $dateReservation;
 
-    public function setDatereservation(?\DateTime $datereservation): void
-    {
-        $this->datereservation = $datereservation;
+        return $this;
     }
 
     public function getConfirmation(): ?bool
@@ -79,33 +48,34 @@ class ReservationEnchere
         return $this->confirmation;
     }
 
-    public function setConfirmation(?bool $confirmation): void
+    public function setConfirmation(?bool $confirmation): self
     {
         $this->confirmation = $confirmation;
+
+        return $this;
     }
 
-    public function getIduser(): Utilisateur
+    public function getIdUser(): ?Utilisateur
     {
-        return $this->iduser;
+        return $this->idUser;
     }
 
-    public function setIduser(Utilisateur $iduser): void
+    public function setIdUser(?Utilisateur $idUser): self
     {
-        $this->iduser = $iduser;
+        $this->idUser = $idUser;
+
+        return $this;
     }
 
-    public function getIdenchere(): Encheres
+    public function getIdEnchere(): ?Encheres
     {
-        return $this->idenchere;
+        return $this->idEnchere;
     }
 
-    public function setIdenchere(Encheres $idenchere): void
+    public function setIdEnchere(?Encheres $idEnchere): self
     {
-        $this->idenchere = $idenchere;
-    }
+        $this->idEnchere = $idEnchere;
 
-    public function isConfirmation(): ?bool
-    {
-        return $this->confirmation;
+        return $this;
     }
 }

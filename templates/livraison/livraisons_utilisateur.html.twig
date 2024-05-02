@@ -1,0 +1,43 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Liste des livraisons{% endblock %}
+
+{% block body %}
+    <h1>Liste des livraisons</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Date de livraison</th>
+            <th>Statut</th>
+            <th>Adresse de livraison</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for livraison in livraisons %}
+            <tr>
+                <td>{{ livraison.dateLivraison|date('Y-m-d') }}</td>
+                {% if livraison.statut == 'en attente' %}
+                    <td>{{ livraison.statut }} <i class="fa-solid fa-hourglass-start"></i></td>
+                {% endif %}
+                {% if livraison.statut == 'en cours' %}
+                    <td>{{ livraison.statut }} <i class="fa-solid fa-spinner"></i></td>
+                {% endif %}
+                {% if livraison.statut == 'Récupéré' %}
+                    <td>{{ livraison.statut }} <i class="fa-solid fa-check"></i></td>
+                {% endif %}
+                <td>{{ livraison.commande.adresse }}</td>
+
+                <td>
+                    {% if livraison.statut != 'en attente' %}
+                    <a href="{{ path('app_avis_livraison_new', {'idLivraison': livraison.idLivraison}) }}" class="btn dbxshad btn-lg btn-thm2 circle">Commenter</a>
+                    {% endif %}
+                    {% if livraison.statut not in ['Récupéré', 'en attente'] %}
+                        <a href="{{ path('recuperer_livraison', {'idLivraison': livraison.idLivraison}) }}" class="btn btn-lg btn-success">Récupérer</a>
+                    {% endif %}
+                </td>
+            </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Users:</h1>
+    <form method="post" action="{{ path('app_csv_import') }}" enctype="multipart/form-data">
+        <input type="file" id="csvfile" name="csvfile">
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

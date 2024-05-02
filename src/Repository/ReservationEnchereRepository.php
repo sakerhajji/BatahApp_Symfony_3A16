@@ -21,28 +21,15 @@ class ReservationEnchereRepository extends ServiceEntityRepository
         parent::__construct($registry, ReservationEnchere::class);
     }
 
-//    /**
-//     * @return ReservationEnchere[] Returns an array of ReservationEnchere objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?ReservationEnchere
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findByDate(string $searchDate, int $limit = null, int $offset = null): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.dateReservation = :searchDate')
+            ->setParameter('searchDate', new \DateTime($searchDate))
+            ->orderBy('r.dateReservation', 'ASC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
+    }
 }

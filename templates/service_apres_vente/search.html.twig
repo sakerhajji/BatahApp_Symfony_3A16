@@ -1,0 +1,41 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block body %}
+    <h1>Search Results</h1>
+
+    <p>Displaying results for: {{ app.request.query.get('search') }}</p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>IdService</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ result.idService }}</td>
+                <td>{{ result.description }}</td>
+                <td>{{ result.type }}</td>
+                <td>{{ result.date ? result.date|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ result.status ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_service_apres_vente_show', {'idService': result.idService}) }}">Show</a>
+                    <a href="{{ path('app_service_apres_vente_edit', {'idService': result.idService}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

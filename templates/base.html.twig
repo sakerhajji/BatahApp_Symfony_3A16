@@ -11,7 +11,7 @@
     <meta name="CreativeLayers" content="ATFN">
 
     <!-- Title -->
-    <title>{% block title %}Voiture - Automotive & Car Dealer HTML Template{% endblock %}</title>
+    <title>{% block title %}BATAH{% endblock %}</title>
 
     <!-- CSS files -->
     {% block css %}
@@ -20,9 +20,11 @@
         <link rel="stylesheet" href="{{ asset('css/dashbord_navitaion.css') }}">
         <!-- Responsive stylesheet -->
         <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+
         <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
- {% endblock %}
+        <link href="{{ asset('images/iconbatah.png') }}" sizes="128x128" rel="shortcut icon" type="image/x-icon"/>
+        <link href="{{ asset('images/iconbatah.png') }}" sizes="128x128" rel="shortcut icon"/>
+    {% endblock %}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -34,7 +36,7 @@
 </head>
 
 <body>
-{% block body %}
+
     <div class="wrapper">
         <div class="preloader"></div>
 
@@ -45,13 +47,16 @@
                     <div class="col-lg-8 col-xl-7">
                         <div class="header_top_contact_opening_widget text-center text-md-start">
                             <ul class="mb0">
-                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-phone-call"></span>+216 95 316 683</a></li>
-                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-map"></span>cité ghazela - Esprit</a></li>
-                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-clock"></span>Mon - Fri 8:00 - 18:00</a></li>
+                                <li class="list-inline-item"><a href="#"><span class="flaticon-phone-call"></span>1-800-458-56987</a>
+                                </li>
+                                <li class="list-inline-item"><a href="#"><span class="flaticon-map"></span>47 Bakery
+                                        Street, London, UK</a></li>
+                                <li class="list-inline-item"><a href="#"><span class="flaticon-clock"></span>Mon - Fri
+                                        8:00 - 18:00</a></li>
                             </ul>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-4 col-xl-5">
                         <div class="header_top_social_widgets text-center text-md-end">
                             <ul class="m0">
@@ -60,9 +65,9 @@
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-twitter"></span></a></li>
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-instagram"></span></a></li>
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-linkedin"></span></a></li>
-                                <li class="list-inline-item" style="font-size: 20px;"><a href="{{path('app_login')}}" data-bs-toggle="modal"
+                                <li class="list-inline-item"><a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#logInModal">Login</a></li>
-                                <li class="list-inline-item" style="font-size: 20px;"><a href="{{path('app_ajouter')}}" data-bs-toggle="modal"
+                                <li class="list-inline-item"><a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#logInModal">Register</a></li>
                             </ul>
                         </div>
@@ -85,59 +90,25 @@
                             <span class="icon-bar"></span>
                         </button>
                     </div>
-                    <a href="#" class="navbar_brand float-start dn-md" id="logo-container">
-                    <div class="logo-container">
-                        <img class="logo img-fluid" src="{{ asset('uploads/logo.png') }}" alt="Logo">
-                        <span class="brand-text">batah</span>
-                    </div>
-                </a>
-          <style>
-            .logo-container {
-              display: inline-flex;
-              align-items: center;
-              transition: transform 0.3s ease-in-out; /* Add smooth transition */
-          }
-          
-          .logo {
-              width: 100px; /* Adjust the size as needed */
-              height: auto;
-              margin-right: 10px; /* Adjust the spacing between the logo and text */
-          }
-          
-          .brand-text {
-              font-size: 14px; /* Adjust the font size as needed */
-              color: #FF5733; /* Attractive color for the text */
-              font-weight: bold; /* Make the text bold */
-          }
-          
-          #logo-container:hover .logo-container {
-              transform: rotate(360deg); /* Rotate the logo 360 degrees on hover */
-          }
-          
-          
-          </style>
-          <script>
-            const logoContainer = document.getElementById('logo-container');
-          
-          logoContainer.addEventListener('mouseenter', () => {
-              logoContainer.classList.add('rotate-logo');
-          });
-          
-          logoContainer.addEventListener('mouseleave', () => {
-              logoContainer.classList.remove('rotate-logo');
-          });
-          </script>
-                
+                    <a href="/afficheclient" class="navbar_brand float-start dn-md">
+                        <img class="logo1 img-fluid" src="{{ asset('images/batah.jpg') }}"
+                             alt="header-logo2.png" style="width: 100px; height: auto;">
+                        <img class="logo2 img-fluid" src="{{ asset('images/batah.jpg') }}"
+                             alt="header-logo2.svg" style="width: 100px; height: auto;">
+                    </a>
                     <!-- Responsive Menu Structure-->
                     <ul id="respMenu" class="ace-responsive-menu menu_list_custom_code wa text-end"
                         data-menu-style="horizontal">
                         <li><a href="#"><span class="title">Home</span></a>
                             <!-- Level Two-->
                             <ul>
-                                <li><a href="{{ path('app_afficahge_produits') }}">Home Product</a></li>
-                                <li><a href="#">Home Location</a></li>
-                                <li><a href="#">Home V3</a></li>
-                                
+                                <li><a href="index.html">Home V1</a></li>
+                                <li><a href="index2.html">Home V2</a></li>
+                                <li><a href="index3.html">Home V3</a></li>
+                                <li><a href="index4.html">Home V4</a></li>
+                                <li><a href="index5.html">Home V5</a></li>
+                                <li><a href="index6.html">Home V6</a></li>
+                                <li><a href="index7.html">Home V7</a></li>
                             </ul>
                         </li>
                         <li><a href="#"><span class="title">Explore</span></a>
@@ -210,7 +181,7 @@
                         <li><a href="#"><span class="title">Pages</span></a>
                             <ul>
                                 <li><a href="page-about.html">About Us</a></li>
-                                <li><a href="{{ path('app_calculator') }}">Calculator</a></li>
+                                <li><a href="page-calculator.html">Calculator</a></li>
                                 <li><a href="page-compare.html">Compare</a></li>
                                 <li><a href="page-contact.html">Contact</a></li>
                                 <li><a href="page-error.html">404 Page</a></li>
@@ -228,34 +199,33 @@
                                             class="badge">2</sup></span></a></li>
                         <li><a class="notification" href="#"><span class="body-color flaticon-bell fz16"></span></a>
                         </li>
-
-                        {#  session admin #}
+                        {% block profileBlock %}
                         <li class="user_setting">
-    <div class="dropdown">
-        <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-        {% if app.session.get('user').avatar %}
-              {#  <img class="rounded-circle mr10" src="{{ asset('users/' ~ app.session.get('user').avatar) }}" alt="User Avatar"> #}
-                <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png')  }}" alt="User Avatar">
-            {% else %}
-                <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}" alt="Default Avatar">
-            {% endif %}  <span class="dn-1366"> {{ app.session.get('user').nomutilisateur }} <span class="fas fa-angle-down ml5"></span></span>
-        </a>
-        <div class="dropdown-menu">
-            <div class="user_set_header">
-                <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
-                <p>{{ app.session.get('user').nomutilisateur }} <br><span class="address">{{ app.session.get('user').adresseemail }}</span></p>
-            </div>
-            
-            <div class="user_setting_content">
-                <a class="dropdown-item active" href="#">My Profile</a>
-                <a class="dropdown-item" href="#">Messages</a>
-                <a class="dropdown-item" href="#">My Listing</a>
-                <a class="dropdown-item" href="#">Help</a>
-            <a class="dropdown-item" href="{{ path('app_main') }}">Log out</a>
-            </div>
-        </div>
-    </div>
-</li>
+                            <div class="dropdown">
+
+                                <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <img class="rounded-circle mr10" src="{{ asset('images/team/e1.png') }}"
+                                         alt="e1.png">
+                                    <span class="dn-1366"> Jerome Bell <span
+                                                class="fas fa-angle-down ml5"></span></span>
+                                </a>
+
+                                <div class="dropdown-menu">
+                                    <div class="user_set_header">
+                                        <img class="float-start" src="{{ asset('images/team/e1.png') }}" alt="e1.png">
+                                        <p>Jerome Bell <br><span class="address">alitufan@gmail.com</span></p>
+                                    </div>
+                                    <div class="user_setting_content">
+                                        <a class="dropdown-item active" href="#">My Profile</a>
+                                        <a class="dropdown-item" href="#">Messages</a>
+                                        <a class="dropdown-item" href="#">My Listing</a>
+                                        <a class="dropdown-item" href="#">Help</a>
+                                        <a class="dropdown-item" href="#">Log out</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endblock %}
                     </ul>
                 </div>
             </nav>
@@ -288,7 +258,7 @@
                                  aria-labelledby="home-tab">
                                 <div class="col-lg-12">
                                     <div class="login_form">
-                                        <p>New to battah.com? <a href="page-register.html">Sign up.</a> Are you a dealer?
+                                        <p>New to Cars.com? <a href="page-register.html">Sign up.</a> Are you a dealer?
                                         </p>
                                         <form action="#">
                                             <div class="mb-2 mr-sm-2">
@@ -314,39 +284,59 @@
                                  aria-labelledby="profile-tab">
                                 <div class="col-lg-12">
                                     <div class="sign_up_form">
-                                        <p>Already have a profile? <a href="page-login.html">Sign in.</a></p>
-                                        <form action="#">
+                                        <p>Already have a profile? <a href="{{ path('app_login') }}">Sign in.</a></p>
+                                        {# regitre fomulaire#}
+{#                                        <form action="{{ path('handle_form') }}" method="post">#}
+
+                                        <form action="{{ path('ajouter') }}" method="post">
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label class="form-label">First Name</label>
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="first_name">
                                                     </div>
                                                 </div>
+
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label class="form-label">Last Name</label>
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="last_name">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12">
                                                     <div class="form-group">
                                                         <label class="form-label">Email</label>
-                                                        <input type="email" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="form-group mb20">
-                                                        <label class="form-label">Password</label>
-                                                        <input type="password" class="form-control">
+                                                        <input type="email" class="form-control" name="email">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-group mb20">
                                                         <label class="form-label">Confirm Password</label>
-                                                        <input type="password" class="form-control">
+                                                        <input type="date" class="form-control" name="date_de_naissance">
                                                     </div>
                                                 </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb20">
+                                                        <label class="form-label">Gender</label>
+                                                        <select class="form-control" name="gender">
+                                                            <option value="H">Homme</option>
+                                                            <option value="F">Femme</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb20">
+                                                        <label class="form-label">Password</label>
+                                                        <input type="password" class="form-control" name="password">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb20">
+                                                        <label class="form-label">Confirm Password</label>
+                                                        <input type="password" class="form-control" name="confirm_password">
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <button type="submit" class="btn btn-signup btn-thm mb0">Sign Up</button>
                                         </form>
@@ -366,7 +356,7 @@
                     <div class="mobile_menu_bar">
                         <a class="menubar" href="#menu"><small>Menu</small><span></span></a>
                     </div>
-                    <div class="mobile_menu_main_logo"><img class="nav_logo_img img-fluid" src="images/header-logo2.svg"
+                    <div class="mobile_menu_main_logo"><img class="nav_logo_img img-fluid" src="{{ asset('images/header-logo2.svg') }}"
                                                             alt="images/header-logo2.png"></div>
                 </div>
             </div>
@@ -394,7 +384,7 @@
                                     <li><a href="page-dashboard-favorites.html">Favorites</a></li>
                                     <li><a href="page-dashboard-add-listings.html">Add Listing</a></li>
                                     <li><a href="page-dashboard-messages.html">Messages</a></li>
-                                    <li><a href="page-login.html">Login</a></li>
+                                    <li><a href="{{path('app_login')}}">Login</a></li>
                                 </ul>
                             </li>
                             <li><a href="page-user-profile.html">User Profile</a></li>
@@ -458,7 +448,7 @@
                             <li><a href="page-contact.html">Contact</a></li>
                             <li><a href="page-error.html">Error</a></li>
                             <li><a href="page-faq.html">Faq</a></li>
-                            <li><a href="page-login.html">Login</a></li>
+                            <li><a href="{{path('app_login')}}">Login</a></li>
                             <li><a href="page-pricing.html">Pricing Table</a></li>
                             <li><a href="page-register.html">Sign up</a></li>
                             <li><a href="page-service.html">Service</a></li>
@@ -488,154 +478,180 @@
         </div>
 
         <!-- Our Dashbord -->
-<section class="our-dashbord dashbord bgc-f9">
-        <div class="our-dashbord dashbord bgc-f9">
-            <div class="container-fluid">
+        <section class="our-dashbord dashbord bgc-f9">
+            <div class="our-dashbord dashbord bgc-f9">
+                <div class="container-fluid">
 
-                <div class="row">
+                    <div class="row">
 
-                    <div class="col-xxl-10 offset-xxl-2 dashboard_grid_space">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="extra-dashboard-menu dn-lg">
-                                    <div class="ed_menu_list">
-                                        <ul>
-                                            <li><a href="/home"><span class="flaticon-dashboard"></span>Dashboard</a>
-                                            </li>
-                                            <li><a href="{{ path('app_utilisateur_index') }}"><span
-                                                            class="flaticon-user-2"></span>Profile</a></li>
-                                            <li><a href="page-dashboard-listing.html"><span
-                                                            class="flaticon-list"></span>My Listing</a></li>
-                                            <li><a href="page-dashboard-favorites.html"><span
-                                                            class="flaticon-heart"></span>Favorites</a></li>
-                                            <li><a href="page-dashboard-add-listings.html"><span
-                                                            class="flaticon-plus"></span>Add Listing</a></li>       
-                                            <li><a href="page-dashboard-messages.html"><span
-                                                            class="flaticon-message"></span>Messages</a></li>
-                                            <li><a href="#"><span
-                                                            class="flaticon-list"></span>Partenaires</a></li>
-                                                            <li><a href="{{ path('app_back_affiche') }}"><span
-                                                            class="flaticon-list"></span>Product</a></li>
-                                                            <li><a href="{{ path('app_backCommand') }}"><span
-                                                            class="flaticon-list"></span>Command</a></li>
+                        <div class="col-xxl-10 offset-xxl-2 dashboard_grid_space">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="extra-dashboard-menu dn-lg">
+                                        <div class="ed_menu_list">
+                                            <ul>
 
 
-                                            <li><a href="#"><span
-                                                            class="flaticon-list"></span>Location</a></li>
-                                            <li><a href="#"><span
-                                                            class="flaticon-list"></span>Apres Vente</a></li>
-                                                            <li><a href="#"><span
-                                                            class="flaticon-list"></span>Encheres</a></li>
-                                            <li><a href="page-login.html"><span
-                                                            class="flaticon-logout"></span>Logout</a></li>
+                                                    {% block bouton %}
+
+                                                    <li><a href="{{ path('app_utilisateur_index') }}"><span class="flaticon-dashboard"></span>Dashboard</a></li>
+
+                                                    <li><a href="{{ path('test') }}"><span class="flaticon-message"></span>csv import</a></li>
+
+                                                    <li><a href="{{ path('app_login') }}"><span class="flaticon-logout"></span>Logout</a></li>
+
+                                                    <li><a href="{{ path('app_partenaires_index') }}"><span
+                                                                class="fa-solid fa-handshake"></span>Partenaires</a></li>
+                                                                <li><a href="{{ path('app_back_affiche') }}"><span
+                                                                class="fa-solid fa-handshake"></span>produits</a></li>
+
+                                                    <li><a href="{{ path('app_service_apres_vente_index') }}"><span
+                                                                class="fa-solid fa-badge-check"></span>Apres Vente</a></li>
+
+                                                    <li><a href="{{ path('liste_commandes') }}"><span
+                                                                class="fa-regular fa-bags-shopping"></span>Liste commandes</a></li>
+
+                                                    <li><a href="{{ path('app_livraison_index') }}"><span
+                                                                class="fa-solid fa-truck-fast"></span>Liste Livraisons</a></li>
+
+                                                    <li><a href="{{ path('app_avis_livraison_index') }}"><span
+                                                                class="fa-solid fa-comment"></span>Avis Livraisons</a></li>
+
+                                                        <li><a href="{{ path('app_forum_index') }}"><span
+                                                                class="fa-solid fa-heart"></span>Forum</a></li>
+
+                                                        <li><a href="{{ path('app_Affiche_enchere') }}"><span
+                                                                        class="fa-solid fa-scale-balanced"></span>Encheres</a></li>
+
+                                                        <li><a href="{{ path('app_affiche_reservations') }}"><span
+                                                                        class="fa-solid fa-calendar-clock"></span>Reservation Encheres</a></li>
+
+                                                        <li><a href="{{ path('app_encheret_statistics') }}"><span
+                                                                        class="fa-sharp fa-solid fa-chart-simple"></span>Statistique Enchere</a></li>
 
 
+                                                {% endblock %}
 
 
-                                        </ul>
+                                                {% block utilisateur %}
+                                                    <li><a href="{{ path('liste_livraisons_utilisateur') }}"><span
+                                                                    class="fa-solid fa-truck-fast"></span>mes Livraisons</a></li>
+
+                                                    <li><a href="{{ path('app_service_apres_vente_new') }}"><span
+                                                                    class="fa-solid fa-lightbulb-exclamation-on"></span>Ajouter reclamation</a></li>
+                                                    <li><a href="{{ path('app_forum_new') }}"><span
+                                                                    class="fa-solid fa-circle-xmark"></span>Ajouter Avis</a></li>
+                                                {% endblock %}
+
+                                                <li><a href="{{ path('profile') }}"><span class="flaticon-user-2"></span>Profile</a></li>
+
+                                                    <li><a href="{{path('app_login')}}"><span
+                                                                class="flaticon-logout"></span>Logout</a></li>
+
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="dashboard_navigationbar dn db-lg mt50">
+                                        <div class="dropdown">
+                                            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars pr10"></i>
+                                                Dashboard Navigation
+                                            </button>
+                                            <ul id="myDropdown" class="dropdown-content">
+                                                <li><a class="active" href="page-dashboard.html"><span
+                                                                class="flaticon-dashboard"></span>Dashboard</a></li>
+                                                <li><a href="page-dashboard-profile.html"><span
+                                                                class="flaticon-user-2"></span>Profile</a></li>
+                                                <li><a href="page-dashboard-listing.html"><span
+                                                                class="flaticon-list"></span>My Listing</a></li>
+                                                <li><a href="page-dashboard-favorites.html"><span
+                                                                class="flaticon-heart"></span>Favorites</a></li>
+                                                <li><a href="page-dashboard-add-listings.html"><span
+                                                                class="flaticon-plus"></span>Add Listing</a></li>
+                                                <li><a href="page-dashboard-messages.html"><span
+                                                                class="flaticon-message"></span>Messages</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                {% block body %}
+                                <div class="col-xl-8">
+                                    <div class="breadcrumb_content mb50">
+                                        <h2 class="breadcrumb_title">Hello, Cameron!</h2>
+                                        <p>Ready to jump back in!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="ff_one">
+                                        <div class="icon"><span class="flaticon-list"></span></div>
+                                        <div class="detais text-end">
+                                            <div class="timer">1260</div>
+                                            <p class="para">Total Listing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="ff_one style2">
+                                        <div class="icon"><span class="flaticon-message"></span></div>
+                                        <div class="detais text-end">
+                                            <div class="timer">74</div>
+                                            <p class="para">Messages</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="ff_one style3">
+                                        <div class="icon"><span class="flaticon-heart"></span></div>
+                                        <div class="detais text-end">
+                                            <div class="timer">20</div>
+                                            <p class="para">Favorites</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-lg-12 col-xl-7">
+                                    <div class="application_statics">
+                                        <h4>Your Profile Views</h4>
+                                        <div class="c_container"></div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-5">
+                                    <div class="recent_job_activity">
+                                        <h4 class="title">Recent Activities</h4>
+                                        <div class="grid d-block d-sm-flex">
+                                            <div class="icon blue"><span><img
+                                                            src="{{ asset('images/icon/briefcase-blue.svg') }}"
+                                                            alt="briefcase-blue.svg"></span></div>
+                                            <p class="mb0"><span class="heading-color">Wade Warren</span> add list for a car
+                                                <span class="color-blue">Audi a3 Sportback 2020</span></p>
+                                        </div>
+                                        <!-- Add more recent activities here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endblock %}
                         </div>
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="dashboard_navigationbar dn db-lg mt50">
-                                    <div class="dropdown">
-                                        <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars pr10"></i>
-                                            Dashboard Navigation
-                                        </button>
-                                        <ul id="myDropdown" class="dropdown-content">
-                                            <li><a class="active" href="page-dashboard.html"><span
-                                                            class="flaticon-dashboard"></span>Dashboard</a></li>
-                                            <li><a href="page-dashboard-profile.html"><span
-                                                            class="flaticon-user-2"></span>Profile</a></li>
-                                            <li><a href="page-dashboard-listing.html"><span
-                                                            class="flaticon-list"></span>My Listing</a></li>
-                                            <li><a href="page-dashboard-favorites.html"><span
-                                                            class="flaticon-heart"></span>Favorites</a></li>
-                                            <li><a href="page-dashboard-add-listings.html"><span
-                                                            class="flaticon-plus"></span>Add Listing</a></li>
-                                            <li><a href="page-dashboard-messages.html"><span
-                                                            class="flaticon-message"></span>Messages</a></li>
-                                            <li><a href="page-login.html"><span
-                                                            class="flaticon-logout"></span>Logout</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            {% block pane %}
-                            <div class="col-xl-8">
-                                <div class="breadcrumb_content mb50">
-                                    <h2 class="breadcrumb_title">Hello, Cameron!</h2>
-                                    <p>Ready to jump back in!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="ff_one">
-                                    <div class="icon"><span class="flaticon-list"></span></div>
-                                    <div class="detais text-end">
-                                        <div class="timer">1260</div>
-                                        <p class="para">Total Listing</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="ff_one style2">
-                                    <div class="icon"><span class="flaticon-message"></span></div>
-                                    <div class="detais text-end">
-                                        <div class="timer">74</div>
-                                        <p class="para">Messages</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="ff_one style3">
-                                    <div class="icon"><span class="flaticon-heart"></span></div>
-                                    <div class="detais text-end">
-                                        <div class="timer">20</div>
-                                        <p class="para">Favorites</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-lg-12 col-xl-7">
-                                <div class="application_statics">
-                                    <h4>Your Profile Views</h4>
-                                    <div class="c_container"></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-5">
-                                <div class="recent_job_activity">
-                                    <h4 class="title">Recent Activities</h4>
-                                    <div class="grid d-block d-sm-flex">
-                                        <div class="icon blue"><span><img
-                                                        src="{{ asset('images/icon/briefcase-blue.svg') }}"
-                                                        alt="briefcase-blue.svg"></span></div>
-                                        <p class="mb0"><span class="heading-color">Wade Warren</span> add list for a car
-                                            <span class="color-blue">Audi a3 Sportback 2020</span></p>
-                                    </div>
-                                    <!-- Add more recent activities here -->
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endblock %}
                     </div>
 
                 </div>
-
             </div>
-        </div>
+        </section>
     </div>
-  </div>
     </section>
 
     <div class="ed_menu_list">
@@ -646,13 +662,14 @@
             <li><a href="page-dashboard-favorites.html"><span class="flaticon-heart"></span>Favorites</a></li>
             <li><a href="page-dashboard-add-listings.html"><span class="flaticon-plus"></span>Add Listing</a></li>
             <li><a href="page-dashboard-messages.html"><span class="flaticon-message"></span>Messages</a></li>
-            <li><a href="page-login.html"><span class="flaticon-logout"></span>Logout</a></li>
+            <li><a href="{{path('app_login')}}"><span class="flaticon-logout"></span>Logout</a></li>
         </ul>
     </div>
     <a class="scrollToHome" href="#"><i class="fas fa-arrow-up"></i></a>
     </div>
     <!-- Wrapper End -->
 {% block js %}
+
     <script src="{{ asset('js/jquery-3.6.0.js') }}"></script>
     <script src="{{ asset('js/jquery-migrate-3.0.0.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -673,13 +690,14 @@
     <script src="{{ asset('js/slider.js') }}"></script>
     <script src="{{ asset('js/timepicker.js') }}"></script>
     <script src="{{ asset('js/dashboard-script.js') }}"></script>
+    <script src="{{ asset('js/smartuploader.js') }}"></script>
     <!-- Custom script for all pages -->
     <script src="{{ asset('js/script.js') }}"></script>
 
 {% endblock %}
-{% endblock %}
+
+
 </body>
 
 <!-- Mirrored from creativelayers.net/themes/voiture-html/page-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2024 13:40:05 GMT -->
 </html>
-<style>

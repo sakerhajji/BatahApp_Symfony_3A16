@@ -32,8 +32,7 @@ class UtilisateurType extends AbstractType
             ->add('statutverificationcompte')
             ->add('avatar')
             ->add('dateinscription')
-            ->add('role')
-        ;
+            ->add('role');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

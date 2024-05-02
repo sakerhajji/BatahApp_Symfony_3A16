@@ -24,7 +24,7 @@ class MainController extends AbstractController
 
     private $passwordEncoder;
 
-    #[Route('/login', name: 'app_login')]
+    #[Route('/login2', name: 'app_login2')]
     public function login(Request $request): Response
     {
         $utilisateur = new Utilisateur();

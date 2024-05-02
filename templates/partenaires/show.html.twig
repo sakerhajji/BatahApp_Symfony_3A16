@@ -1,0 +1,19 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Show Partenaire{% endblock %}
+
+{% block body %}
+    <h1>Show Partenaire</h1>
+    <!-- Display Partenaire details here -->
+    <p>ID: {{ partenaire.idpartenaire }}</p>
+    <p>Nom: {{ partenaire.nom }}</p>
+    <p>Type: {{ partenaire.type }}</p>
+    <p>Adresse: {{ partenaire.adresse }}</p>
+    <p>Telephone: {{ partenaire.telephone }}</p>
+    <p>Email: {{ partenaire.email }}</p>
+    <img src="{{ asset('image/uploads/partenaires/' ~ partenaire.logo) }}" alt="Logo" style="width: 100px;">
+    <p>Points: {{ partenaire.points }}</p>
+
+    <!-- Button to close modal -->
+    <button type="button" class="btn dbxshad btn-lg btn-thm3 circle" data-dismiss="modal"onclick="window.history.back();">Close</button>
+{% endblock %}

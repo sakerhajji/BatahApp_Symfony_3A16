@@ -370,9 +370,8 @@ class Produits
     }
     public function __toString()
     {
-        return (string) $this->getIdProduit();
+        return $this->getIdProduit();
     }
-
     /**
      * @return Collection<int, Comment>
      */

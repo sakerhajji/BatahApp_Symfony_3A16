@@ -1,7 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-
-app_main:
-    path: /
-    controller: App\Controller\MainController::index
+app_sav_pdf:
+  path: '/sav/pdf/{id}'
+  controller: 'App\Controller\ServiceApresVenteController::generatePdf'
+  methods: ['GET']

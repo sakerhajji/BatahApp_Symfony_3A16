@@ -2,7 +2,11 @@
 Ace Responsive Menu Plugin
 Version: 1.0
 Author: Samson.Onna 
+<<<<<<< HEAD
 Email : samson3d@gmail.com
+=======
+EmailSender : samson3d@gmail.com
+>>>>>>> origin/Gestion_Utlisateur_Saker
 ----------------------------------------*/
 
 (function ($) {
