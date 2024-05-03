@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ class MainController extends AbstractController
     #[Route('/main', name: 'app_main')]
     public function index(): Response
     {
-        return $this->render('home/home.html.twig', [
+        return $this->render('products/home/home.html.twig', [
             'controller_name' => 'MainController',
         ]);
     }
@@ -58,7 +58,7 @@ class MainController extends AbstractController
             }
         }
 
-        return $this->render('home/login.html.twig', [
+        return $this->render('products/home/login.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -77,7 +77,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('main/register.html.twig', [
+        return $this->render('products/main/register.html.twig', [
             'f' => $form->createView()
         ]);
     }
@@ -86,7 +86,7 @@ class MainController extends AbstractController
     {
 
         $users = $this->getDoctrine()->getManager()->getRepository(Utilisateur::class)->findAll();
-        return $this->render('main/afficher.html.twig', [
+        return $this->render('products/main/afficher.html.twig', [
             'u' => $users
         ]);
     }
@@ -95,7 +95,7 @@ class MainController extends AbstractController
     #[Route('/login_failure', name: 'login_failure')]
     public function loginFailure(): Response
     {
-        return $this->render('main/login_failure.html.twig');
+        return $this->render('products/main/login_failure.html.twig');
     }
     /**
      * @Route("/logout", name="app_logout")

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use App\Entity\Basket;
 use App\Entity\Utilisateur;
@@ -34,7 +34,7 @@ class StripeController extends AbstractController
 
         $totalPrice += 8;
 
-        return $this->render('stripe/index.html.twig', [
+        return $this->render('products/stripe/index.html.twig', [
             'stripe_key' => $_ENV["STRIPE_KEY"],
             'totalPrice' => $totalPrice,
             'basketItemsCount' => $basketItemsCount,

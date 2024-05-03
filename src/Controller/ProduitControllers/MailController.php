@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use App\Entity\Contact;
 use App\Entity\Card;
@@ -23,7 +23,7 @@ class MailController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('default/index.html.twig', [
+        return $this->render('products/default/index.html.twig', [
             'controller_name' => 'DefaultController',
         ]);
     }
@@ -47,7 +47,7 @@ class MailController extends AbstractController
             return $this->redirectToRoute('contact');
         }
 
-        return $this->render('default/contact.html.twig', [
+        return $this->render('products/default/contact.html.twig', [
             'formContact' => $formContact->createView()
         ]);
     }
@@ -76,7 +76,7 @@ class MailController extends AbstractController
             return $this->redirectToRoute('card');
         }
 
-        return $this->render('default/card.html.twig', [
+        return $this->render('products/default/card.html.twig', [
             'formCard' => $formProduct->createView(),
             'cards' => $cardRepository->findAll()
         ]);

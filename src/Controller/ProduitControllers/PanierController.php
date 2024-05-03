@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use App\Service\BasketService;
 
@@ -58,7 +58,7 @@ class PanierController extends AbstractController
         }
 
         // Render the panier.html.twig template with necessary data
-        return $this->render('panier/panier.html.twig', [
+        return $this->render('products/panier/panier.html.twig', [
             'controller_name' => 'PanierController',
             'basketData' => $basketData,
             'totalPrice' => $totalPrice,

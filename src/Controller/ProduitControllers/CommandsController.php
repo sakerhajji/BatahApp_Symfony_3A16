@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use App\Repository\CommandsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,7 +50,7 @@ class CommandsController extends AbstractController
             $imagesByLocation[$basketItem->getIdProduit()->getIdProduit()] = $imageRepository->findBy(['produits' => $basketItem->getIdProduit()]);
         }
 
-        return $this->render('commands/command.html.twig', [
+        return $this->render('products/commands/command.html.twig', [
             'controller_name' => 'CommandsController',
             'basketData' => $basketData,
             'totalPrice' => $totalPrice,
@@ -116,7 +116,7 @@ class CommandsController extends AbstractController
     public function backCommand(CommandsRepository $rep): Response
     {
         $commands = $rep->findAll();
-        return $this->render('commands/backCommands.html.twig', [
+        return $this->render('products/commands/backCommands.html.twig', [
             'controller_name' => 'CommandsController',
             'commands' => $commands
         ]);
@@ -139,7 +139,7 @@ class CommandsController extends AbstractController
         $basketItemsCount = count($basketService->getCartItems($connectedUser->getId()));
 
 
-        return $this->render('commands/affichageCommand.html.twig', [
+        return $this->render('products/commands/affichageCommand.html.twig', [
             'controller_name' => 'CommandsController',
             'command' => $command,
             'numCommand' => $numCommand,
@@ -156,7 +156,7 @@ class CommandsController extends AbstractController
 
         $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
 
-        return $this->render('commands/affichageCommandAdmin.html.twig', [
+        return $this->render('products/commands/affichageCommandAdmin.html.twig', [
             'controller_name' => 'CommandsController',
             'command' => $command,
             'numCommand' => $numCommand,
@@ -216,7 +216,7 @@ class CommandsController extends AbstractController
         }
         $basketItemsCount = count($basketService->getCartItems($connectedUser->getId()));
 
-        return $this->render('commands/listCommandsClient.html.twig', [
+        return $this->render('products/commands/listCommandsClient.html.twig', [
             'controller_name' => 'CommandsController',
             'commands' => $commands,
             'Encourslist' => $Encourslist,
@@ -270,7 +270,7 @@ class CommandsController extends AbstractController
         $command = $rep->find($idCommand);
         $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
 
-        return $this->render('facture/facture.html.twig', [
+        return $this->render('products/facture/facture.html.twig', [
             'controller_name' => 'CommandsController',
             'command' => $command,
             'commandArticles' => $commandArticles,
@@ -337,7 +337,7 @@ class CommandsController extends AbstractController
             $MercedesPercentage = 0;
             $AudiPercentage = 0;
         }
-        return $this->render('chart/index.html.twig', [
+        return $this->render('products/chart/index.html.twig', [
             'chartData' =>  $chartData,
             'totalThisMonth' => $totalThisMonth,
             'list' => $list,

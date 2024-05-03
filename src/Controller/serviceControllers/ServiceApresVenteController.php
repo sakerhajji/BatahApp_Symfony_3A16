@@ -39,12 +39,12 @@ class ServiceApresVenteController extends AbstractController
         $serviceApresVentes = $paginator->paginate(
             $allServiceApresVentesQuery, // Query to paginate
             $request->query->getInt('page', 1), // Current page number, 1 by default
-            5// Number of items per page
+            5 // Number of items per page
         );
 
         return $this->render('service_apres_vente/index.html.twig', [
             'service_apres_ventes' => $serviceApresVentes,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -59,14 +59,12 @@ class ServiceApresVenteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($serviceApresVente);
             $entityManager->flush();
-
-
         }
 
         return $this->renderForm('service_apres_vente/new.html.twig', [
             'service_apres_vente' => $serviceApresVente,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
     #[Route('/stat', name: 'services_plus_achetes')]
@@ -84,7 +82,7 @@ class ServiceApresVenteController extends AbstractController
         return $this->render('service_apres_vente/stat.html.twig', [
             'labels' => json_encode($labels),
             'data' => json_encode($data),
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
     #[Route('/{idService}', name: 'app_service_apres_vente_show', methods: ['GET'])]
@@ -92,7 +90,7 @@ class ServiceApresVenteController extends AbstractController
     {
         return $this->render('service_apres_vente/show.html.twig', [
             'service_apres_vente' => $serviceApresVente,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -175,8 +173,8 @@ class ServiceApresVenteController extends AbstractController
     </div>
 </body>
 </html>';
-            $email=new EmailSender2();
-            $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
+            $email = new EmailSender2();
+            $email->sendEmail($partnerEmail, "Affectation de service", $message, $urlLogo);
 
             $entityManager->persist($selectedPartner);
             $entityManager->persist($serviceApresVente);
@@ -190,7 +188,7 @@ class ServiceApresVenteController extends AbstractController
         return $this->renderForm('service_apres_vente/edit.html.twig', [
             'service_apres_vente' => $serviceApresVente,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
     #[Route('/searchccc/aaa/', name: 'search', methods: ['GET'])]
@@ -206,13 +204,13 @@ class ServiceApresVenteController extends AbstractController
 
         return $this->render('service_apres_vente/search.html.twig', [
             'results' => $results,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
     #[Route('/{idService}', name: 'app_service_apres_vente_delete', methods: ['POST'])]
     public function delete(Request $request, ServiceApresVente $serviceApresVente, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$serviceApresVente->getIdService(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $serviceApresVente->getIdService(), $request->request->get('_token'))) {
             $entityManager->remove($serviceApresVente);
             $entityManager->flush();
         }
@@ -233,7 +231,7 @@ class ServiceApresVenteController extends AbstractController
 
         $messageBody = sprintf(
             'Your affectation has been successfully registered with the following details:' .
-            "\nDescription: %s\nType: %s\nDate: %s\nStatus: %s",
+                "\nDescription: %s\nType: %s\nDate: %s\nStatus: %s",
             $serviceApresVente->getDescription(),
             $serviceApresVente->getType(),
             $serviceApresVente->getDate()->format('Y-m-d H:i:s'),

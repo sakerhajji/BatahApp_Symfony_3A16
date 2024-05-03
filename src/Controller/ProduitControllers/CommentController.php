@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ class CommentController extends AbstractController
     #[Route('/comment', name: 'app_comment')]
     public function index(): Response
     {
-        return $this->render('comment/index.html.twig', [
+        return $this->render('products/comment/index.html.twig', [
             'controller_name' => 'CommentController',
         ]);
     }
@@ -152,7 +152,7 @@ class CommentController extends AbstractController
     public function Affiche(CommentRepository $repository)
     {
         $comment = $repository->findAll(); //select *
-        return $this->render('comment/Affiche.html.twig', ['comment' => $comment]);
+        return $this->render('products/comment/Affiche.html.twig', ['comment' => $comment]);
     }
 
 
@@ -164,7 +164,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('app_Affichecomment');
         }
 
-        return $this->render('comment/show.html.twig', ['b' => $comment]);
+        return $this->render('products/comment/show.html.twig', ['b' => $comment]);
     }
 
 
@@ -185,6 +185,6 @@ class CommentController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('app_Affichecomment');
         }
-        return $this->render('Comment/Add.html.twig', ['f' => $form->createView()]);
+        return $this->render('products/Comment/Add.html.twig', ['f' => $form->createView()]);
     }
 }

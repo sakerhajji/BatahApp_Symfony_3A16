@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\ProduitControllers;
 
 use App\Entity\Image;
 use App\Entity\Produits;
@@ -71,7 +71,7 @@ class ProduitController extends AbstractController
     public function home(): Response
     {
 
-        return $this->render('home/home.html.twig');
+        return $this->render('products/home/home.html.twig');
     }
 
     /************************************************************************************************************************************************* */
@@ -280,7 +280,7 @@ class ProduitController extends AbstractController
             return $this->redirectToRoute('app_back_affiche');
         }
 
-        return $this->render('produit/page-dashboard-edit-produits.html.twig', [
+        return $this->render('products/produit/page-dashboard-edit-produits.html.twig', [
             'form' => $form->createView(),
             //'photo_path' => $produit->getPhoto() ? '/uploads/' . $produit->getPhoto() : null,
         ]);
@@ -291,7 +291,7 @@ class ProduitController extends AbstractController
         /*
         // Vérifier si l'utilisateur a le rôle requis
         if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->render('error/not_admin.html.twig', []);
+            return $this->render('products/error/not_admin.html.twig', []);
         }
 */
 
@@ -348,7 +348,7 @@ class ProduitController extends AbstractController
 
         $totalPages = ceil($totalItems / $itemsPerPage);
 
-        return $this->render('produit/page-dashboard-listing.html.twig', [
+        return $this->render('products/produit/page-dashboard-listing.html.twig', [
             'products' => $products,
             'searchQuery' => $searchQuery,
             'currentPage' => $currentPage,
@@ -364,12 +364,12 @@ class ProduitController extends AbstractController
 
         $product = $pr->find($idp);
 
-        return $this->render('produit/page-front-details-produit.html.twig', ['product' => $product]);
+        return $this->render('products/produit/page-front-details-produit.html.twig', ['product' => $product]);
     }
     #[Route('/detail', name: 'app_detail_produit')]
     public function detail(): Response
     {
-        return $this->render('produit/page-front-details-produit.html.twig');
+        return $this->render('products/produit/page-front-details-produit.html.twig');
     }
 
     #[Route('/az', name: 'app_afficahge_produits')]
@@ -451,7 +451,7 @@ class ProduitController extends AbstractController
         foreach ($allProducts as $prod) { // Utilisez $allProducts à la place de $products
             $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
         }
-        return $this->render('produit/indexfront.html.twig', [
+        return $this->render('products/produit/indexfront.html.twig', [
             'listS' => $pagination,
             'existingArticles' => $existingArticles,
             'basketItemsCount' => $basketItemsCount,
@@ -473,7 +473,7 @@ class ProduitController extends AbstractController
         $newCars =  $newCars = array_reverse($allProducts); // Inverser l'ordre des produits pour simuler un tri par date d'ajout décroissante
         //$otherProducts = array_slice($allProducts, 0, count($allProducts) - count($newCars)); // Produits restants
 
-        return $this->render('produit/page-front-produit.html.twig',  [
+        return $this->render('products/produit/page-front-produit.html.twig',  [
             'products' => $allProducts, // Produits pour nav-home
             'newCars' => $newCars, // Produits pour nav-shopping
         ]);
@@ -534,7 +534,7 @@ class ProduitController extends AbstractController
         $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
 
 
-        return $this->render('produit/detailProduitFront.html.twig', array(
+        return $this->render('products/produit/detailProduitFront.html.twig', array(
             'id' => $prod->getIdProduit(),
             'name' => $prod->getLabelle(),
             'prix' => $prod->getPrix(),
@@ -663,13 +663,13 @@ public function likeProduct($idp, EntityManagerInterface $em)
             $monthlyInterestRate = $interestRate / 12;
             $monthlyPayment = ($loanAmount * $monthlyInterestRate) / (1 - pow(1 + $monthlyInterestRate, -$period));
 
-            return $this->render('produit/page-calculator.html.twig', [
+            return $this->render('products/produit/page-calculator.html.twig', [
                 'form' => $form->createView(),
                 'monthlyPayment' => $monthlyPayment,
             ]);
         }
 
-        return $this->render('produit/page-calculator.html.twig', [
+        return $this->render('products/produit/page-calculator.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -895,7 +895,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
     {
         $produit = $pr->findAllSorted();
 
-        return $this->render('produit/index.html.twig', [
+        return $this->render('products/produit/index.html.twig', [
             'listS' => $produit,
         ]);
     }
@@ -905,7 +905,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
     {
         $produit = $pr->findAllSorted1();
 
-        return $this->render('produit/index.html.twig', [
+        return $this->render('products/produit/index.html.twig', [
             'listS' => $produit,
         ]);
     }
@@ -920,7 +920,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
 
         $produit = $repo->advancedSearch($query, $prodid, $prodlabelle, $prodstatus);
 
-        return $this->render('produit/index.html.twig', [
+        return $this->render('products/produit/index.html.twig', [
             'listS' => $produit,
         ]);
     }
@@ -958,7 +958,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
             $terrainPercentage = 0;
         }
 
-        return $this->render('produit/stat.html.twig', [
+        return $this->render('products/produit/stat.html.twig', [
             'voiturePercentage' => $voiturePercentage,
             'maisonPercentage' => $maisonPercentage,
             'terrainPercentage' => $terrainPercentage,
@@ -1026,7 +1026,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
         $entityManager = $this->getDoctrine()->getManager();
         $product = $entityManager->getRepository(Produits::class)->find($id_produit);
 
-        return $this->render('produit/indexfront.html.twig', [
+        return $this->render('products/produit/indexfront.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
         ]);
@@ -1043,7 +1043,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
         // Calculate average rating
         $averageRating = $this->calculateAverageRating($product);
 
-        return $this->render('produit/indexfront.html.twig', [
+        return $this->render('products/produit/indexfront.html.twig', [
             'product' => $product,
             'averageRating' => $averageRating,
         ]);
@@ -1151,7 +1151,7 @@ public function likeProduct($idp, EntityManagerInterface $em)
         $Services = $em->getRepository(Article::class)->find($artid);
 
 
-        return $this->render('article/getNoterArticlePage.html.twig', array(
+        return $this->render('products/article/getNoterArticlePage.html.twig', array(
             'Id' => $Services->getArtid(),
             'name' => $Services->getArtlib(),
             'prix' => $Services->getArtprix(),
