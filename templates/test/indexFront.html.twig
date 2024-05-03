@@ -39,7 +39,7 @@
                       </div>
                   </div>
               </div>
-
+              {% if avis is not null %}
               {% for chunk in avis|batch(2) %}
                   <div class="row">
                       {% for avi in chunk %}
@@ -61,6 +61,7 @@
                       {% endfor %}
                   </div>
               {% endfor %}
+            {% endif %}
 
           </div>
       </section>

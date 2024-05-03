@@ -43,74 +43,79 @@
         <div class="container">
             <div class="row">
                 {% for item in encheres %}
-                    {% set enchere = item.enchere %}
-                    <div class="col-sm-6 col-xl-6">
-                        <div class="car-listing list_style">
-                            <div class="thumb">
-                                <div class="tag">FEATURED</div>
-                                {% if enchere.getProduit().getPhoto() is not null %}
-                                    <img class="h100p" src="{{ asset('image/uploads/encheres/' ~ enchere.getProduit().getPhoto()) }}" alt="Image par défaut" style="width: 400px;">
-                                {% else %}
+    {% set enchere = item.enchere %}
+    <div class="col-sm-6 col-xl-6">
+        <div class="car-listing list_style">
+            <div class="thumb">
+                <div class="tag">FEATURED</div>
+                {% set productId = enchere.getProduit().getIdProduit() %}
+                {% set images = imagesByLocation[productId] ?? [] %}
+                {% if images is not empty %}
+                    <!-- Display only the first image in the main thumbnail -->
+                    <img src="{{ asset(images[0].getUrl()) }}" class="card-img-top main-thumbnail" alt="{{ enchere.getProduit().getLabelle }}">
+                {% else %}
+                    <!-- Si aucune image n'est disponible, affichez une image par défaut -->
+                    <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
+                {% endif %}
+                <div class="thmb_cntnt2">
+                    <ul class="mb0">
+                        <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+                    </ul>
+                </div>
+            </div>
+            <div class="listign_review">
+                <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+            </div>
+            <!-- Utilisez une balise <span> avec un attribut style pour définir la couleur du texte "Mise à enchère" -->
+            <span style="color: red;">Mise à enchère</span>
+            <p>début: {{ item.dateDebutFormatted }}</p>
+            <p>fin: {{ item.dateFinFormatted }}</p>
 
+            <!-- Bouton Réserver -->
+            <div class="reservation-button">
+                <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
+                    <button type="submit" class="btn btn-primary">Reserver</button>
+                </form>
+                <!-- Button to trigger modal -->
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_{{ loop.index }}">
+            <a href="{{ path('detailProduitFront', {idp: enchere.getProduit().getIdProduit()}) }}" style="color: white; text-decoration: none;">Voir les détails</a>
+        </button>
+        
+            </div>
+        </div>
+    </div>
 
-                                    <!-- Image par défaut -->
-                                    <img class="h100p" src="{{ asset('image/uploads/encheres/voiture3.jpg') }}" alt="Image par défaut" style="width: 400px;">
-                                {% endif %}
-                                <div class="thmb_cntnt2">
-                                    <ul class="mb0">
-                                        <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="listign_review">
-                                <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
-                            </div>
-                            <!-- Utilisez une balise <span> avec un attribut style pour définir la couleur du texte "Mise à enchère" -->
-                            <span style="color: red;">Mise à enchère</span>
-                            <p>début: {{ item.dateDebutFormatted }}</p>
-                            <p>fin: {{ item.dateFinFormatted }}</p>
+    <!-- Fenêtre modale pour afficher les détails du produit -->
+    <div class="modal fade" id="modal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_{{ loop.index }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel_{{ loop.index }}">Détails du Produit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenu des détails du produit -->
+                    <img src="{{ asset('uploads/' ~ enchere.getProduit().getPhoto()) }}" alt="Image du produit">
+                    <p>Nom du Produit: {{ enchere.getProduit().getLabelle() }}</p>
+                    <p>Description: {{ enchere.getProduit().getDescription() }}</p>
+                    <p>Prix: {{ enchere.getProduit().getPrix() }}</p>
+                    <p>Type: {{ enchere.getProduit().getType() }}</p>
+                    <p>Status: {{ enchere.getProduit().getStatus() }}</p>
+                    <p>Période de garantie: {{ enchere.getProduit().getPeriodeGarantie() }} mois</p>
+                    <p>Localisation: {{ enchere.getProduit().getLocalisation() }}</p>
+                    <!-- Ajoutez d'autres informations du produit selon vos besoins -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin de la fenêtre modale -->
+{% endfor %}
 
-                            <!-- Bouton Réserver -->
-                            <div class="reservation-button">
-                                <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
-       
-        <button type="submit" class="btn btn-primary">Reserver</button>
-    </form>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fenêtre modale pour afficher les détails du produit -->
-                    <div class="modal fade" id="modal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_{{ loop.index }}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalLabel_{{ loop.index }}">Détails du Produit</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Contenu des détails du produit -->
-                                    <img src="{{ asset('uploads/' ~ enchere.getProduit().getPhoto()) }}" alt="Image du produit">
-                                    <p>Nom du Produit: {{ enchere.getProduit().getLabelle() }}</p>
-                                    <p>Description: {{ enchere.getProduit().getDescription() }}</p>
-                                    <p>Prix: {{ enchere.getProduit().getPrix() }}</p>
-                                    <p>Type: {{ enchere.getProduit().getType() }}</p>
-                                    <p>Status: {{ enchere.getProduit().getStatus() }}</p>
-                                    <p>Période de garantie: {{ enchere.getProduit().getPeriodeGarantie() }} mois</p>
-                                    <p>Localisation: {{ enchere.getProduit().getLocalisation() }}</p>
-                                    <!-- Ajoutez d'autres informations du produit selon vos besoins -->
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Fin de la fenêtre modale -->
-                {% endfor %}
             </div>
         </div>
     </section>
