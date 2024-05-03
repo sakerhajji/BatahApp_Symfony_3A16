@@ -43,6 +43,9 @@ class Location
         #[ORM\JoinColumn(name: "id", referencedColumnName: "id")]
         private Utilisateur $id;
 
+        #[ORM\Column(name: "likes", type: "integer", nullable: true, options: ["default" => 0])]
+        private ?int $likes;
+
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="location", orphanRemoval=true, cascade={"persist", "remove"})
@@ -52,6 +55,24 @@ class Location
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->likes = 0;
+    }
+
+    public function incrementLikes(): void
+    {
+        $this->likes++;
+    }
+
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): self
+    {
+        $this->likes = $likes;
+        return $this;
     }
 
 

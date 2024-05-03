@@ -11,7 +11,17 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="main-title text-center">
-                        <h2>Featured Listings</h2>
+                        <h2>Plongez dans le luxe et le confort !</h2>
+                        <h4> Explorez nos maisons et voitures disponibles.</h4>
+                        <div class="text-center mt-5">
+                            <h3 >Découvrez nos statistiques pour des informations exclusives !</h3>
+                            <!-- Bouton pour visualiser toutes les locations -->
+                            <a href="{{ path('app_location_client_statistiques') }}" class="btn btn-primary">Cliquez ici </a>
+                        </div>
+                        
+
+
+
                     </div>
                 </div>
             </div>
@@ -37,11 +47,18 @@
                                                         <img src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
                                                     {% endif %}
                                                 </div>
+                                                
                                                 <div class="details">
                                                     <div class="wrapper">
-                                                        <h5 class="price">${{ loca.prix }}</h5>
+                                                        <h5 class="price">{{ loca.prix }} TND</h5>
                                                         <h6 class="title"><a href="{{ path('app_reservation', {'locationId': loca.getIdLocation()}) }}">{{ loca.type }}</a></h6>
                                                     </div>
+
+                                                    <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ loca.idLocation }}">{{ loca.likes }}</span></p>
+                                                    <button type="button" class="btn btn-link like-button" data-reponse-id="{{ loca.idLocation }}">
+                                                        <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
+                                                    </button>
+                                                    
                                                     <div class="listing_footer">
                                                         <ul class="mb0">
                                                             <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span></a></li>
@@ -93,7 +110,53 @@
                 });
             }
         });
+
     </script>
+
+    <script>
+        // Attacher un gestionnaire d'événement à tous les boutons de like
+        document.querySelectorAll('.like-button').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                var reponseId = button.dataset.reponseId;
+                var likeCountElement = document.querySelector('#like-count-' + reponseId);
+    
+                // Vérifier si le bouton a déjà été cliqué (déjà liké)
+                var isLiked = button.classList.contains('liked');
+    
+                // Envoyer une requête AJAX pour incrémenter ou décrémenter les likes
+                fetch('{{ path('likeReclamations', {'idLocation': '1'}) }}'.replace('1', reponseId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ isLiked: isLiked }) // Envoyer l'état actuel du like
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Mettre à jour le nombre de likes affiché dans le DOM
+                    likeCountElement.textContent = data.likesCount;
+    
+                    // Mettre à jour la classe du bouton en fonction de l'état actuel du like
+                    if (isLiked) {
+                        button.classList.remove('liked');
+                    } else {
+                        button.classList.add('liked');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            });
+        });
+    </script>
+
 {% endblock %}
 {% block basket %}{% endblock %}
 {% block footer %}{% endblock  %}

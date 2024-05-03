@@ -18,11 +18,21 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Repository\ImageRepository;
+use Proxies\__CG__\App\Entity\Location as EntityLocation;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class LocationClientController extends AbstractController
 {
+
+    private $managerRegistry;
+
+    public function __construct( ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
+
     #[Route('/location/client', name: 'app_location_client')]
     public function index(): Response
     {
@@ -64,28 +74,38 @@ class LocationClientController extends AbstractController
             $entityManager->persist($location);
             $entityManager->flush();
 
-            $imageFile = $form->get('imageFile')->getData();
-            if ($imageFile) {
-                try {
-                    $originalFilename = $imageFile->getClientOriginalName();
-                    $extension = $imageFile->getClientOriginalExtension();
-                    $newFilename = uniqid() . '.' . $extension;
+           
+            $imageFiles = $form->get('images')->getData(); // Utilisez le nom de champ associé à la relation OneToMany
 
-                    $imageFile->move(
-                        $this->getParameter('kernel.project_dir') . '/public/uploads',
-                        $newFilename
-                    );
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile) {
+                    try {
+                        // Générez un nom de fichier unique en utilisant l'extension de fichier d'origine
+                        $originalFilename = $imageFile->getClientOriginalName();
+                        $extension = $imageFile->getClientOriginalExtension();
+                        $newFilename = uniqid() . '.' . $extension;
 
-                    $imagePath = '/uploads/' . $newFilename;
+                        $imageFile->move(
+                            $this->getParameter('kernel.project_dir') . '/public/uploads',
+                            $newFilename
+                        );
 
-                    $image = new Image();
-                    $image->setUrl($imagePath);
-                    $image->setLocation($location);
+                        // Définissez le chemin réel de l'image téléchargée dans l'entité Image
+                        $imagePath = '/uploads/' . $newFilename; // Chemin relatif depuis le répertoire public
 
-                    $entityManager->persist($image);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Failed to upload the image.');
-                    return $this->redirectToRoute('app_location_front_add');
+                        // Créez une nouvelle entité Image
+                        $image = new Image();
+                        $image->setUrl($imagePath);
+                        // Associez l'image au produit
+                        $location->addImage($image);
+
+                        // Persistez l'entité Image
+                        $entityManager->persist($image);
+                    } catch (FileException $e) {
+                        // Gérer l'erreur de téléchargement de fichier
+                        $this->addFlash('error', 'Failed to upload one or more images.');
+                        return $this->redirectToRoute('app_ajout_location');
+                    }
                 }
             }
 
@@ -101,13 +121,13 @@ class LocationClientController extends AbstractController
  
         ]);
     }
-
-
     #[Route('/locationclient', name: 'app_location_client_affiche')]
     public function locationClient(ManagerRegistry $em, LocationRepository $lr, ImageRepository $imageRepository): Response
     {
     $userId = 2; // Change this to the desired user id
-    $locations = $lr->findByUserId($userId);
+    $availability = true; // Set the availability status you want to filter
+
+    $locations = $lr->findByUserIdAndAvailability($userId, $availability);
 
     // Fetch images
     $imagesByLocation = [];
@@ -150,36 +170,27 @@ public function statistiques(LocationRepository $locationRepository): Response
     ]);
 }
 
-
-
-#[Route('/reservationClient', name: 'reservation_client')]
-
-public function showReservations(LocationRepository $locationRepository): Response
+#[Route('/likeReclamations/{idLocation}', name: 'likeReclamations', methods: ['POST'])]
+public function likeReclamations(Request $request, $idLocation): JsonResponse
 {
-    $userId = 2; // ID de l'utilisateur désiré
+    $reponse = $this->managerRegistry->getRepository(Location::class)->find($idLocation);
 
-    // Récupérer les locations publiées par l'utilisateur spécifié
-    $locations = $locationRepository->findByUserId($userId);
-
-    // Créer un tableau pour stocker les réservations associées aux locations de l'utilisateur
-    $reservations = [];
-
-    // Pour chaque location de l'utilisateur
-    foreach ($locations as $location) {
-        // Récupérer les réservations associées à cette location
-        $locationReservations = $location->getReservations();
-
-        // Ajouter chaque réservation à la liste des réservations
-        foreach ($locationReservations as $reservation) {
-            $reservations[] = $reservation;
-        }
+    if (!$reponse) {
+        throw $this->createNotFoundException('Réponse non trouvée');
     }
 
-    // Passer les réservations au modèle Twig pour l'affichage
-    return $this->render('location_client/affichageReservationClient.html.twig', [
-        'reservations' => $reservations,
-    ]);
+    $likesCount = $reponse->getLikes();
+    $reponse->setLikes($likesCount == 0 ? 1 : 0);
+
+    $em = $this->managerRegistry->getManager();
+    $em->persist($reponse);
+    $em->flush();
+
+    return new JsonResponse(['likesCount' => $reponse->getLikes()]);
 }
+
+
+
 
 
 }

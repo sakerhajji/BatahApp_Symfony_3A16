@@ -17,6 +17,14 @@
             margin: auto; /* Centrer le graphe horizontalement */
             margin-top: 20px; /* Ajouter un peu d'espace au-dessus du graphe */
         }
+        
+        /* Bouton retour */
+        .btn-retour {
+            position: fixed; /* Positionnement fixe */
+            bottom: 20px; /* Espacement du bas */
+            right: 20px; /* Espacement de la droite */
+            z-index: 999; /* Assurer que le bouton est au-dessus des autres éléments */
+        }
     </style>
 </head>
 <body>
@@ -120,6 +128,10 @@
             }
         });
     </script>
+
+    <!-- Bouton de retour -->
+    <a href="{{ path('app_location_front_affiche') }}" class="btn btn-secondary btn-retour">Retour</a>
+
 </body>
 </html>
 {% endblock %}

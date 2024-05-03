@@ -24,7 +24,7 @@
     <!-- Chercher par prix -->
     <div class="row mb-3">
         <div class="col">
-            <label for="prix">Chercher par prix maximum :</label>
+            <label for="prix">Chercher par prix : </label>
             <input type="number" name="prix" id="prix" min="0">
         </div>
         <div class="col-auto">
@@ -57,20 +57,16 @@
     <div class="car-listing bdr_none d-flex mb0">
     <div class="thumb w150">
         {% set images = imagesByLocation[loca.getIdLocation()] %}
-        {% if images is not empty %}
-            <div class="image-gallery">
-                {% for image in images %}
-                    <img class="img-fluid" src="{{ asset(image.getUrl()) }}" alt="Image">
-                {% endfor %}
-            </div>
-        {% else %}
-            <!-- Provide a placeholder image if no image is available -->
-            <img class="img-fluid" src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
-        {% endif %}
+{% if images is not empty %}
+    {% set firstImage = images[0] %}
+    <img src="{{ asset(firstImage.getUrl()) }}" alt="Product Image" class="img-fluid" style="max-width: 100px; height: auto;">
+{% else %}
+    <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
+{% endif %}
 </div>
         <div class="details ms-1">
             <h6 class="title"><a href="page-car-single-v1.html">{{ loca.type }}</a></h6>
-            <h5 class="price">${{ loca.prix }}</h5>
+            <h5 class="price">{{ loca.prix }} TND</h5>
         </div>
     </div>
 </td>   <td class="align-middle">{{ loca.type }}</td>
@@ -124,6 +120,22 @@
         </div>
     </div>
 </div>
+
+{% if totalPages > 1 %}
+ 
+    {% if totalPages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for page in 1..totalPages %}
+                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path('app_location_back_affiche', {'page': page}) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}
+
+{% endif %}
 
 
 <div class="text-center mt-4">

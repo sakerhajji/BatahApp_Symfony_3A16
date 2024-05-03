@@ -1,0 +1,51 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Réservations sur vos locations{% endblock %}
+
+{% block pane %}
+<div class="container">
+    <h2 class="mt-5">les réservations en attentes d'une confirmation</h2>
+    <div class="row">
+        <div class="col-md-12">
+            {% if reservations is not empty %}
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Date de début</th>
+                            <th scope="col">Date de fin</th>
+                            <th scope="col">Notes</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reservationLocation in reservations %}
+                            <tr>
+                                <th scope="row">{{ reservationLocation.getId() }}</th>
+                                <td>{{ reservationLocation.getDateDebut()|date('Y-m-d') }}</td>
+                                <td>{{ reservationLocation.getDateFin()|date('Y-m-d') }}</td>
+                                <td>{{ reservationLocation.getNotes() }}</td>
+                                <td>
+                                    <a href="{{ path('confirm_reservation', { id: reservationLocation.getId() }) }}" class="btn btn-primary btn-sm">Confirmer</a>
+                                   
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Aucune réservation trouvée.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row justify-content-end mt-3">
+        <div class="col-md-4 text-right">
+            <!-- Bouton de retour -->
+            <a href="{{ path('app_location_front_affiche') }}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+</div>
+{% block basket %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% endblock %}

@@ -1,17 +1,26 @@
 <?php
 
 namespace App\Controller;
+use App\Repository\ReservationLocationRepository;
+use App\Repository\LocationRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\ReservationLocation;
 use App\Entity\Utilisateur;
 use App\Entity\Location;
+use App\Repository\ImageRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\twilioo;
+use Twilio\Rest\Client;
+
+
+
+
 
 class ReservationController extends AbstractController
 {
@@ -22,17 +31,25 @@ class ReservationController extends AbstractController
 
 
      #[Route('/reservation', name: 'app_reservation')]
-     public function index(Request $request): Response
+     public function index(Request $request, EntityManagerInterface $em,ImageRepository $imageRepository): Response
      {
          $locationId = $request->query->get('locationId'); // Get the location ID from the query parameters
-     
+         $loca = $em->getRepository(Location::class)->find($locationId);
          // Fetch the list of users
          $users = $this->getDoctrine()->getRepository(Utilisateur::class)->findAll();
      
+
+          // Fetch images for the product
+          $imagesByLocation = [];
+          $imagesByLocation[$loca->getIdLocation()] = $imageRepository->findBy(['location' => $loca]);
+  
+  
          // Pass the location ID and the list of users to the reservation page
          return $this->render('reservation/reservation.html.twig', [
              'locationId' => $locationId,
              'users' => $users,
+             'loca' => $loca,
+             'imagesByLocation' => $imagesByLocation,
          ]);}
 
 
@@ -176,4 +193,74 @@ public function submitUpdateReservation(Request $request, ReservationLocation $r
             'reservationLocations' => $reservationLocations,
         ]);
     }
+
+    
+    #[Route('/reservationshowBack', name: 'reservationBack')]
+    public function showReservationsBack(): Response
+    {
+        $reservationLocations = $this->getDoctrine()->getRepository(ReservationLocation::class)->findAll();
+
+        return $this->render('reservation/reservationBack.html.twig', [
+            'reservationLocations' => $reservationLocations,
+        ]);
+    }
+
+    #[Route('/reservationClientshow', name: 'reservationClient')]
+    public function showReservationClient( LocationRepository $lr, ReservationLocationRepository $reservationLocationRepository): Response
+    {
+        // Récupérer l'ID de l'utilisateur
+        $userId = 2;
+    
+        // Fetch locations related to the user
+        $availability = true; // Set the availability status you want to filter
+
+        $locations = $lr->findByUserIdAndAvailability($userId, $availability);
+    
+    
+        // Extract location IDs
+        $locationIds = [];
+        foreach ($locations as $location) {
+            $locationIds[] = $location->getId();
+        }
+    
+        // Fetch reservations for the user's locations
+        $reservations = $reservationLocationRepository->findReservationsForLocations($locationIds);
+    
+        return $this->render('reservation/reservationClient.html.twig', [
+            'reservations' => $reservations,
+        ]);
+    }
+
+    #[Route('/confirm-reservation/{id}', name: 'confirm_reservation')]
+    public function confirmReservation(Request $request, int $id, twilioo $twilioService, EntityManagerInterface $entityManager): Response
+    {
+        // Retrieve the reservation from the database based on the provided ID
+    $reservation = $entityManager->getRepository(ReservationLocation::class)->find($id);
+
+    // Ensure the reservation exists
+    if (!$reservation) {
+        throw $this->createNotFoundException('Reservation not found');
+    }
+
+    // Confirm the reservation (update the database status or perform any necessary logic)
+    // For example, you might set a 'confirmed' flag in the Reservation entity
+
+    // Mark the availability of the associated location as false
+    $location = $reservation->getLocation();
+    $location->setDisponibilite(false);
+
+    // Persist the changes to the location entity
+    $entityManager->persist($location);
+
+    // Flush changes to the database
+    $entityManager->flush();
+        $userPhoneNumber = '+21654497997'; // Assuming you have a method to retrieve the user's phone number
+        $message = 'Your reservation has been confirmed!';
+        $twilioService->sendSms($userPhoneNumber, $message);
+
+        // Redirect back to the page displaying reservations
+        return $this->redirectToRoute('reservationClient');
+    }
+    
+
 }

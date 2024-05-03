@@ -106,7 +106,38 @@ class LocationRepository extends ServiceEntityRepository
     
         return $query->getSingleResult();
     }
+
+    public function findLocationsForUser(int $userId): array
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
     
+    public function findBySearchQuery(string $searchQuery, int $limit = null, int $offset = null): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.type LIKE :query ')
+            ->setParameter('query', '%' . $searchQuery . '%')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByUserIdAndAvailability(int $userId, bool $availability): array
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.id', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->andWhere('l.disponibilite = :availability')
+            ->setParameter('availability', $availability)
+            ->getQuery()
+            ->getResult();
+    }
 
 
     //    /**

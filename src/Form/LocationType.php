@@ -90,17 +90,14 @@ class LocationType extends AbstractType
                 'required' => false,
                 
             ])
-            ->add('imageFile', FileType::class, [
-        
-                'label' => 'Image',
-                'attr' => ['class' => 'form-control-file'],
+            ->add('images', FileType::class, [
                 'required' => false,
-                'constraints' => [
-                    new NotBlank(['message' => 'image ne peut pas être vide.']),
-                ],
-                'invalid_message' => 'image ne peut pas être vide.',
+                'label' => 'Images',
+                'attr' => ['class' => 'form-control-file'],
+                'multiple' => true, // Allow multiple file uploads
+                'mapped' => false, // Pour éviter la liaison automatique avec une entité
             ]);
-    }
+        }
 
     public function configureOptions(OptionsResolver $resolver): void
     {

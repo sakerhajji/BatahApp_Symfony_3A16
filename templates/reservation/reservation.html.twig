@@ -3,6 +3,61 @@
 {% block title %}Réserver Location{% endblock %}
 
 {% block pane %}
+
+<style>
+    .image-gallery {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .main-image-container {
+        margin-bottom: 20px;
+    }
+    
+    .main-image {
+        max-width: 100%; /* Largeur maximale pour l'image principale */
+        height: auto; /* Hauteur automatique pour conserver les proportions */
+    }
+    
+    .thumbnail-image {
+        width: 80px; /* Largeur fixe pour les miniatures */
+        height: 80px; /* Hauteur fixe pour les miniatures */
+        margin: 0 5px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .thumbnail-image:hover {
+        transform: scale(1.1);
+    }
+    
+    .thumbnail-image.active {
+        transform: scale(1.2);
+    }
+
+    .back-button-container {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .back-button {
+        background-color: #f0f0f0; /* Gris clair */
+        color: #000; /* Couleur du texte */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .back-button:hover {
+        background-color: #ccc; /* Gris clair plus foncé au survol */
+    }
+</style>
+ 
+
 <div>
     <h4 class="mb30">Contact </h4>
     <form action="{{ path('app_reservation_submit') }}" method="post">
@@ -57,6 +112,35 @@
         <button type="submit" class="btn btn-block btn-thm mt10 mb20">Réserver</button>
     </form>
 </div>
+
+{% set images = imagesByLocation[loca.getIdLocation()] %}
+{% if images is not empty %}
+    <div class="image-gallery">
+        <div class="main-image-container">
+            <img id="mainImage" src="{{ asset(images[0].getUrl()) }}" class="main-image" style="width: 300px; height: 300px;">
+        </div>
+        <div class="thumbnails-container">
+            {% for key, image in images %}
+                <img src="{{ asset(image.getUrl()) }}" class="thumbnail-image" style="width: 80px; height: 80px;" onclick="switchImage('{{ asset(image.getUrl()) }}')">
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <!-- Si aucune image n'est disponible, affichez une image par défaut -->
+    <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
+{% endif %}
+
+<div class="back-button-container">
+    <!-- Bouton pour visualiser toutes les locations -->
+    <a href="{{ path('app_location_front_affiche') }}" class="back-button">Retour</a>
+</div>
+
+<script>
+    function switchImage(newImageUrl) {
+        document.getElementById('mainImage').src = newImageUrl;
+    }
+</script>
+
 {% endblock %}
 {% block basket %}{% endblock %}
 {% block footer %}{% endblock %}

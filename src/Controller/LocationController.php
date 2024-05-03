@@ -54,28 +54,38 @@ class LocationController extends AbstractController
             $entityManager->persist($location);
             $entityManager->flush();
 
-            $imageFile = $form->get('imageFile')->getData();
-            if ($imageFile) {
-                try {
-                    $originalFilename = $imageFile->getClientOriginalName();
-                    $extension = $imageFile->getClientOriginalExtension();
-                    $newFilename = uniqid() . '.' . $extension;
+           
+            $imageFiles = $form->get('images')->getData(); // Utilisez le nom de champ associé à la relation OneToMany
 
-                    $imageFile->move(
-                        $this->getParameter('kernel.project_dir') . '/public/uploads',
-                        $newFilename
-                    );
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile) {
+                    try {
+                        // Générez un nom de fichier unique en utilisant l'extension de fichier d'origine
+                        $originalFilename = $imageFile->getClientOriginalName();
+                        $extension = $imageFile->getClientOriginalExtension();
+                        $newFilename = uniqid() . '.' . $extension;
 
-                    $imagePath = '/uploads/' . $newFilename;
+                        $imageFile->move(
+                            $this->getParameter('kernel.project_dir') . '/public/uploads',
+                            $newFilename
+                        );
 
-                    $image = new Image();
-                    $image->setUrl($imagePath);
-                    $image->setLocation($location);
+                        // Définissez le chemin réel de l'image téléchargée dans l'entité Image
+                        $imagePath = '/uploads/' . $newFilename; // Chemin relatif depuis le répertoire public
 
-                    $entityManager->persist($image);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Failed to upload the image.');
-                    return $this->redirectToRoute('app_ajout_location');
+                        // Créez une nouvelle entité Image
+                        $image = new Image();
+                        $image->setUrl($imagePath);
+                        // Associez l'image au produit
+                        $location->addImage($image);
+
+                        // Persistez l'entité Image
+                        $entityManager->persist($image);
+                    } catch (FileException $e) {
+                        // Gérer l'erreur de téléchargement de fichier
+                        $this->addFlash('error', 'Failed to upload one or more images.');
+                        return $this->redirectToRoute('app_ajout_location');
+                    }
                 }
             }
 
@@ -93,130 +103,146 @@ class LocationController extends AbstractController
     }
     
     #[Route('/modifier/{idl}', name: 'app_modifier_location')]
-public function editLocation(Request $request, ValidatorInterface $validator, LocationRepository $lr, ImageRepository $imageRepository, $idl): Response
-{
-    $entityManager = $this->getDoctrine()->getManager();
-    $location = $lr->find($idl);
-
-    if (!$location) {
-        throw $this->createNotFoundException('Location not found');
-    }
-
-    $form = $this->createForm(LocationType::class, $location);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted()) {
-        // Validate the form data
-        $errors = $validator->validate($location);
-
-        if (count($errors) === 0) {
-            // If there are no validation errors, proceed with form submission
-
-            // Traitement de l'image (Image processing)
-            $imageFile = $form->get('imageFile')->getData();
-            if ($imageFile) {
-                // Code pour traiter l'upload de l'image (Code to process image upload)
-
-                // Generate a unique filename using the original file extension
-                $originalFilename = $imageFile->getClientOriginalName();
-                $extension = $imageFile->getClientOriginalExtension();
-                $newFilename = uniqid() . '.' . $extension;
-
-                // Move the uploaded file to the desired location
-                $imageFile->move(
-                    $this->getParameter('kernel.project_dir') . '/public/uploads',
-                    $newFilename
-                );
-
-                // Retrieve the existing image associated with the location
-                $existingImage = $imageRepository->findOneBy(['location' => $location]);
-
-                if ($existingImage) {
-                    // Remove the existing image file from the file system
-                    $existingImagePath = $existingImage->getUrl();
-                    // Delete the image file if it exists
-                    if (file_exists($existingImagePath)) {
-                        unlink($existingImagePath);
-                    }
-                } else {
-                    // Create a new image entity if no existing image found
-                    $existingImage = new Image();
-                    $existingImage->setLocation($location);
-                    $entityManager->persist($existingImage);
+    public function editLocation(Request $request, ValidatorInterface $validator, LocationRepository $lr, ImageRepository $imageRepository, $idl): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $location = $lr->find($idl);
+    
+        if (!$location) {
+            throw $this->createNotFoundException('Location not found');
+        }
+    
+        $form = $this->createForm(LocationType::class, $location);
+        $form->handleRequest($request);
+    
+        $errors = []; // Initialize $errors variable
+    
+        if ($form->isSubmitted()) {
+            // Validate the form data
+            $errors = $validator->validate($location);
+    
+            // Handle image upload if form is submitted
+            $existingImages = $imageRepository->findBy(['location' => $location]);
+            $imageFiles = $form->get('images')->getData(); // Récupère un tableau d'objets UploadedFile
+    
+            // Supprimer les images existantes associées au produit
+            foreach ($existingImages as $existingImage) {
+                $existingImagePath = $existingImage->getUrl();
+                if (file_exists($existingImagePath)) {
+                    unlink($existingImagePath);
                 }
-
-                // Update the image URL
-                $existingImage->setUrl('/uploads/' . $newFilename);
+                // Supprimer l'image de la base de données
+                $entityManager->remove($existingImage);
             }
-
+    
+            // Enregistrer les nouvelles images associées au produit
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile) {
+                    try {
+                        // Générer un nom de fichier unique en utilisant l'extension de fichier d'origine
+                        $originalFilename = $imageFile->getClientOriginalName();
+                        $extension = $imageFile->getClientOriginalExtension();
+                        $newFilename = uniqid() . '.' . $extension;
+    
+                        // Déplacer le fichier téléchargé vers l'emplacement désiré
+                        $imageFile->move(
+                            $this->getParameter('kernel.project_dir') . '/public/uploads',
+                            $newFilename
+                        );
+    
+                        // Créer une nouvelle entité Image
+                        $newImage = new Image();
+                        $newImage->setUrl('/uploads/' . $newFilename);
+                        $newImage->setLocation($location);
+    
+                        // Persistez l'entité Image
+                        $entityManager->persist($newImage);
+                    } catch (FileException $e) {
+                        // Gérer l'erreur de téléchargement de fichier
+                        $this->addFlash('error', 'Failed to upload one or more images.');
+                        return $this->redirectToRoute('app_ajout_location');
+                    }
+                }
+            }
+    
             // Save the changes to the database
             $entityManager->flush();
-
+    
             $this->addFlash('success', 'Location updated successfully.');
             return $this->redirectToRoute('app_location_back_affiche');
-        } else {
-            // If there are validation errors, render the form with errors
-            foreach ($errors as $error) {
-                $this->addFlash('error', $error->getMessage());
-            }
         }
+    
+        return $this->render('location/page-dashboard-edit-locations.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $errors, // Pass errors to the template
+        ]);
+    }
+    
+
+   
+#[Route('/locationback', name: 'app_location_back_affiche')]
+public function showprodback(
+    Request $request,
+    ManagerRegistry $em,
+    LocationRepository $lr,
+    ImageRepository $imageRepository,
+    PaginatorInterface $paginator
+): Response {
+    $typeFilter = $request->query->get('type');
+    $prixMax = $request->query->get('prix');
+
+    // Fetch locations
+    if ($typeFilter || $prixMax) {
+        $criteria = [];
+        if ($typeFilter) {
+            $criteria['type'] = $typeFilter;
+        }
+        if ($prixMax) {
+            $criteria['prix'] = $prixMax;
+        }
+        $locations = $lr->findBy($criteria);
+    } else {
+        $locations = $lr->findAllWithUser(); // Assuming you have a custom method findAllWithUser in LocationRepository to join User entity
     }
 
-    // Render the form with errors
-    return $this->render('location/page-dashboard-edit-locations.html.twig', [
-        'form' => $form->createView(),
-    ]);
 
+    // Paginate the results
+    $pagination = $paginator->paginate(
+        $locations, // Query results
+        $request->query->getInt('page', 1), // Page number
+        5 // Limit per page
+    );
 
-    return $this->render('location/page-dashboard-edit-locations.html.twig', [
-        'form' => $form->createView(),
+    $currentPage = $request->query->getInt('page', 1);
+    $itemsPerPage = 5;
+    $offset = ($currentPage - 1) * $itemsPerPage;
+
+    $searchQuery = $request->query->get('search', '');
+    if ($searchQuery !== '') {
+        $products = $lr->findBySearchQuery($searchQuery, $itemsPerPage, $offset);
+        $totalItems = count($products);
+    } else {
+        $products = $lr->findBy([], null, $itemsPerPage, $offset);
+        $totalItems = $lr->count([]);
+    }
+    $totalPages = ceil($totalItems / $itemsPerPage);
+
+    // Fetch images
+    $imagesByLocation = [];
+    foreach ($pagination as $location) {
+        $imagesByLocation[$location->getIdLocation()] = $imageRepository->findBy(['location' => $location]);
+    }
+
+    return $this->render('location/page-dashboard-listing.html.twig', [
+        'pagination' => $pagination,
+        'imagesByLocation' => $imagesByLocation,
+        'searchQuery' => $searchQuery,
+        'currentPage' => $currentPage,
+        'totalPages' => $totalPages,
+        'imagesByLocation' => $imagesByLocation,
     ]);
 }
 
-
-    #[Route('/locationback', name: 'app_location_back_affiche')]
-    public function showprodback(
-        Request $request,
-        ManagerRegistry $em,
-        LocationRepository $lr,
-        ImageRepository $imageRepository,
-        PaginatorInterface $paginator
-    ): Response {
-        $typeFilter = $request->query->get('type');
-        $prixMax = $request->query->get('prix');
-
-        // Fetch locations
-        if ($typeFilter || $prixMax) {
-            $criteria = [];
-            if ($typeFilter) {
-                $criteria['type'] = $typeFilter;
-            }
-            if ($prixMax) {
-                $criteria['prix'] = $prixMax;
-            }
-            $locations = $lr->findBy($criteria);
-        } else {
-            $locations = $lr->findAllWithUser(); // Assuming you have a custom method findAllWithUser in LocationRepository to join User entity
-        }
-
-        // Paginate the results
-        $pagination = $paginator->paginate(
-            $locations, // Query results
-            $request->query->getInt('page', 1), // Page number
-            10 // Limit per page
-        );
-
-        // Fetch images
-        $imagesByLocation = [];
-        foreach ($pagination as $location) {
-            $imagesByLocation[$location->getIdLocation()] = $imageRepository->findBy(['location' => $location]);
-        }
-
-        return $this->render('location/page-dashboard-listing.html.twig', [
-            'pagination' => $pagination,
-            'imagesByLocation' => $imagesByLocation,
-        ]);
-    }
 
     #[Route('/supprimer/{idl}', name: 'app_supprimer_location')]
     public function removeloca(ManagerRegistry $em, Request $request, LocationRepository $lr, ImageRepository $imageRepository, $idl): Response
