@@ -4,13 +4,12 @@ namespace App\Controller\PartenaireControllers;
 
 use App\Entity\Commands;
 use App\Entity\Livraison;
-use App\Entity\Utilisateur;
 use App\Entity\Partenaires;
-use App\Entity\ServiceApresVente;
 use App\Form\LivraisonType;
 use App\Repository\CommandsRepository;
 use App\Repository\LivraisonRepository;
 use App\Service\EmailSender2;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -23,14 +22,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
 #[Route('/livraison')]
-
 class LivraisonController extends AbstractController
 {
     private $session;
+
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
+
     #[Route('/recuperer-livraison/{idLivraison}', name: 'recuperer_livraison')]
     public function recupererLivraison($idLivraison, EntityManagerInterface $entityManager): Response
     {
@@ -67,7 +67,7 @@ class LivraisonController extends AbstractController
         }
         return $this->render('livraison/livraisons_utilisateur.html.twig', [
             'livraisons' => $livraisons,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -80,11 +80,9 @@ class LivraisonController extends AbstractController
         return $this->render('livraison/liste.html.twig', [
             'commandes' => $commandes,
             'livraisons' => $livraisons,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
-
-
 
 
     #[Route('/livrer-commande/{id}', name: 'livrer_commande')]
@@ -98,7 +96,7 @@ class LivraisonController extends AbstractController
 
         $livraison = new Livraison();
         $livraison->setCommande($commande);
-        $livraison->setDateLivraison(new \DateTime());
+        $livraison->setDateLivraison(new DateTime());
 
         $entityManager->persist($livraison);
         $entityManager->flush();
@@ -107,6 +105,7 @@ class LivraisonController extends AbstractController
 
         return $this->redirectToRoute('liste_commandes');
     }
+
     #[Route('/', name: 'app_livraison_index', methods: ['GET'])]
     public function index(LivraisonRepository $livraisonRepository): Response
     {
@@ -114,7 +113,7 @@ class LivraisonController extends AbstractController
         return $this->render('livraison/index.html.twig', [
             'livraisons' => $livraisonRepository->findAll(),
             'livraisonsStats' => $livraisonsStats,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
 
         ]);
     }
@@ -136,7 +135,7 @@ class LivraisonController extends AbstractController
         return $this->renderForm('livraison/new.html.twig', [
             'livraison' => $livraison,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -145,7 +144,7 @@ class LivraisonController extends AbstractController
     {
         return $this->render('livraison/show.html.twig', [
             'livraison' => $livraison,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -164,14 +163,14 @@ class LivraisonController extends AbstractController
         return $this->renderForm('livraison/edit.html.twig', [
             'livraison' => $livraison,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
     #[Route('/{idLivraison}', name: 'app_livraison_delete', methods: ['POST'])]
     public function delete(Request $request, Livraison $livraison, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$livraison->getIdLivraison(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $livraison->getIdLivraison(), $request->request->get('_token'))) {
             $entityManager->remove($livraison);
             $entityManager->flush();
         }
@@ -270,9 +269,9 @@ class LivraisonController extends AbstractController
     <div class="container">
         <img src="cid:logo" alt="Logo BATAH" class="logo">
         <div class="content">
-            <p>Bonjour <strong>'. $partnerNom .'</strong>,</p>
+            <p>Bonjour <strong>' . $partnerNom . '</strong>,</p>
             <p>Vous avez été affecté à une nouvelle livraison. Veuillez suivre le lien ci-dessous pour consulter les détails et l\'itinéraire de la livraison.</p>
-            <a href="' .$lienMaps.'" class="button">Voir l\'itinéraire</a>
+            <a href="' . $lienMaps . '" class="button">Voir l\'itinéraire</a>
             <p>Merci de faire partie de notre réseau de partenaires.</p>
         </div>
         <div class="footer">
@@ -285,8 +284,8 @@ class LivraisonController extends AbstractController
 
 
 ';
-            $email=new EmailSender2();
-            $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
+            $email = new EmailSender2();
+            $email->sendEmail($partnerEmail, "Affectation de service", $message, $urlLogo);
 
             // Enregistrer les modifications dans la base de données
             $entityManager->persist($selectedPartner);
@@ -299,7 +298,7 @@ class LivraisonController extends AbstractController
 
         return $this->render('livraison/affecter_partenaire.html.twig', [
             'form' => $form->createView(),
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 

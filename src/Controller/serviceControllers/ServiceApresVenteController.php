@@ -25,10 +25,12 @@ use Twilio\Rest\Client;
 class ServiceApresVenteController extends AbstractController
 {
     private $session;
+
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
+
     #[Route('/', name: 'app_service_apres_vente_index', methods: ['GET'])]
     public function index(ServiceApresVenteRepository $serviceApresVenteRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -44,7 +46,7 @@ class ServiceApresVenteController extends AbstractController
 
         return $this->render('service_apres_vente/index.html.twig', [
             'service_apres_ventes' => $serviceApresVentes,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -66,9 +68,10 @@ class ServiceApresVenteController extends AbstractController
         return $this->renderForm('service_apres_vente/new.html.twig', [
             'service_apres_vente' => $serviceApresVente,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
+
     #[Route('/stat', name: 'services_plus_achetes')]
     public function servicesPlusAchetes(ServiceApresVenteRepository $serviceApresVenteRepository): Response
     {
@@ -84,15 +87,16 @@ class ServiceApresVenteController extends AbstractController
         return $this->render('service_apres_vente/stat.html.twig', [
             'labels' => json_encode($labels),
             'data' => json_encode($data),
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
+
     #[Route('/{idService}', name: 'app_service_apres_vente_show', methods: ['GET'])]
     public function show(ServiceApresVente $serviceApresVente): Response
     {
         return $this->render('service_apres_vente/show.html.twig', [
             'service_apres_vente' => $serviceApresVente,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -175,8 +179,8 @@ class ServiceApresVenteController extends AbstractController
     </div>
 </body>
 </html>';
-            $email=new EmailSender2();
-            $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
+            $email = new EmailSender2();
+            $email->sendEmail($partnerEmail, "Affectation de service", $message, $urlLogo);
 
             $entityManager->persist($selectedPartner);
             $entityManager->persist($serviceApresVente);
@@ -190,35 +194,10 @@ class ServiceApresVenteController extends AbstractController
         return $this->renderForm('service_apres_vente/edit.html.twig', [
             'service_apres_vente' => $serviceApresVente,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
-    #[Route('/searchccc/aaa/', name: 'search', methods: ['GET'])]
-    public function search(Request $request, ServiceApresVenteRepository $serviceApresVenteRepository): Response
-    {
-        $search = $request->query->get('search');
 
-        if (!$search) {
-            return $this->redirectToRoute('app_service_apres_vente_index');
-        }
-
-        $results = $serviceApresVenteRepository->findByTypeOrStatus($search);
-
-        return $this->render('service_apres_vente/search.html.twig', [
-            'results' => $results,
-            'user'=>$this->session->get('user'),
-        ]);
-    }
-    #[Route('/{idService}', name: 'app_service_apres_vente_delete', methods: ['POST'])]
-    public function delete(Request $request, ServiceApresVente $serviceApresVente, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$serviceApresVente->getIdService(), $request->request->get('_token'))) {
-            $entityManager->remove($serviceApresVente);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_service_apres_vente_index', [], Response::HTTP_SEE_OTHER);
-    }
     /**
      * @throws ConfigurationException
      * @throws TwilioException
@@ -249,12 +228,39 @@ class ServiceApresVenteController extends AbstractController
         );
     }
 
+    #[Route('/searchccc/aaa/', name: 'search', methods: ['GET'])]
+    public function search(Request $request, ServiceApresVenteRepository $serviceApresVenteRepository): Response
+    {
+        $search = $request->query->get('search');
+
+        if (!$search) {
+            return $this->redirectToRoute('app_service_apres_vente_index');
+        }
+
+        $results = $serviceApresVenteRepository->findByTypeOrStatus($search);
+
+        return $this->render('service_apres_vente/search.html.twig', [
+            'results' => $results,
+            'user' => $this->session->get('user'),
+        ]);
+    }
+
+    #[Route('/{idService}', name: 'app_service_apres_vente_delete', methods: ['POST'])]
+    public function delete(Request $request, ServiceApresVente $serviceApresVente, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $serviceApresVente->getIdService(), $request->request->get('_token'))) {
+            $entityManager->remove($serviceApresVente);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_service_apres_vente_index', [], Response::HTTP_SEE_OTHER);
+    }
 
     #[Route('/sav/pdf/{id}', name: 'app_sav_pdf')]
     public function generatePdf(ServiceApresVente $serviceApresVente): Response
     {
         $html = $this->renderView('service_apres_vente/pdf_template.html.twig', [
-            'serviceApresVente' =>  $serviceApresVente,
+            'serviceApresVente' => $serviceApresVente,
         ]);
 
         $pdfOptions = new Options();

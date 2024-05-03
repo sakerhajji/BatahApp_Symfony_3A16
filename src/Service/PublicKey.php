@@ -13,4 +13,5 @@ class PublicKey
     }
 
     //Autres méthodes de la classe
-};
+}
+

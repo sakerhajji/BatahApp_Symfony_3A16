@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ReservationEnchere;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,7 +26,7 @@ class ReservationEnchereRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.dateReservation = :searchDate')
-            ->setParameter('searchDate', new \DateTime($searchDate))
+            ->setParameter('searchDate', new DateTime($searchDate))
             ->orderBy('r.dateReservation', 'ASC')
             ->setMaxResults($limit)
             ->setFirstResult($offset)

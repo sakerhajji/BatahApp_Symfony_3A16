@@ -66,6 +66,7 @@ class UtilisateurRepository extends ServiceEntityRepository
         $user = $queryBuilder->getQuery()->getOneOrNullResult();
         return $user;
     }
+
     public function updatePasswor(int $userId, string $newPassword): int
     {
         $entityManager = $this->getEntityManager();

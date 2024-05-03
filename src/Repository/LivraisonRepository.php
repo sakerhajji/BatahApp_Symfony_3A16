@@ -20,6 +20,7 @@ class LivraisonRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Livraison::class);
     }
+
     public function countDeliveriesByStatus(): array
     {
         return $this->createQueryBuilder('l')

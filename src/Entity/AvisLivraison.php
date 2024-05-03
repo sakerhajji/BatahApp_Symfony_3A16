@@ -1,11 +1,13 @@
 <?php
+
 namespace App\Entity;
+
 use App\Repository\AvisLivraisonRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 
-#[ORM\Entity(repositoryClass:AvisLivraisonRepository::class)]
-#[ORM\Table(name:"avisLivraison")]
+#[ORM\Entity(repositoryClass: AvisLivraisonRepository::class)]
+#[ORM\Table(name: "avisLivraison")]
 class AvisLivraison
 {
     #[ORM\Id]

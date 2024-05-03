@@ -7,8 +7,10 @@ namespace App\Security;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +18,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\File;
-
-
-
 
 
 class GoogleAuthenticator extends OAuth2Authenticator
@@ -57,15 +54,14 @@ class GoogleAuthenticator extends OAuth2Authenticator
 
 
         $existingUser = $this->entityManager->getRepository(Utilisateur::class)->findOneBy(['adresseemail' => $user->getAdresseemail()]);
-         if (!$existingUser)
-         {
-             $this->entityManager->persist($user);
-             $this->entityManager->flush();
-         }
+        if (!$existingUser) {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        }
         $existingUser = $this->entityManager->getRepository(Utilisateur::class)->findOneBy(['adresseemail' => $user->getAdresseemail()]);
 
 
-         return $existingUser;
+        return $existingUser;
 
 
     }
@@ -91,7 +87,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
     {
         $imageContent = file_get_contents($imageUrl);
         if ($imageContent === false) {
-            throw new \Exception("Failed to download image.");
+            throw new Exception("Failed to download image.");
         }
 
         $safeFilename = uniqid(); // Could also slugify the user's name if preferred

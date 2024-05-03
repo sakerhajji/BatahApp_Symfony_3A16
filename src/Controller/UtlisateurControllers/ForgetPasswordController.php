@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ForgetPasswordController extends AbstractController
 {
-    #[Route('/forget-password', name: 'forget_password_' , methods: ['GET'])]
+    #[Route('/forget-password', name: 'forget_password_', methods: ['GET'])]
     public function index(Request $request): Response
     {
         return $this->render('utilisateur/forgetPassword.html.twig');
@@ -25,8 +25,8 @@ class ForgetPasswordController extends AbstractController
     {
         $data = $request->request->all();
         $code = $data['code'] ?? null;
-        $codeSession=$session->get('code') ;
-dd($code == $codeSession) ;
+        $codeSession = $session->get('code');
+        dd($code == $codeSession);
         if ($code == $codeSession) {
             return $this->render('utilisateur/newPassword.html.twig');
         } else {
@@ -47,22 +47,22 @@ dd($code == $codeSession) ;
             $this->addFlash('error', 'No email provided.');
             return $this->redirectToRoute('forget_password_');
         }
-        $utilisateur=new Utilisateur();
-        $utilisateur=$repository->ForgetPassword($email) ;
+        $utilisateur = new Utilisateur();
+        $utilisateur = $repository->ForgetPassword($email);
 
-        if ($utilisateur == null ) {
+        if ($utilisateur == null) {
             $this->addFlash('error', 'Email does not exist.');
             return $this->render('utilisateur/forgetPassword.html.twig');
         }
 
         $randomNumber = rand(1000, 9999);
         $session->set('code', $randomNumber);
-        $session->set('user',$utilisateur);
+        $session->set('user', $utilisateur);
 
 
-        $message = $randomNumber ;
+        $message = $randomNumber;
 
-        $emailSender = new EmailSender() ;
+        $emailSender = new EmailSender();
         $emailSender->sendEmail("saker.hajji13@gmail.com", "[Reset Password]", $message);
 
         $this->addFlash('success', 'A reset code has been sent to your email.');

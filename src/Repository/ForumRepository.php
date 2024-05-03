@@ -20,14 +20,16 @@ class ForumRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Forum::class);
     }
+
     public function search($keyword): array
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.title LIKE :keyword OR f.content LIKE :keyword')
-            ->setParameter('keyword', '%'.$keyword.'%')
+            ->setParameter('keyword', '%' . $keyword . '%')
             ->getQuery()
             ->getResult();
     }
+
     public function findBestTimeToBuy(): array
     {
         return $this->createQueryBuilder('f')
@@ -35,6 +37,7 @@ class ForumRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
     public function findBestPrices(int $limit): array
     {
         // Implement your logic to fetch the best prices data from the database

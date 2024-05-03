@@ -17,22 +17,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class AvisLivraisonController extends AbstractController
 {
     private $session;
+
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
+
     #[Route('/', name: 'app_avis_livraison_index', methods: ['GET'])]
     public function index(AvisLivraisonRepository $avisLivraisonRepository): Response
     {
         return $this->render('avis_livraison/index.html.twig', [
             'avis_livraisons' => $avisLivraisonRepository->findAll(),
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
 
     #[Route('/new/{idLivraison}', name: 'app_avis_livraison_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,$idLivraison): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, $idLivraison): Response
     {
         $avisLivraison = new AvisLivraison();
         $livraison = $this->getDoctrine()->getRepository(Livraison::class)->find($idLivraison);
@@ -50,7 +52,7 @@ class AvisLivraisonController extends AbstractController
         return $this->renderForm('avis_livraison/new.html.twig', [
             'avis_livraison' => $avisLivraison,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -59,7 +61,7 @@ class AvisLivraisonController extends AbstractController
     {
         return $this->render('avis_livraison/show.html.twig', [
             'avis_livraison' => $avisLivraison,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -78,14 +80,14 @@ class AvisLivraisonController extends AbstractController
         return $this->renderForm('avis_livraison/edit.html.twig', [
             'avis_livraison' => $avisLivraison,
             'form' => $form,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
     #[Route('/{idAvis}', name: 'app_avis_livraison_delete', methods: ['POST'])]
     public function delete(Request $request, AvisLivraison $avisLivraison, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$avisLivraison->getIdAvis(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $avisLivraison->getIdAvis(), $request->request->get('_token'))) {
             $entityManager->remove($avisLivraison);
             $entityManager->flush();
         }

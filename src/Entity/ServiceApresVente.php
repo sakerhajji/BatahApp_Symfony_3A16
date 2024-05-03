@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ServiceApresVenteRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -29,7 +30,7 @@ class ServiceApresVente
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)] // Change from DATE_MUTABLE to DATETIME_MUTABLE
     #[Assert\NotBlank(message: 'date cannot be blank')]
-    private ?\DateTimeInterface $date = null;
+    private ?DateTimeInterface $date = null;
 
 
     #[ORM\Column]
@@ -42,6 +43,7 @@ class ServiceApresVente
     #[ORM\ManyToOne(targetEntity: Partenaires::class, inversedBy: "services")]
     #[ORM\JoinColumn(name: "idPartenaire", referencedColumnName: "idPartenaire")]
     private ?Partenaires $idPartenaire = null;
+
     public function getIdService(): ?int
     {
         return $this->idService;
@@ -71,12 +73,12 @@ class ServiceApresVente
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(DateTimeInterface $date): static
     {
         $this->date = $date;
 

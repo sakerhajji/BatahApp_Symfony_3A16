@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ForumRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,16 +27,14 @@ class Forum
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'type cannot be blank')]
     #[Assert\Length(min: 4, max: 255, maxMessage: "content cannot exceed {{ limit }} characters")]
-
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'type cannot be blank')]
     #[Assert\Length(min: 4, max: 10, maxMessage: "Username cannot exceed {{ limit }} characters")]
-
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
@@ -77,12 +76,12 @@ class Forum
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
 

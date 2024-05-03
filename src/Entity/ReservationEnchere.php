@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: "App\Repository\ReservationEnchereRepository")]
@@ -31,12 +32,12 @@ class ReservationEnchere
         return $this->idReservation;
     }
 
-    public function getDateReservation(): ?\DateTimeInterface
+    public function getDateReservation(): ?DateTimeInterface
     {
         return $this->dateReservation;
     }
 
-    public function setDateReservation(?\DateTimeInterface $dateReservation): self
+    public function setDateReservation(?DateTimeInterface $dateReservation): self
     {
         $this->dateReservation = $dateReservation;
 

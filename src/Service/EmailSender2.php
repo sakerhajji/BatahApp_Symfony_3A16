@@ -3,13 +3,12 @@
 namespace App\Service;
 
 use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Transport\Dsn;
+use Symfony\Component\Mime\Email;
 
 class EmailSender2
 {
-    public function sendEmail(string $to , string $subject , string $html,string $imagePath)
+    public function sendEmail(string $to, string $subject, string $html, string $imagePath)
     {
         // Create a Transport object
         $transport = Transport::fromDsn('smtp://batahapp@gmail.com:gpay%20ypxn%20mcnf%20uiod@smtp.gmail.com:587');

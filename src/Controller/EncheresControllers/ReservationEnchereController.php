@@ -2,28 +2,27 @@
 
 namespace App\Controller\EncheresControllers;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\ReservationEnchere;
 use App\Form\ReservationEnchereType;
-use App\Repository\ReservationEnchereRepository;
-use App\Entity\Encheres;
 use App\Repository\EncheresRepository;
+use App\Repository\ReservationEnchereRepository;
 use App\Repository\UtilisateurRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Twilio\Exceptions\ConfigurationException;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
 
 
-
-
 class ReservationEnchereController extends AbstractController
 {
     private $session;
+
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
@@ -34,7 +33,7 @@ class ReservationEnchereController extends AbstractController
     {
         return $this->render('EncheresTemplates/reservation_enchere/index.html.twig', [
             'controller_name' => 'ReservationEnchereController',
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
 
@@ -61,11 +60,9 @@ class ReservationEnchereController extends AbstractController
             'reservations' => $reservations,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
-
-
 
 
     #[Route('/wala', name: 'app_add_reservation_enchere')]
@@ -87,10 +84,9 @@ class ReservationEnchereController extends AbstractController
 
         return $this->render('EncheresTemplates/reservation_enchere/add_reservation_enchere.html.twig', [
             'form' => $form->createView(),
-            'user'=>$this->session->get('user'),
+            'user' => $this->session->get('user'),
         ]);
     }
-
 
 
     #[Route('/reserverwala/{idp}/{iduser}', name: 'app_reserverwala')]
@@ -119,7 +115,7 @@ class ReservationEnchereController extends AbstractController
         // Définir les valeurs de la réservation
         $reservation->setIdEnchere($enchere);
         $reservation->setIdUser($user);
-        $reservation->setDateReservation(new \DateTime());
+        $reservation->setDateReservation(new DateTime());
         $reservation->setConfirmation(true); // ou 1
 
         // Enregistrer la réservation en base de données
@@ -133,7 +129,7 @@ class ReservationEnchereController extends AbstractController
         $this->addFlash('success', 'La réservation a été ajoutée avec succès et un sms contenant la date de enchere est envoye.');
 
         $this->sendTwilioMessage($reservation);
-        return $this->redirectToRoute('app_Afficheclient_enchere',[],Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_Afficheclient_enchere', [], Response::HTTP_SEE_OTHER);
     }
 
     /**
@@ -167,8 +163,6 @@ class ReservationEnchereController extends AbstractController
             ]
         );
     }
-
-
 
 
 }

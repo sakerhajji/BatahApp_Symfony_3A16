@@ -15,8 +15,7 @@ class ForumType extends AbstractType
             ->add('title')
             ->add('prix')
             ->add('content')
-            ->add('username')
-        ;
+            ->add('username');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -5,6 +5,7 @@ namespace App\Controller\UtlisateurControllers;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
 use App\Service\PictureService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -16,41 +17,40 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
 {
-    #[Route('/test', name: 'test') ]
-    public function index(SessionInterface $session, MailerInterface $mailer , UtilisateurRepository $repository ): Response
+    #[Route('/test', name: 'test')]
+    public function index(SessionInterface $session, MailerInterface $mailer, UtilisateurRepository $repository): Response
     {
 //        $emailSender = new EmailSender();
 //        $emailSender->sendEmail();
 
 
-        $data=$session->get('user') ;
+        $data = $session->get('user');
         return $this->render('utilisateur/csv_upload.html.twig', [
-            'user'=>$data ,
+            'user' => $data,
         ]);
 
     }
-    #[Route('/MisAjour', name: 'MisAjour', methods: ['POST'])]
 
-    public function MisAjour(Request $request, EntityManagerInterface $entityManager, SessionInterface $session , PictureService $pictureService ): Response
+    #[Route('/MisAjour', name: 'MisAjour', methods: ['POST'])]
+    public function MisAjour(Request $request, EntityManagerInterface $entityManager, SessionInterface $session, PictureService $pictureService): Response
     {
 
         $user = $session->get('user');
         $data = $request->request->all();
         $imageFile = $request->files->get('image');
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $newFilename = uniqid().'.'.$imageFile->guessExtension();
+        $newFilename = uniqid() . '.' . $imageFile->guessExtension();
         try {
             $imageFile->move(
                 $this->getParameter('images_directory'),
                 $newFilename
             );
-            $user->setAvatar($newFilename) ;
+            $user->setAvatar($newFilename);
         } catch (FileException $e) {
             // ... handle exception if something happens during file upload
         }
 
         // Check if user is in session
-
 
 
         // Update user properties
@@ -70,8 +70,8 @@ class TestController extends AbstractController
             $user->setNumerocin($data['form_Cin']);
         }
         if (isset($data['form_date'])) {
-            $datedenaissance = \DateTime::createFromFormat('Y-m-d', $data['form_date']);
-            if ($datedenaissance instanceof \DateTime) {
+            $datedenaissance = DateTime::createFromFormat('Y-m-d', $data['form_date']);
+            if ($datedenaissance instanceof DateTime) {
                 $user->setDatedenaissance($datedenaissance);
             }
 
@@ -86,14 +86,14 @@ class TestController extends AbstractController
             ->set('u.pays', ':pays')
             ->set('u.numerocin', ':cin')
             ->set('u.datedenaissance', ':date')
-            ->set('u.avatar',':avatar')
+            ->set('u.avatar', ':avatar')
             ->setParameter('nom', $data['form_name'])
             ->setParameter('prenom', $data['form_prenom'])
             ->setParameter('telephone', $data['form_tlf'])
             ->setParameter('pays', $data['pays'])
             ->setParameter('cin', $data['form_Cin'])
-            ->setParameter('avatar',$newFilename)
-            ->setParameter('date', \DateTime::createFromFormat('Y-m-d', $data['form_date']))
+            ->setParameter('avatar', $newFilename)
+            ->setParameter('date', DateTime::createFromFormat('Y-m-d', $data['form_date']))
             ->where('u.id = :userId')
             ->setParameter('userId', $user->getId())
             ->getQuery();
@@ -104,10 +104,6 @@ class TestController extends AbstractController
         // Redirect or return a response
         return $this->redirectToRoute('profile');
     }
-
-
-
-
 
 
 }
