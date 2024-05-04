@@ -5,8 +5,10 @@ namespace App\Controller\UtlisateurControllers;
 
 use App\Security\GoogleAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use MongoDB\Driver\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GoogleController extends AbstractController
@@ -25,12 +27,14 @@ class GoogleController extends AbstractController
      * in config/packages/knpu_oauth2_client.yaml
      */
     #[Route('/connect/google/check', name: 'connect_google_check')]
-    public function connectCheckAction(Request $request, GoogleAuthenticator $authenticator)
+    public function connectCheckAction(Request $request, GoogleAuthenticator $authenticator , SessionInterface $session)
     {
         // Authenticate the user using the GoogleAuthenticator
         $user = $authenticator->authenticate($request);
         // Redirect to the homepage or a protected page
-        return $this->redirectToRoute('app_login');
+        $session->clear() ;
+        $session->set('user',$user) ;
+        return $this->redirectToRoute('app_utilisateur_index');
     }
 
 }
