@@ -36,12 +36,12 @@ class PartenairesType extends AbstractType
                     'voiture' => 'voiture',
                     'maison' => 'maison',
                     'terrain' => 'terrain',
-                    'livraison'=>'livraison'
+                    'livraison' => 'livraison'
                 ],
                 'constraints' => [
                     new Assert\NotBlank(['message' => "Le type ne peut pas être vide"]),
                     new Assert\Choice([
-                        'choices' => ["voiture", "maison", "terrain","livraison"],
+                        'choices' => ["voiture", "maison", "terrain", "livraison"],
                         'message' => "Le type doit être voiture, maison ou terrain"
                     ])
                 ]
@@ -87,10 +87,7 @@ class PartenairesType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a valid image file',
                     ])
                 ],
-            ])
-
-        ;
-
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -100,5 +97,4 @@ class PartenairesType extends AbstractType
             'attr' => ['enctype' => 'multipart/form-data'],
         ]);
     }
-
 }

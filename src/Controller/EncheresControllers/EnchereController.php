@@ -4,6 +4,7 @@ namespace App\Controller\EncheresControllers;
 
 
 use App\Entity\Encheres;
+use App\Entity\Utilisateur;
 use App\Form\EncheresType;
 use App\Repository\EncheresRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,21 +20,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 class EnchereController extends AbstractController
 {
     private $session;
-
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
-
     #[Route('/enchere', name: 'app_enchere')]
     public function index(): Response
     {
         return $this->render('EncheresTemplates/enchere/index.html.twig', [
             'controller_name' => 'EnchereController',
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
         ]);
     }
-
     #[Route('/add', name: 'app_Add_enchere')]
     public function add(Request $request): Response
     {
@@ -53,9 +51,10 @@ class EnchereController extends AbstractController
 
         return $this->render('EncheresTemplates/enchere/page-dashboard-add-encheres.html.twig', [
             'f' => $form->createView(),
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
         ]);
     }
+
 
 
     #[Route('/affiche', name: 'app_Affiche_enchere')]
@@ -84,7 +83,7 @@ class EnchereController extends AbstractController
             'endDate' => $endDate,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
         ]);
     }
 
@@ -122,7 +121,7 @@ class EnchereController extends AbstractController
 
         return $this->render('EncheresTemplates/enchere/page-dashboard-edit-encheres.html.twig', [
             'form' => $form->createView(),
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
         ]);
     }
 
@@ -172,7 +171,7 @@ class EnchereController extends AbstractController
             'searchQuery' => $searchQuery,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
             'partenaires' => $this->session->get('partenaires'),
             'avis' => $this->session->get('avis'),
         ]);
@@ -199,7 +198,7 @@ class EnchereController extends AbstractController
                     'enchere' => $enchere,
                     'dateDebutFormatted' => $enchere->getDateDebut() ? $enchere->getDateDebut()->format('Y-m-d H:i:s') : 'Date de début non disponible',
                     'dateFinFormatted' => $enchere->getDateFin() ? $enchere->getDateFin()->format('Y-m-d H:i:s') : 'Date de fin non disponible',
-                    'user' => $this->session->get('user'),
+                    'user'=>$this->session->get('user'),
                 ];
             }
         }
@@ -215,7 +214,7 @@ class EnchereController extends AbstractController
             'products' => $products, // Pass products to Twig
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
         ]);
     }
 
@@ -229,9 +228,15 @@ class EnchereController extends AbstractController
         // Rendre la vue avec les données des statistiques
         return $this->render('EncheresTemplates/enchere/statistics.html.twig', [
             'statisticsData' => $statisticsData,
-            'user' => $this->session->get('user'),
+            'user'=>$this->session->get('user'),
         ]);
     }
+
+
+
+
+
+
 
 
 }

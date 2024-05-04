@@ -21,7 +21,7 @@ class ServiceApresVenteType extends AbstractType
                     'terrain ' => 'terrain',
                     'maison ' => 'maison',
                 ],
-            ])              ->add('date')
+            ])->add('date')
             // ->add('status')
             ->add('achats')
             //  ->add('idPartenaire')

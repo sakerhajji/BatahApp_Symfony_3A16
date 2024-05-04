@@ -7,7 +7,7 @@
                 <div class="col-12">
                     <div class="full">
                         <h3>Vente aux encheres, En routes pour les bonnes affaires</h3>
-                        
+
                     </div>
                     {% for flashMessage in app.flashes('success') %}
                         <div class="alert alert-success">{{ flashMessage }}</div>
@@ -73,9 +73,9 @@
                             <!-- Bouton Réserver -->
                             <div class="reservation-button">
                                 <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
-       
-        <button type="submit" class="btn btn-primary">Reserver</button>
-    </form>
+
+                                    <button type="submit" class="btn btn-primary">Reserver</button>
+                                </form>
 
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                 // Vous pouvez effectuer des opérations supplémentaires ici, comme l'envoi de la demande Ajax
                 console.log('ID de l\'enchère:', enchereId);
                 console.log('URL de réservation:', url);
-                
+
                 // Exemple d'envoi de la demande Ajax
                 /*
                 fetch(url, {
