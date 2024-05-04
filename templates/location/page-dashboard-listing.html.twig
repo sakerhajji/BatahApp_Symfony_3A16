@@ -1,0 +1,144 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}locations{% endblock %}
+  
+{% block body %}
+{% for message in app.flashes('success') %}
+<div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+<form action="{{ path('app_location_back_affiche') }}" method="GET">
+    <!-- Filtrer par type -->
+    <div class="row mb-3">
+        <div class="col">
+            <label for="type">Filtrer par type :</label>
+            <select name="type" id="type">
+                <option value="">Tous</option>
+                <option value="maison">Maison</option>
+                <option value="voiture">Voiture</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" name="action" value="filter" class="btn btn-primary">Filtrer</button>
+        </div>
+    </div>
+    <!-- Chercher par prix -->
+    <div class="row mb-3">
+        <div class="col">
+            <label for="prix">Chercher par prix : </label>
+            <input type="number" name="prix" id="prix" min="0">
+        </div>
+        <div class="col-auto">
+            <button type="submit" name="action" value="search" class="btn btn-primary">Chercher</button>
+        </div>
+    </div>
+</form>
+</div>
+
+<div class="col-lg-12 mt50">
+    <div class="tab-content row" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="col-lg-12">
+                <div class="table-responsive my_lisging_table">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr class="thead_row">
+                                <th class="thead_title pl20" scope="col">Photo de la location et son prix </th>
+                                <th class="thead_title" scope="col">Type</th>
+                                <th class="thead_title" scope="col">Description</th>
+                             
+                                <th class="thead_title" scope="col">Adresse</th>
+                                <th class="thead_title" scope="col">Utilisateur</th>
+                                <th class="thead_title" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                       {% for loca in pagination %}
+   <tr>
+    <td class="align-middle pl20" scope="row">
+    <div class="car-listing bdr_none d-flex mb0">
+    <div class="thumb w150">
+        {% set images = imagesByLocation[loca.getIdLocation()] %}
+{% if images is not empty %}
+    {% set firstImage = images[0] %}
+    <img src="{{ asset(firstImage.getUrl()) }}" alt="Product Image" class="img-fluid" style="max-width: 100px; height: auto;">
+{% else %}
+    <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; height: auto;">
+{% endif %}
+</div>
+        <div class="details ms-1">
+            <h6 class="title"><a href="page-car-single-v1.html">{{ loca.type }}</a></h6>
+            <h5 class="price">{{ loca.prix }} TND</h5>
+        </div>
+    </div>
+</td>   <td class="align-middle">{{ loca.type }}</td>
+        <td class="align-middle">{{ loca.description }}</td>
+        <td class="align-middle">{{ loca.adresse }}</td>
+        <td class="align-middle">{{ loca.id.nomutilisateur ~ ' ' ~ loca.id.prenomutilisateur }}</td>
+     
+        <td class="editing_list align-middle">
+            <!-- Your actions buttons -->
+        </td>
+        <td class="editing_list align-middle">
+            <ul>
+                <li class="list-inline-item mb-1">
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="View"><span class="flaticon-view"></span></a>
+                </li>
+                <li class="list-inline-item mb-1">
+                    <a href="{{ path('app_modifier_location', {'idl': loca.getIdLocation()}) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>
+                </li>
+                <li class="list-inline-item mb-1">
+                    <a href="#" class="delete-location" data-bs-toggle="modal" data-bs-target="#deleteModal{{ loca.getIdLocation() }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><span class="flaticon-trash"></span></a>
+                </li>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{ loca.getIdLocation() }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ loca.getIdLocation() }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ loca.getIdLocation() }}">Confirmation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous sûr de vouloir supprimer cette location ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <a href="{{ path('app_supprimer_location', {'idl': loca.getIdLocation()}) }}" class="btn btn-danger">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </ul>
+        </td>
+    </tr>
+{% endfor %}
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if totalPages > 1 %}
+ 
+    {% if totalPages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for page in 1..totalPages %}
+                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                    <a class="page-link" href="{{ path('app_location_back_affiche', {'page': page}) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}
+
+{% endif %}
+
+
+<div class="text-center mt-4">
+    <a href="{{ path('app_ajout_location') }}" class="btn btn-primary">Ajouter Location</a>
+</div>
+{% endblock %}

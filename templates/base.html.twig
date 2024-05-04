@@ -47,12 +47,9 @@
                     <div class="col-lg-8 col-xl-7">
                         <div class="header_top_contact_opening_widget text-center text-md-start">
                             <ul class="mb0">
-                                <li class="list-inline-item"><a href="#"><span class="flaticon-phone-call"></span>1-800-458-56987</a>
-                                </li>
-                                <li class="list-inline-item"><a href="#"><span class="flaticon-map"></span>47 Bakery
-                                        Street, London, UK</a></li>
-                                <li class="list-inline-item"><a href="#"><span class="flaticon-clock"></span>Mon - Fri
-                                        8:00 - 18:00</a></li>
+                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-phone-call"></span>+216 95 316 683</a></li>
+                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-map"></span>cité ghazela - Esprit</a></li>
+                                <li class="list-inline-item"><a href="#" style="font-size: 20px;"><span class="flaticon-clock"></span>Mon - Fri 8:00 - 18:00</a></li>
                             </ul>
                         </div>
                     </div>
@@ -65,9 +62,9 @@
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-twitter"></span></a></li>
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-instagram"></span></a></li>
                                 <li class="list-inline-item"><a href="#"><span class="fab fa-linkedin"></span></a></li>
-                                <li class="list-inline-item"><a href="#" data-bs-toggle="modal"
+                                <li class="list-inline-item" style="font-size: 20px;"><a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#logInModal">Login</a></li>
-                                <li class="list-inline-item"><a href="#" data-bs-toggle="modal"
+                                <li class="list-inline-item" style="font-size: 20px;"><a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#logInModal">Register</a></li>
                             </ul>
                         </div>
@@ -102,13 +99,10 @@
                         <li><a href="#"><span class="title">Home</span></a>
                             <!-- Level Two-->
                             <ul>
-                                <li><a href="index.html">Home V1</a></li>
-                                <li><a href="index2.html">Home V2</a></li>
-                                <li><a href="index3.html">Home V3</a></li>
-                                <li><a href="index4.html">Home V4</a></li>
-                                <li><a href="index5.html">Home V5</a></li>
-                                <li><a href="index6.html">Home V6</a></li>
-                                <li><a href="index7.html">Home V7</a></li>
+                                <li><a href="{{ path('app_afficahge_produits') }}">Home Product</a></li>
+                                <li><a href="#">Home Location</a></li>
+                                <li><a href="#">Home V3</a></li>
+                                
                             </ul>
                         </li>
                         <li><a href="#"><span class="title">Explore</span></a>
@@ -181,7 +175,7 @@
                         <li><a href="#"><span class="title">Pages</span></a>
                             <ul>
                                 <li><a href="page-about.html">About Us</a></li>
-                                <li><a href="page-calculator.html">Calculator</a></li>
+                                <li><a href="#">Calculator</a></li>
                                 <li><a href="page-compare.html">Compare</a></li>
                                 <li><a href="page-contact.html">Contact</a></li>
                                 <li><a href="page-error.html">404 Page</a></li>
@@ -258,7 +252,7 @@
                                  aria-labelledby="home-tab">
                                 <div class="col-lg-12">
                                     <div class="login_form">
-                                        <p>New to Cars.com? <a href="page-register.html">Sign up.</a> Are you a dealer?
+                                        <p>New to battah.com? <a href="page-register.html">Sign up.</a> Are you a dealer?
                                         </p>
                                         <form action="#">
                                             <div class="mb-2 mr-sm-2">
@@ -505,6 +499,9 @@
                                                                 <li><a href="{{ path('app_back_affiche') }}"><span
                                                                 class="fa-solid fa-handshake"></span>produits</a></li>
 
+                                                                <li><a href="{{ path('app_location_back_affiche') }}"><span
+                                                                class="fa-solid fa-handshake"></span>locations</a></li>
+
                                                     <li><a href="{{ path('app_service_apres_vente_index') }}"><span
                                                                 class="fa-solid fa-badge-check"></span>Apres Vente</a></li>
 
@@ -701,3 +698,4 @@
 
 <!-- Mirrored from creativelayers.net/themes/voiture-html/page-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 17 Mar 2024 13:40:05 GMT -->
 </html>
+<style>

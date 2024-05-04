@@ -2,36 +2,74 @@
 
 namespace App\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-
-
-use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use App\Entity\Location;
+use App\Repository\UtilisateurRepository;
 
 class LocationType extends AbstractType
 {
+    private $utilisateurRepository;
+
+    public function __construct(UtilisateurRepository $utilisateurRepository)
+    {
+        $this->utilisateurRepository = $utilisateurRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+
         $builder
-            ->add('prix')
-            ->add('type')
-            ->add('description')
-            ->add('adresse')
+
+            ->add('prix', NumberType::class, [
+
+                'required' => false, // Modifier à true pour le rendre obligatoire
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type',
+                'choices' => [
+                    'Maison' => 'maison',
+                    'Voiture' => 'voiture',
+                ],
+                'placeholder' => 'Choisir un type',
+                'attr' => ['class' => 'form-control'],
+                'required' => false,
+
+            ])
+            ->add('description', TextType::class, [
+
+
+                'required' => false,
+            ])
+            ->add('adresse', TextType::class, [
+
+                'required' => false,
+            ])
             ->add('disponibilite', ChoiceType::class, [
                 'choices' => [
                     'Available' => true,
                     'Not Available' => false,
                 ],
-            ])
-            ->add('id')
-            ->add('imageFile', FileType::class, [
                 'required' => false,
-                'label' => 'Image',
-                // Add more options here as needed
+                'attr' => ['class' => 'form-control'],
+
+            ])
+
+            ->add('images', FileType::class, [
+                'required' => false,
+                'label' => 'Images',
+                'attr' => ['class' => 'form-control-file'],
+                'multiple' => true, // Allow multiple file uploads
+                'mapped' => false, // Pour éviter la liaison automatique avec une entité
             ]);
     }
 

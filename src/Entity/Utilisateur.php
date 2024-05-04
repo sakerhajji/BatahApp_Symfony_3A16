@@ -86,6 +86,11 @@ class Utilisateur implements UserInterface
     private $produits;
 
     /**
+     * @ORM\OneToMany(targetEntity=Location::class, mappedBy="id")
+     */
+    private $locations;
+
+    /**
      * @ORM\OneToMany(targetEntity=Views::class, mappedBy="utilisateur")
      */
     private $views;
@@ -98,6 +103,7 @@ class Utilisateur implements UserInterface
     {
         $this->dateinscription = new \DateTime(); // Définit la date actuelle
         $this->produits = new ArrayCollection();
+        $this->locations = new ArrayCollection();
         $this->views = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
@@ -162,6 +168,38 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
+
+
+
+    /**
+     * @return Collection|Location[]
+     */
+    public function getLocation(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->removeElement($location)) {
+            // set the owning side to null (unless already changed)
+            if ($location->getId() === $this) {
+                $location->setId(null);
+            }
+        }
+
+        return $this;
+    }
 
 
     public function getId(): int

@@ -1,0 +1,35 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Réserver Location {% endblock %}
+
+{% block pane %}
+<div>
+</div>
+<div>
+
+<h4 class="mb30">Contact </h4>
+<form action="#">
+  <div class="row">
+    <div class="col-lg-12">
+      <label for="date_debut">Date Début</label>
+      <div class="mb-3">
+        <input class="form-control form_control" type="date" id="date_debut" name="date_debut">
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <label for="date_fin">Date Fin</label>
+      <div class="mb-3">
+        <input class="form-control form_control" type="date" id="date_fin" name="date_fin">
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="mb-3">
+        <input class="form-control form_control" type="email" name="note" placeholder="Note ">
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-block btn-thm mt10 mb20">Réserver</button>
+</form>
+</div>
+{% endblock %}
+{% block basket %}{% endblock %}

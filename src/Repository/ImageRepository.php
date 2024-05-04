@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Location;
 
 /**
  * @extends ServiceEntityRepository<Image>
@@ -20,6 +21,26 @@ class ImageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Image::class);
     }
+    
+    /**
+     * Find images by location.
+     * 
+     * @param Location $location The location entity.
+     * @return Image[] Returns an array of Image objects.
+     */
+    public function findByLocation(Location $location): ?Image
+    {
+        try {
+            return $this->createQueryBuilder('i')
+                ->andWhere('i.location = :location')
+                ->setParameter('location', $location)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+    
 
 //    /**
 //     * @return Image[] Returns an array of Image objects
