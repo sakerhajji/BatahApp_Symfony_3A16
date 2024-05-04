@@ -96,7 +96,7 @@ class ProduitController extends AbstractController
         $isAdmin = $security->isGranted('ROLE_ADMIN');
 
         // Choix de la template en fonction du rôle de l'utilisateur
-        $template = $isAdmin ? 'produit/page-dashboard-add-produits.html.twig' : 'produit/page-dashboard-add-produits_front.html.twig';
+        $template = $isAdmin ? 'products/produit/page-dashboard-add-produits.html.twig' : 'products/produit/page-dashboard-add-produits.html.twig';
 
 
 

@@ -27,6 +27,17 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+<style>
+    #lblCartCount {
+      font-size: 11px;
+      background: #ff0000;
+      color: #fff;
+      padding: 1.2px 4px;
+      vertical-align: top;
+      margin-left: -14px;
+      margin-top: -9px;
+    }
+  </style>
 
 <body>
 <div class="wrapper ovh">
@@ -107,13 +118,11 @@
                     <li> <a href="#"><span class="title">Home</span></a>
                         <!-- Level Two-->
                         <ul>
-                            <li><a href="{{ asset('index.html') }}">Home V1</a></li>
-                            <li><a href="{{ asset('index2.html') }}">Home V2</a></li>
-                            <li><a href="{{ asset('index3.html') }}">Home V3</a></li>
-                            <li><a href="{{ asset('index4.html') }}">Home V4</a></li>
-                            <li><a href="{{ asset('index5.html') }}">Home V5</a></li>
-                            <li><a href="{{ asset('index6.html') }}">Home V6</a></li>
-                            <li><a href="{{ asset('index7.html') }}">Home V7</a></li>
+                            <li><a href="{{ path('app_afficahge_produits') }}">Home</a></li>
+                            <li> <a href="{{ path('app_commandHistory') }}"><span class="title">Command History</span></a>
+                            <li> <a href="{{ path('app_produit') }}"><span class="title">Add Vehicule</span></a>
+                            <li><a href="{{ path('app_calculator') }}">Calculator</a></li>
+                            
                         </ul>
                     </li>
 
@@ -132,7 +141,7 @@
                                 </ul>
                             </li>
 
-
+                           
 
                             <li> <a href="#"><span class="title">Listing</span></a>
                                 <ul>
@@ -203,6 +212,9 @@
                             <li class="add_listing"><a href="page-dashboard-add-listings.html">+ Add Listing</a></li>
                             <li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
                         </ul>
+                       
+                    <li> <a href="{{ path('app_panier') }}"><span class="title">Panier</span></a>
+                        
             </div>
         </nav>
     </header>
@@ -704,6 +716,8 @@
             </div>
         </div>
     </section>
+{% block featured %}
+    
 
     <!-- Featured Product  -->
     <section class="featured-product">
@@ -1791,7 +1805,7 @@
             </div>
         </div>
     </section>
-
+{% endblock %}
     <!-- Why Chose us  -->
     <section class="why-chose pt0 pb90">
         <div class="container">

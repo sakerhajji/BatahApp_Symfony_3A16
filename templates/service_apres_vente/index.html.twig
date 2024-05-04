@@ -46,8 +46,8 @@
         </table>
     </div>
     <div class="pagination justify-content-center">
-        {{ knp_pagination_render(service_apres_ventes) }}
-    </div>
+    {{ knp_pagination_render(service_apres_ventes, '@KnpPaginator/Pagination/sliding.html.twig') }}
+</div>
     <a href="{{ path('app_service_apres_vente_new') }}" class="btn btn-success">Create new</a> {# Add Bootstrap button style #}
     <a href="{{ path('services_plus_achetes') }}" class="btn btn-primary btn-sm">Stat</a>
 

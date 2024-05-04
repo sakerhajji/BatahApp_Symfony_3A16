@@ -1,4 +1,4 @@
-{% extends 'base_front.html.twig' %}
+{% extends 'frontP.html.twig' %}
 
 {% block title %}HOME{% endblock %}
     {% block basket %}  
@@ -7,7 +7,7 @@
         </span> 
     {% endblock %}
 
-{% block pane %}
+{% block encheres %}
  
 <style>
     .slide-one {
@@ -215,64 +215,6 @@
 
 
 
-<section class="home-one mt-5 mt-md-5 p-0">
-<section class="home-one mt-5 mt-md-5 p-0">
-    <div class="container2">
-        <div class="background-image2">
-            <div class="blinking-text2">
-                <h1>VENDRE VOTRE VOITURE D'OCCASION N'A JAMAIS ÉTÉ AUSSI FACILE.</h1>
-            </div>
-        </div>
-    </div>
-</section>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="main-banner-wrapper home2_main_slider mb-3">
-                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            {% for prod in products %}
-                            {# Calcul du prix mensuel #}
-                            {% set prix_total = prod.prix %}
-                            {% set duree = 36 %} {# supposons une période de paiement de 36 mois #}
-                            {% set prix_mensuel = prix_total / duree %}
-                            <div class="carousel-item {% if loop.first %}active{% endif %}">
-                            <div class="slide slide-one" style="background-image: url('{{ asset('uploads/' ~ prod.getPhoto()) }}');">
-                            <div class="container">
-                                        <div class="row home-content-home2-style">
-                                            <div class="col-lg-12 p-0">
-                                                <h2 class="banner-title text-white"><small>{{ prod.gettype() }}</small><br>{{ prod.getlabelle() }}</h2>
-                                                <h3 class="banner_top_title text-thm">
-                                                    <span class="animated-object1"><img class="objects" src="images/home/title-bottom-border.svg" alt=""></span>
-                                                    <span style="color: #E0115F; background-color: #ffffff; padding: 5px 10px; border-radius: 5px;">
-                                                PRIX: {{ prod.getprix()|number_format(0, '.', ',') }}DT</span><small class="text-white"></small>
-                                            </h3>
-                                                <p><span style="font-size: 30px; color: #ffffff;">Monthly payment: {{ prix_mensuel|number_format(0, '.', ',') }} TND</span></p>
-                                                <a href="{{ path('app_details_produit', {'idp': prod.getidproduit()}) }}" class="btn banner-btn">Learn More</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-caption d-none d-md-block">
-                                    <!-- Ajoutez ici les légendes des slides si nécessaire -->
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
     
     <section class="min-sec">
         <div class="container">
@@ -318,96 +260,80 @@
                
                 <div class="row">
                 <!-- Single Item -->
+                
+               
                 {% for p in listS %}
-                  <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <div class="card h-100 product-card">
-                
-                      {% set images = imagesByLocation[p.getIdProduit()] %}
-                      {% if images is not empty %}
-                        <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-                       
-
-                          <div class="carousel-inner">
-                            {% for key, image in images %}
-                              <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                    <img src="{{ asset(image.getUrl()) }}" class="d-block w-100" alt="{{ p.labelle }}">
-                              </div>
-                            {% endfor %}
-                          </div>
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                          </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                          </button>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="card h-100 product-card">
+                            <div class="thumb">
+                                {% set images = imagesByLocation[p.getIdProduit()] %}
+                                {% if images is not empty %}
+                                    <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                                        <div class="carousel-inner">
+                                            {% for key, image in images %}
+                                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                    <img src="{{ asset(image.getUrl()) }}" alt="{{ p.labelle }}">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- Carousel Controls -->
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <!-- Default Image -->
+                                    <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image">
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ p.labelle }}</h5>
+                                <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
+                                <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
+                                <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
+                                <!-- Formulaire de notation -->
+                                <form action="{{ path('submit_rating') }}" method="post" class="rating-form">
+                                    <input type="hidden" name="product_id" value="{{ p.getIdProduit() }}">
+                                    <div class="rating-stars">
+                                        <input type="radio" id="star5" name="rating" value="5">
+                                        <label for="star5" title="5 stars"></label>
+                                        <input type="radio" id="star4" name="rating" value="4">
+                                        <label for="star4" title="4 stars"></label>
+                                        <input type="radio" id="star3" name="rating" value="3">
+                                        <label for="star3" title="3 stars"></label>
+                                        <input type="radio" id="star2" name="rating" value="2">
+                                        <label for="star2" title="2 stars"></label>
+                                        <input type="radio" id="star1" name="rating" value="1">
+                                        <label for="star1" title="1 star"></label>
+                                    </div>
+                                    <button type="submit">Submit Rating</button>
+                                </form>
+                                <p>Average Rating: {{ p.getAverageRating() }}</p>
+                                <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ p.idProduit }}">{{ p.likes }}</span></p>
+                                <button type="button" class="btn btn-link like-button" data-reponse-id="{{ p.idProduit }}">
+                                    <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
+                                </button>
+                            </div>
+                            <hr>
+                            <div class="card-footer text-center">
+                                {% if p.getIdProduit() in existingArticles %}
+                                    <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
+                                {% else %}
+                                    <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
+                                        <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
-                      {% else %}
-                    <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
-                      {% endif %}
-                
-                <!-- Autres détails de la carte -->
-            
-{#                  
-                    {% if p.images|length > 0 %}
-                    {% for image in p.images %}
-                        <img src="{{ asset('uploads/' ~ image.url) }}" class="card-img-top" alt="{{ p.labelle }}">
-                    {% endfor %}
-                {% else %}
-                    <!-- Si le produit n'a pas d'images, affichez une image par défaut ou un message -->
-                    <img src="{{ asset('uploads/default.jpg') }}" class="card-img-top" alt="Image par défaut">
-                {% endif %}
-  #}
-                <div class="card-body">
-                            <h5 class="card-title">{{ p.labelle }}</h5>
-                            <p class="card-text">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></p>
-                          <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
-                          <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
-    
-<!-- Formulaire de notation -->
-<form action="{{ path('submit_rating') }}" method="post" class="rating-form">
-    <input type="hidden" name="product_id" value="{{ p.getIdProduit() }}">
-    <div class="rating-stars">
-        <input type="radio" id="star5" name="rating" value="5">
-        <label for="star5" title="5 stars"></label>
-        <input type="radio" id="star4" name="rating" value="4">
-        <label for="star4" title="4 stars"></label>
-        <input type="radio" id="star3" name="rating" value="3">
-        <label for="star3" title="3 stars"></label>
-        <input type="radio" id="star2" name="rating" value="2">
-        <label for="star2" title="2 stars"></label>
-        <input type="radio" id="star1" name="rating" value="1">
-        <label for="star1" title="1 star"></label>
-    </div>
-    <button type="submit">Submit Rating</button>
-</form>
- <p>Average Rating: {{ p.getAverageRating() }}</p>
-
-   
-
- <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ p.idProduit }}">{{ p.likes }}</span></p>
-    <button type="button" class="btn btn-link like-button" data-reponse-id="{{ p.idProduit }}">
-        <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
-    </button>
-
-    
-                        </div>
-                        <hr>
-                        <div class="card-footer text-center">
-                          {% if p.getIdProduit() in existingArticles %}
-                            <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
-                          {% else %}
-                            <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
-                              <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
-                            </a>
-                          {% endif %}
-                            
-                      </div>
                     </div>
-                  </div>
                 {% endfor %}
-              </div>
+            </div>
+            
             
               
             
@@ -578,4 +504,4 @@
 
 {% endblock %}
 
-{% block footer %} {% endblock %}
+{% block featured %} {% endblock %}
