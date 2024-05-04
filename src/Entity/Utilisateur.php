@@ -35,7 +35,7 @@ class Utilisateur
     private ?string $motdepasse = null;
 
     #[ORM\Column(name: "adressePostale", type: "string", length: 60, nullable: true)]
-    private ?string $adressepostal = null;
+    private ?string $adressepostale = null;
 
     #[ORM\Column(name: "numeroTelephone", type: "string", length: 30, nullable: true)]
     private ?string $numerotelephone = null;

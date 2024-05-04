@@ -276,6 +276,8 @@ class UtilisateurController extends AbstractController
         return $this->renderForm('utilisateur/new.html.twig', [
             'utilisateur' => $utilisateur,
             'form' => $form,
+            'user' => $this->session->get('user'),
+
         ]);
     }
 

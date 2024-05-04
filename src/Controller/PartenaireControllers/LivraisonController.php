@@ -3,6 +3,7 @@
 namespace App\Controller\PartenaireControllers;
 
 use App\Entity\Commands;
+
 use App\Entity\Livraison;
 use App\Entity\Partenaires;
 use App\Form\LivraisonType;
@@ -30,7 +31,130 @@ class LivraisonController extends AbstractController
     {
         $this->session = $session;
     }
+    #[Route('/{idLivraison}/affecter_partenaire', name: 'affecter_partenaire', methods: ['GET', 'POST'])]
+    public function affecterpartenaire(Request $request, $idLivraison, EntityManagerInterface $entityManager): Response
+    {
+        $livraison = $entityManager->getRepository(Livraison::class)->find($idLivraison);
+        $form = $this->createFormBuilder()
+            ->add('partner', EntityType::class, [
+                'class' => Partenaires::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'Sélectionner un partenaire',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->where('p.type = :type')
+                        ->setParameter('type', 'livraison');
+                },
+            ])
+            ->add('submit', SubmitType::class, ['label' => 'Assigner'])
+            ->getForm();
 
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer le partenaire sélectionné
+            $selectedPartner = $form->get('partner')->getData();
+
+            $selectedPartner->setPoints($selectedPartner->getPoints() + 1);
+
+            $livraison->setPartenaire($selectedPartner->getIdpartenaire());
+            $livraison->setStatut("en cours");
+
+            // Envoyer un e-mail au partenaire
+            $partnerEmail = $selectedPartner->getEmail();
+            $partnerNom = $selectedPartner->getNom();
+            $adresseCommande = $livraison->getCommande()->getAdresse();
+            $lienMaps = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($adresseCommande);
+            $urlLogo = $this->getParameter('kernel.project_dir') . '/public/images/batah.jpg';
+            $message = '
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affectation de service</title>
+    <style>
+        body {
+            font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 100px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="cid:logo" alt="Logo BATAH" class="logo">
+        <div class="content">
+            <p>Bonjour <strong>'. $partnerNom .'</strong>,</p>
+            <p>Vous avez été affecté à une nouvelle livraison. Veuillez suivre le lien ci-dessous pour consulter les détails et l\'itinéraire de la livraison.</p>
+            <a href="' .$lienMaps.'" class="button">Voir l\'itinéraire</a>
+            <p>Merci de faire partie de notre réseau de partenaires.</p>
+        </div>
+        <div class="footer">
+            Pour toute assistance, contactez-nous au : +21623456789<br>
+            <small>© BATAH - Tous droits réservés</small>
+        </div>
+    </div>
+</body>
+</html>
+
+
+';
+            $email=new EmailSender2();
+            $email->sendEmail($partnerEmail, "Affectation de service", $message,$urlLogo);
+
+            // Enregistrer les modifications dans la base de données
+            $entityManager->persist($selectedPartner);
+            $entityManager->persist($livraison);
+            $entityManager->flush();
+
+            // Redirection vers la page d'index après l'attribution du partenaire
+            return $this->redirectToRoute('app_livraison_index');
+        }
+
+        return $this->render('livraison/affecter_partenaire.html.twig', [
+            'form' => $form->createView(),
+            'user' => $this->session->get('user')
+        ]);
+    }
     #[Route('/recuperer-livraison/{idLivraison}', name: 'recuperer_livraison')]
     public function recupererLivraison($idLivraison, EntityManagerInterface $entityManager): Response
     {
@@ -140,8 +264,9 @@ class LivraisonController extends AbstractController
     }
 
     #[Route('/{idLivraison}', name: 'app_livraison_show', methods: ['GET'])]
-    public function show(Livraison $livraison): Response
+    public function show($idLivraison,EntityManagerInterface $entityManager): Response
     {
+        $livraison = $entityManager->getRepository(Livraison::class)->find($idLivraison);
         return $this->render('livraison/show.html.twig', [
             'livraison' => $livraison,
             'user' => $this->session->get('user'),
@@ -149,8 +274,9 @@ class LivraisonController extends AbstractController
     }
 
     #[Route('/{idLivraison}/edit', name: 'app_livraison_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Livraison $livraison, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, $idLivraison, EntityManagerInterface $entityManager): Response
     {
+        $livraison = $entityManager->getRepository(Livraison::class)->find($idLivraison);
         $form = $this->createForm(LivraisonType::class, $livraison);
         $form->handleRequest($request);
 
@@ -178,128 +304,6 @@ class LivraisonController extends AbstractController
         return $this->redirectToRoute('app_livraison_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{idLivraison}/affecter_partenaire', name: 'affecter_partenaire', methods: ['GET', 'POST'])]
-    public function affecterpartenaire(Request $request, Livraison $livraison, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createFormBuilder()
-            ->add('partner', EntityType::class, [
-                'class' => Partenaires::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Sélectionner un partenaire',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('p')
-                        ->where('p.type = :type')
-                        ->setParameter('type', 'livraison');
-                },
-            ])
-            ->add('submit', SubmitType::class, ['label' => 'Assigner'])
-            ->getForm();
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer le partenaire sélectionné
-            $selectedPartner = $form->get('partner')->getData();
-
-            $selectedPartner->setPoints($selectedPartner->getPoints() + 1);
-
-            $livraison->setPartenaire($selectedPartner->getIdpartenaire());
-            $livraison->setStatut("en cours");
-
-            // Envoyer un e-mail au partenaire
-            $partnerEmail = $selectedPartner->getEmail();
-            $partnerNom = $selectedPartner->getNom();
-            $adresseCommande = $livraison->getCommande()->getAdresse();
-            $lienMaps = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($adresseCommande);
-            $urlLogo = $this->getParameter('kernel.project_dir') . '/public/images/batah.jpg';
-            $message = '
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Affectation de service</title>
-    <style>
-        body {
-            font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .logo {
-            width: 100px;
-            display: block;
-            margin: 0 auto 20px;
-        }
-        .content {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .button {
-            background-color: #007bff;
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .footer {
-            font-size: 14px;
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <img src="cid:logo" alt="Logo BATAH" class="logo">
-        <div class="content">
-            <p>Bonjour <strong>' . $partnerNom . '</strong>,</p>
-            <p>Vous avez été affecté à une nouvelle livraison. Veuillez suivre le lien ci-dessous pour consulter les détails et l\'itinéraire de la livraison.</p>
-            <a href="' . $lienMaps . '" class="button">Voir l\'itinéraire</a>
-            <p>Merci de faire partie de notre réseau de partenaires.</p>
-        </div>
-        <div class="footer">
-            Pour toute assistance, contactez-nous au : +21623456789<br>
-            <small>© BATAH - Tous droits réservés</small>
-        </div>
-    </div>
-</body>
-</html>
-
-
-';
-            $email = new EmailSender2();
-            $email->sendEmail($partnerEmail, "Affectation de service", $message, $urlLogo);
-
-            // Enregistrer les modifications dans la base de données
-            $entityManager->persist($selectedPartner);
-            $entityManager->persist($livraison);
-            $entityManager->flush();
-
-            // Redirection vers la page d'index après l'attribution du partenaire
-            return $this->redirectToRoute('app_livraison_index');
-        }
-
-        return $this->render('livraison/affecter_partenaire.html.twig', [
-            'form' => $form->createView(),
-            'user' => $this->session->get('user'),
-        ]);
-    }
 
 }
