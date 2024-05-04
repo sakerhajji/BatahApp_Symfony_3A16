@@ -76,7 +76,7 @@
                             <li class="list-inline-item"><a href="#"><span class="fab fa-twitter"></span></a></li>
                             <li class="list-inline-item"><a href="#"><span class="fab fa-instagram"></span></a></li>
                             <li class="list-inline-item"><a href="#"><span class="fab fa-linkedin"></span></a></li>
-                            <li class="list-inline-item"><a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Login</a></li>
+                            <li class="list-inline-item"><a href="{{ path('app_login') }}"  >Login</a></li>
                             <li class="list-inline-item"><a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Register</a></li>
                         </ul>
                     </div>
@@ -2094,96 +2094,7 @@
         </div>
     </section>
 
-    <!-- Testimonials  -->
-    <section class="our-testimonials-home1 pt120 pb120">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="main-title text-center">
-                        <h2>Testimonials</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="testimonial_slider_home1">
-                        <div class="item">
-                            <div class="testimonial_box">
-                                <div class="thumb">
-                                    <img class="rounded-circle" src="{{ asset('images/testimonial/1.png') }}" alt="1.png">
-                                    <h4 class="title">Marvin McKinney <br><small>Marketing Coordinator</small></h4>
-                                </div>
-                                <div class="details">
-                                    <div class="icon"><span class="fa fa-quote-left"></span></div>
-                                    <p>Aliquam lorem ante, dapibus in, viverra nisi quis, feugiat a, tellus. Phasellus viverra deo nulla ut metus varius qui laoreet. Quisque sum rutrum. Aenean imperdiet. Etiam ultricies cum sociis.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="testimonial_box">
-                                <div class="thumb">
-                                    <img class="rounded-circle" src="{{ asset('images/testimonial/2.png') }}" alt="2.png">
-                                    <h4 class="title">Brooklyn Simmons <br><small>President of Sales</small></h4>
-                                </div>
-                                <div class="details">
-                                    <div class="icon"><span class="fa fa-quote-left"></span></div>
-                                    <p>Aliquam lorem ante, dapibus in, viverra nisi quis, feugiat a, tellus. Phasellus viverra deo nulla ut metus varius qui laoreet. Quisque sum rutrum. Aenean imperdiet. Etiam ultricies cum sociis.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="testimonial_box">
-                                <div class="thumb">
-                                    <img class="rounded-circle" src="{{ asset('images/testimonial/1.png') }}" alt="1.png">
-                                    <h4 class="title">Marvin McKinney <br><small>Marketing Coordinator</small></h4>
-                                </div>
-                                <div class="details">
-                                    <div class="icon"><span class="fa fa-quote-left"></span></div>
-                                    <p>Aliquam lorem ante, dapibus in, viverra nisi quis, feugiat a, tellus. Phasellus viverra deo nulla ut metus varius qui laoreet. Quisque sum rutrum. Aenean imperdiet. Etiam ultricies cum sociis.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="testimonial_box">
-                                <div class="thumb">
-                                    <img class="rounded-circle" src="{{ asset('images/testimonial/2.png') }}" alt="2.png">
-                                    <h4 class="title">Brooklyn Simmons <br><small>President of Sales</small></h4>
-                                </div>
-                                <div class="details">
-                                    <div class="icon"><span class="fa fa-quote-left"></span></div>
-                                    <p>Aliquam lorem ante, dapibus in, viverra nisi quis, feugiat a, tellus. Phasellus viverra deo nulla ut metus varius qui laoreet. Quisque sum rutrum. Aenean imperdiet. Etiam ultricies cum sociis.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="testimonial_box">
-                                <div class="thumb">
-                                    <img class="rounded-circle" src="{{ asset('images/testimonial/1.png') }}" alt="1.png">
-                                    <h4 class="title">Marvin McKinney <br><small>Marketing Coordinator</small></h4>
-                                </div>
-                                <div class="details">
-                                    <div class="icon"><span class="fa fa-quote-left"></span></div>
-                                    <p>Aliquam lorem ante, dapibus in, viverra nisi quis, feugiat a, tellus. Phasellus viverra deo nulla ut metus varius qui laoreet. Quisque sum rutrum. Aenean imperdiet. Etiam ultricies cum sociis.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="testimonial_box">
-                                <div class="thumb">
-                                    <img class="rounded-circle" src="{{ asset('images/testimonial/2.png') }}" alt="2.png">
-                                    <h4 class="title">Brooklyn Simmons <br><small>President of Sales</small></h4>
-                                </div>
-                                <div class="details">
-                                    <div class="icon"><span class="fa fa-quote-left"></span></div>
-                                    <p>Aliquam lorem ante, dapibus in, viverra nisi quis, feugiat a, tellus. Phasellus viverra deo nulla ut metus varius qui laoreet. Quisque sum rutrum. Aenean imperdiet. Etiam ultricies cum sociis.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Our Blog -->
     <section class="our-blog pb90">
@@ -2267,6 +2178,7 @@
     {% block partenaires %}
 
     {% endblock %}
+
 
 
     <!-- Our Footer -->
