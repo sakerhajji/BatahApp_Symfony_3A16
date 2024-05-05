@@ -7,10 +7,14 @@ use App\Entity\Encheres;
 use App\Entity\Produits;
 use App\Entity\Utilisateur;
 use App\Form\EncheresType;
+use App\Repository\BasketRepository;
 use App\Repository\EncheresRepository;
 use App\Repository\ImageRepository;
+use App\Repository\LocationRepository;
+use App\Repository\ProduitsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -128,8 +132,11 @@ class EnchereController extends AbstractController
     }
 
     #[Route('/afficheclient', name: 'app_Afficheclient_enchere')]
-    public function afficheclient(Request $request, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer, ImageRepository $imageRepository): Response
+    public function afficheclient(Request $request, LocationRepository $lr, PaginatorInterface $paginator, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer, ImageRepository $imageRepository, ProduitsRepository $pr, BasketRepository $basketRep): Response
     {
+
+
+
 
         $currentPage = $request->query->getInt('page', 1);
         $itemsPerPage = 5;
@@ -173,8 +180,63 @@ class EnchereController extends AbstractController
             $imagesByLocation[$product->getIdProduit()] = $imageRepository->findBy(['produits' => $product->getIdProduit()]);
         }
 
+        $connectedUser = $this->session->get('user');
+
+        $listArticles = $pr->findAll();
+
+        $existingArticles = [];
+        $basketItems = $basketRep->findBy(['idClient' => $connectedUser]);
+        $basketItemsCount = count($basketItems);
+        $em = $this->getDoctrine()->getManager()->getRepository(Produits::class);
+
+        $repository = $this->getDoctrine()->getRepository(Produits::class)->findAll();
+
+
+        foreach ($basketItems as $basketItem) {
+            // Check if $basketItem has an associated Produits object
+            if ($basketItem->getIdProduit() !== null) {
+                $articleId = $basketItem->getIdProduit()->getIdProduit();
+
+                // Check if the article ID exists in the list of articles
+                foreach ($repository as $article) {
+                    if ($article->getIdProduit() === $articleId) {
+                        // Add the existing article to the list of existing articles
+                        $existingArticles[] = $article->getIdProduit();
+                        break;
+                    }
+                }
+            } else {
+                // Handle the case where $basketItem doesn't have an associated Produits
+                // For example, you can log an error message or skip this basket item
+            }
+        }
+        $pagination = $paginator->paginate(
+            $repository,
+            $request->query->getInt('page', 1), // Current page number
+            3 // Number of items per page
+        );
+        $basketItemsCount = count($basketItems);
+        $allProducts = $pr->findAll();
+
+
+        // Fetch images
+        $imagesByLocation = [];
+        foreach ($allProducts as $prod) { // Utilisez $allProducts à la place de $products
+            $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
+        }
+
+
+
+        // Fetch locations
+        $locations = $lr->findAllWithUser(); // Assuming you have a custom method findAllWithUser in LocationRepository to join User entity
+
+
+
+
+
         return $this->render('EncheresTemplates/enchere/page-front-enchere.html.twig', [
             'encheres' => $formattedEncheresItems,
+            //'listS' => $pagination,
             'products' => $products,
             'searchQuery' => $searchQuery,
             'currentPage' => $currentPage,
@@ -183,6 +245,11 @@ class EnchereController extends AbstractController
             'partenaires' => $this->session->get('partenaires'),
             'avis' => $this->session->get('avis'),
             'imagesByLocation' => $imagesByLocation,
+            'existingArticles' => $existingArticles,
+            'basketItemsCount' => $basketItemsCount,
+            'prod' => $allProducts, // Produits pour nav-home
+            'listArticles' => $listArticles,
+            'locations' => $locations,
         ]);
     }
 
