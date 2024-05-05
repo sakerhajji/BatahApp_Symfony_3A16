@@ -32,8 +32,6 @@ class TestController extends AbstractController
     {
         $partenaires = $PartenairesRepository->findAll();
         $avis = $avisLivraisonRepository->findAll();
-        $this->session->set('avis', $avis);
-        $this->session->set('partenaires', $partenaires);
         return $this->render('test/indexFront.html.twig', [
             'partenaires' => $partenaires,
             'avis' => $avis,

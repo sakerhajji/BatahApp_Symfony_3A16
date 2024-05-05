@@ -6,7 +6,9 @@ namespace App\Controller\EncheresControllers;
 use App\Entity\Encheres;
 use App\Entity\Utilisateur;
 use App\Form\EncheresType;
+use App\Repository\AvisLivraisonRepository;
 use App\Repository\EncheresRepository;
+use App\Repository\PartenairesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -126,9 +128,11 @@ class EnchereController extends AbstractController
     }
 
     #[Route('/afficheclient', name: 'app_Afficheclient_enchere')]
-    public function afficheclient(Request $request, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer): Response
+    public function afficheclient(Request $request, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer,PartenairesRepository $PartenairesRepository,AvisLivraisonRepository $avisLivraisonRepository): Response
     {
 
+        $partenaires = $PartenairesRepository->findAll();
+        $avis = $avisLivraisonRepository->findAll();
         $currentPage = $request->query->getInt('page', 1);
         $itemsPerPage = 5;
         $offset = ($currentPage - 1) * $itemsPerPage;
@@ -172,9 +176,9 @@ class EnchereController extends AbstractController
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
             'user'=>$this->session->get('user'),
-            'partenaires' => $this->session->get('partenaires'),
-            'avis' => $this->session->get('avis'),
-        ]);
+            'partenaires' => $partenaires,
+            'avis' => $avis,
+            ]);
     }
 
     #[Route('/walouta', name: 'walouta_enchere')]
