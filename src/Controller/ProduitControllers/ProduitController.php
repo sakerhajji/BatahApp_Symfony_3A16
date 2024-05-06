@@ -460,6 +460,8 @@ class ProduitController extends AbstractController
             //   'p' => $produit, // Assurez-vous de transmettre le produit au modèle Twig
             // 'images' => $images, // Transmettez la liste des images au modèle Twig
             'imagesByLocation' => $imagesByLocation,
+            'partenaires' => $this->session->get('partenaires'),
+            'avis' => $this->session->get('avis'),
             'listArticles' => $listArticles
         ]);
     }

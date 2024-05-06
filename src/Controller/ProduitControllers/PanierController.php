@@ -81,7 +81,7 @@ class PanierController extends AbstractController
         // add flash message
         $this->addFlash('command_ajoute', 'Article ajouté au panier');
 
-        return $this->redirectToRoute('app_afficahge_produits');
+        return $this->redirectToRoute('app_Afficheclient_enchere');
     }
 
     #[Route('/removeFromBasket/{idp}', name: 'app_removeFromBasket')]

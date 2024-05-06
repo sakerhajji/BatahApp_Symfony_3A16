@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base_front.html.twig' %}
 
 {% block title %}HOME{% endblock %}
@@ -8,6 +9,11 @@
     {% endblock %}
 
 {% block pane %}
+=======
+{% extends 'test/indexFront.html.twig' %}
+
+{% block produits %}
+>>>>>>> 07ccbc113f0a0aeb86843bae6cf06d62dbff5120
  
 <style>
     .slide-one {
@@ -213,6 +219,7 @@
     
 </style>
 
+<<<<<<< HEAD
 
 
 <section class="home-one mt-5 mt-md-5 p-0">
@@ -295,23 +302,30 @@
                                         </ul>
                                     </li>
                                 </ul>
+=======
+<section class="min-sec">
+    <div class="container">
+        <div class="row">
+            <section>
+                <div class="album py-5 bg-light">
+                    <div class="container">
+                        <div class="sidebar-search">
+                            <div class="input-group custom-search-form" style="margin-top: -27px;">
+                                <input type="text" id="search" class="form-control widget_input" placeholder="Chercher..." style="width: 1180px;background: white">
+>>>>>>> 07ccbc113f0a0aeb86843bae6cf06d62dbff5120
                             </div>
+                            <br>
+                            <ul class="nav" id="side-menu">
+                                <li>
+                                    <a href="#"> <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level" id="entitiesNav">
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </section>
-            </div>
-            <div class="row d-flex" id="containerr">
-                <div id="search"></div>
-
-                
-            <span>          <h5 class="card-title">({{listArticles | length}} annonces trouvées)</span></h5>
-
-                 
-
-                <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
-            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Status</button>
-            <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">New Cars</button>
                 </div>
+<<<<<<< HEAD
 
           
                 <div class="row justify-content-center">
@@ -412,6 +426,119 @@
               
             
     </section>
+=======
+            </section>
+        </div>
+        <div class="row d-flex" id="containerr">
+            <div id="search"></div>
+            <h5 class="card-title">({{ listArticles | length }} annonces trouvées)</h5>
+            <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
+                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All Status</button>
+                <button class="nav-link" id="nav-shopping-tab" data-bs-toggle="tab" data-bs-target="#nav-shopping" role="tab" aria-controls="nav-shopping" aria-selected="false">New Cars</button>
+            </div>
+            <div class="tab-content col-lg-12" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <div class="row">
+                        {% for p in listS %}
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="car-listing">
+                                <div class="thumb">
+                                    <div class="tag">FEATURED</div>
+                                    {% set images = imagesByLocation[p.getIdProduit()] %}
+                                    {% if images is not empty %}
+                                    <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                                        <div class="carousel-inner">
+                                            {% for key, image in images %}
+                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                <img src="{{ asset(image.getUrl()) }}" alt="{{ p.labelle }}">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- Carousel Controls -->
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <!-- Default Image -->
+                                    <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image">
+                                    {% endif %}
+                                </div>
+                                <div class="thmb_cntnt2">
+                                    <ul class="mb0">
+                                        <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                                        <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                                    </ul>
+                                </div>
+                                <div class="thmb_cntnt3">
+                                    <ul class="mb0">
+                                        <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                                        <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="details">
+                                <div class="wrapper">
+                                <div class="row align-items-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="price">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></h5>
+                                        <h6 class="title"><a href="#">{{ p.labelle }}</a></h6>
+                                    </div>
+                                    <div class="col">
+                                        <ul class="mb0">
+                                            {% if p.getIdProduit() in existingArticles %}
+                                            <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
+                                            {% else %}
+                                            <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
+                                                <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
+                                            </a>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                                        <div class="listign_review">
+                                            <ul class="mb0">
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#">4.7</a></li>
+                                                <li class="list-inline-item">(684 reviews)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
+                                        <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
+                                        <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ p.idProduit }}">{{ p.likes }}</span></p>
+                                        <button type="button" class="btn btn-link like-button" data-reponse-id="{{ p.idProduit }}">
+                                            <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="listing_footer">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+>>>>>>> 07ccbc113f0a0aeb86843bae6cf06d62dbff5120
     {% for flash_message in app.session.flashbag.get('success') %}
         <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 65px; left: 50%; transform: translateX(-50%); z-index: 9999; margin: 10px; padding: 8px 25px; border-radius: 4px; background-color: #2ecc71; color: #fff; font-size: 16px; ">
             {{ flash_message }}
@@ -578,4 +705,7 @@
 
 {% endblock %}
 
+<<<<<<< HEAD
 {% block footer %} {% endblock %}
+=======
+>>>>>>> 07ccbc113f0a0aeb86843bae6cf06d62dbff5120
