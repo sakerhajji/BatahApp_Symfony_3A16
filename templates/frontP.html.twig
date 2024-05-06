@@ -116,6 +116,7 @@
                             <li><a href="{{ asset('index7.html') }}">Home V7</a></li>
                         </ul>
                     </li>
+                <li> <a href="{{ path('reservationClient') }}"><span class="title">Reservation</span></a></li> 
 
                     <li> <a href="#"><span class="title">Explore</span></a>
                         <!-- Level Two-->
@@ -203,6 +204,7 @@
                             <li class="add_listing"><a href="page-dashboard-add-listings.html">+ Add Listing</a></li>
                             <li class="sidebar_panel"><a class="sidebar_switch pt0" href="#"><span></span></a></li>
                         </ul>
+                    <li> <a href="{{ path('app_panier') }}"><span class="title">Panier</span></a></li>
             </div>
         </nav>
     </header>
@@ -704,11 +706,8 @@
             </div>
         </div>
     </section>
-<<<<<<< HEAD
-=======
 {% block produits %}
     
->>>>>>> 07ccbc113f0a0aeb86843bae6cf06d62dbff5120
 
     <!-- Featured Product  -->
     <section class="featured-product">
@@ -1796,15 +1795,32 @@
             </div>
         </div>
     </section>
-<<<<<<< HEAD
+   
 
-=======
 {% endblock %}
-
+<a href="{{ path('app_produit') }}" style="display: inline-block; position: relative; text-align: center; width: 100%;">
+    <div style="display: inline-block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <img src="{{ asset('uploads/add.png') }}" alt="Add Image">
+    </div>
+</a>
+<br>
+    <br>
+        <br> 
+            <br>
 {% block location %}
     
 {% endblock %}
->>>>>>> 07ccbc113f0a0aeb86843bae6cf06d62dbff5120
+<div>
+<a href="{{ path('app_location_front_add') }}" style="display: inline-block; position: relative; text-align: center; width: 100%;">
+    <div style="display: inline-block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <img src="{{ asset('uploads/add.png') }}" alt="Add Image">
+    </div>
+</a>
+</div> 
+<br>
+    <br>
+        <br> 
+            <br>
     <!-- Why Chose us  -->
     <section class="why-chose pt0 pb90">
         <div class="container">

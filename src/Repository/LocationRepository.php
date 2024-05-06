@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Location;
+use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -138,6 +139,8 @@ class LocationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
 
 
     //    /**

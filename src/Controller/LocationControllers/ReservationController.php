@@ -32,12 +32,16 @@ class ReservationController extends AbstractController
 
 
     #[Route('/reservation', name: 'app_reservation')]
-    public function index(Request $request, EntityManagerInterface $em, ImageRepository $imageRepository): Response
+    public function index(ReservationLocationRepository $rl, Request $request, EntityManagerInterface $em, ImageRepository $imageRepository): Response
     {
         $locationId = $request->query->get('locationId'); // Get the location ID from the query parameters
         $loca = $em->getRepository(Location::class)->find($locationId);
         // Fetch the list of users
         $users = $this->getDoctrine()->getRepository(Utilisateur::class)->findAll();
+
+        //$owner = $rl->getOwner($locationId);
+
+
 
 
         // Fetch images for the product
@@ -50,6 +54,7 @@ class ReservationController extends AbstractController
             'locationId' => $locationId,
             'users' => $users,
             'loca' => $loca,
+            //   'owner' => $owner,
             'imagesByLocation' => $imagesByLocation,
         ]);
     }
@@ -76,6 +81,7 @@ class ReservationController extends AbstractController
 
         // Get the User entity for the selected user ID
         $user = $entityManager->getRepository(Utilisateur::class)->find($userId);
+
 
 
         // Create a new ReservationLocation entity

@@ -327,11 +327,48 @@
     border-color: #C6004D;
 }
 
+
+
+.search-label {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-label h2 {
+    font-size: 24px;
+    color: #333;
+    position: relative;
+    display: inline-block;
+}
+
+.search-label h2::before,
+.search-label h2::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 2px;
+    background-color: #333;
+}
+
+.search-label h2::before {
+    right: 100%;
+    margin-right: 10px;
+}
+
+.search-label h2::after {
+    left: 100%;
+    margin-left: 10px;
+}
+
     
 </style>
 
 <section class="min-sec">
     <div class="container">
+    <div class="search-label">
+    <h2>Search for Products</h2>
+</div>
         <div class="row">
             <section>
                 <div class="album py-5 bg-light">
@@ -407,7 +444,7 @@
                                 <div class="row align-items-center">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="price">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></h5>
+                                        <h5 class="price">à partir de <strong> {{ p.prix|number_format(0, '.', ',') }} DT</strong></h5>
                                         <h6 class="title"><a href="#">{{ p.labelle }}</a></h6>
                                     </div>
                                     <div class="col">
@@ -654,7 +691,7 @@
                                 <div class="col-sm-6 col-xl-3">
                                     <div class="car-listing">
                                         <div class="thumb">
-                                            {% set images = imagesByLocation[loca.getIdLocation()] %}
+                                          {% set images = imagesByLo[loca.getIdLocation()] %}
                                             {% if images is not empty %}
                                                 <img src="{{ asset(images[0].getUrl()) }}" alt="Car Image">
                                             {% else %}

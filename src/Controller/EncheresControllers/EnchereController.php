@@ -7,10 +7,12 @@ use App\Entity\Encheres;
 use App\Entity\Produits;
 use App\Entity\Utilisateur;
 use App\Form\EncheresType;
+use App\Repository\AvisLivraisonRepository;
 use App\Repository\BasketRepository;
 use App\Repository\EncheresRepository;
 use App\Repository\ImageRepository;
 use App\Repository\LocationRepository;
+use App\Repository\PartenairesRepository;
 use App\Repository\ProduitsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -132,10 +134,11 @@ class EnchereController extends AbstractController
     }
 
     #[Route('/afficheclient', name: 'app_Afficheclient_enchere')]
-    public function afficheclient(Request $request, LocationRepository $lr, PaginatorInterface $paginator, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer, ImageRepository $imageRepository, ProduitsRepository $pr, BasketRepository $basketRep): Response
+    public function afficheclient(Request $request, LocationRepository $lr, PaginatorInterface $paginator, EntityManagerInterface $em, EncheresRepository $encheresRepository, SerializerInterface $serializer, ImageRepository $imageRepository, ProduitsRepository $pr, LocationRepository $loca, BasketRepository $basketRep, PartenairesRepository $PartenairesRepository, AvisLivraisonRepository $avisLivraisonRepository): Response
     {
 
-
+        $partenaires = $PartenairesRepository->findAll();
+        $avis = $avisLivraisonRepository->findAll();
 
 
         $currentPage = $request->query->getInt('page', 1);
@@ -164,6 +167,7 @@ class EnchereController extends AbstractController
                     'enchere' => $enchere,
                     'dateDebutFormatted' => $enchere->getDateDebut() ? $enchere->getDateDebut()->format('Y-m-d H:i:s') : 'Date de début non disponible',
                     'dateFinFormatted' => $enchere->getDateFin() ? $enchere->getDateFin()->format('Y-m-d H:i:s') : 'Date de fin non disponible',
+
                 ];
             }
         }
@@ -174,11 +178,7 @@ class EnchereController extends AbstractController
             $products[] = $enchere->getProduit();
         }
 
-        // Fetch images for each product
-        $imagesByLocation = [];
-        foreach ($products as $product) {
-            $imagesByLocation[$product->getIdProduit()] = $imageRepository->findBy(['produits' => $product->getIdProduit()]);
-        }
+
 
         $connectedUser = $this->session->get('user');
 
@@ -218,6 +218,8 @@ class EnchereController extends AbstractController
         $basketItemsCount = count($basketItems);
         $allProducts = $pr->findAll();
 
+        $allLocation = $loca->findAll();
+
 
         // Fetch images
         $imagesByLocation = [];
@@ -225,6 +227,11 @@ class EnchereController extends AbstractController
             $imagesByLocation[$prod->getIdProduit()] = $imageRepository->findBy(['produits' => $prod]);
         }
 
+        // Fetch images
+        $imagesByLo = [];
+        foreach ($allLocation as $l) { // Utilisez $allProducts à la place de $products
+            $imagesByLo[$l->getIdLocation()] = $imageRepository->findBy(['location' => $l]);
+        }
 
 
         // Fetch locations
@@ -242,17 +249,18 @@ class EnchereController extends AbstractController
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
             'user' => $this->session->get('user'),
-            'partenaires' => $this->session->get('partenaires'),
-            'avis' => $this->session->get('avis'),
             'imagesByLocation' => $imagesByLocation,
+            "imagesByLo" => $imagesByLo,
             'existingArticles' => $existingArticles,
             'basketItemsCount' => $basketItemsCount,
             'prod' => $allProducts, // Produits pour nav-home
             'listArticles' => $listArticles,
             'locations' => $locations,
+            'partenaires' => $partenaires,
+            'avis' => $avis,
+
         ]);
     }
-
     #[Route('/walouta', name: 'walouta_enchere')]
     public function waloutalmahboula(Request $request, EncheresRepository $encheresRepository, SerializerInterface $serializer): Response
     {

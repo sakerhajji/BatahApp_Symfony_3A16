@@ -40,49 +40,59 @@ class ReservationLocationRepository extends ServiceEntityRepository
             ->getResult();
     }
     public function findReservationsForUser(int $userId): array
-{
-    return $this->createQueryBuilder('r')
-        ->join('r.location', 'l')
-        ->andWhere('l.id = :userId')
-        ->setParameter('userId', $userId)
-        ->getQuery()
-        ->getResult();
-}
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.location', 'l')
+            ->andWhere('l.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 
-public function findReservationsForLocations(array $locationIds): array
-{
-    return $this->createQueryBuilder('r')
-        ->innerJoin('r.location', 'l')
-        ->andWhere('l.id IN (:locationIds)')
-        ->setParameter('locationIds', $locationIds)
-        ->getQuery()
-        ->getResult();
-}
-    
+    public function findReservationsForLocations(array $locationIds): array
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.location', 'l')
+            ->andWhere('l.id IN (:locationIds)')
+            ->setParameter('locationIds', $locationIds)
+            ->getQuery()
+            ->getResult();
+    }
 
 
-//    /**
-//     * @return ReservationLocation[] Returns an array of ReservationLocation objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getOwner(int $locationId): ?Utilisateur
+    {
+        return $this->createQueryBuilder('reservation_location')
+            ->select('reservation_location.user') // Select the user associated with the reservation
+            ->join('reservation_location.location', 'location')
+            ->where('location.idLocation = :locationId')
+            ->setParameter('locationId', $locationId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-//    public function findOneBySomeField($value): ?ReservationLocation
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return ReservationLocation[] Returns an array of ReservationLocation objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('r.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?ReservationLocation
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
