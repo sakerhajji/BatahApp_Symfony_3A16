@@ -94,11 +94,9 @@
                         </div>
 
                     {% endfor %}
-                    
-
                     <div class="pagination justify-content-center">
-    {{ knp_pagination_render(forums, '@KnpPaginator/Pagination/sliding.html.twig') }}
-</div>
+                        {{ knp_pagination_render(forums) }}
+                    </div>
                 </div>
 
                 <br><br>
