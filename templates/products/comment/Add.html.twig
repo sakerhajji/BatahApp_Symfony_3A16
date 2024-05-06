@@ -1,0 +1,10 @@
+{# Votre template Twig pour afficher les commentaires #}
+
+<button onclick="addComment({{ product.idProduit }}, {{ user.idUser }}, 'Nouveau commentaire')">Ajouter un commentaire</button>
+
+<div id="comments">
+    {# Boucle sur les commentaires existants et les afficher #}
+    {% for comment in product.comments %}
+        <div class="comment">{{ comment.content }}</div>
+    {% endfor %}
+</div>

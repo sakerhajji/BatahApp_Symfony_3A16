@@ -1,0 +1,102 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Afficher Locations {% endblock %}
+
+{% block pane %}
+
+<section class="featured-product pt0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="main-title text-center">
+                    <h2>Featured Listings</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popular_listing_sliders row">
+                    <!-- Nav tabs -->
+                    <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
+                        <!-- Add your tab buttons here -->
+                    </div>
+                    <!-- Tab panes -->
+                    <div class="tab-content col-lg-12" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                            <div class="row">
+                                {% for loca in locations %}
+                                    <div class="col-sm-6 col-xl-3">
+                                        <div class="car-listing">
+                                            <div class="thumb">
+                                                {% set images = imagesByLocation[loca.getIdLocation()] %}
+                                                {% if images is not empty %}
+                                                    <img src="{{ asset(images[0].getUrl()) }}" alt="Car Image">
+                                                {% else %}
+                                                    <img src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
+                                                {% endif %}
+                                            </div>
+                                            <div class="details">
+                                                <div class="wrapper">
+                                                    <h5 class="price">${{ loca.prix }}</h5>
+                                                    <h6 class="title"><a href="{{ path('app_reservation', {'locationId': loca.getIdLocation()}) }}">{{ loca.type }}</a></h6>
+                                                </div>
+                                                <div class="listing_footer">
+                                                    <ul class="mb0">
+                                                        <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span></a></li>
+                                                        <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span></a></li>
+                                                        <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <!-- Add other tabs here if needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bouton pour visualiser toutes les locations -->
+<div class="text-center mt-5">
+    <a href="{{ path('app_location_front_affiche') }}" class="btn btn-primary">Visualiser toutes les locations</a>
+</div>
+
+<script>
+    function validateForm() {
+        var requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+        var formIsValid = true;
+
+        requiredFields.forEach(function(field) {
+            if (!field.value.trim()) {
+                formIsValid = false;
+            }
+        });
+
+        if (!formIsValid) {
+            alert('Veuillez remplir tous les champs.');
+            return false;
+        }
+
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('form');
+
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% block basket %}{% endblock %}
+{% block footer %}{% endblock  %}

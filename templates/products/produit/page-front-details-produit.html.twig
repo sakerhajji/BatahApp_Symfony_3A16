@@ -1,0 +1,126 @@
+{% extends 'base_front_details.html.twig' %}
+{% block title %}details Product{% endblock %}
+{% block header %}  {% endblock %}
+{% block pane %}
+<!-- Agent Single Grid View -->
+
+<section class="our-agent-single bgc-f9 pb90 mt70-992 pt30">
+  <div class="container">
+    <div class="row mb30">
+      <div class="col-xl-12">
+        <div class="breadcrumb_content style2">
+          <ol class="breadcrumb float-start">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Cars for Sale</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="row mb30">
+      <div class="col-lg-7 col-xl-8">
+        <div class="single_page_heading_content">
+          <div class="car_single_content_wrapper">
+            <ul class="car_info mb20-md">
+              <li class="list-inline-item"><a href="#">BRAND NEW - IN STOCK</a></li>
+              <li class="list-inline-item"><a href="#"><span class="flaticon-clock-1 vam"></span>2 years ago</a></li>
+              <li class="list-inline-item"><a href="#"><span class="flaticon-eye vam"></span>13102</a></li>
+            </ul>
+            <h2 class="title">{{product.labelle}}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 col-xl-4">
+        <div class="single_page_heading_content text-start text-lg-end">
+          <div class="price_content">
+            <div class="price mt60 mb10 mt10-md">
+              <h3>
+    <small class="mr15">
+        <del>{{ (product.prix * 1.5) | number_format(0, '.', ',') }} TND</del>
+    </small>
+    {{ product.prix | number_format(0, '.', ',') }} TND
+</h3>
+  </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 col-xl-8">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="single_product_grid single_page1">
+              <div class="single_product_slider">
+                <div class="item">
+                  <div class="sps_content">
+                    <div class="thumb">
+                      <img class="img-fluid" src="{{ asset('uploads/' ~ product.getphoto()) }}" alt="{{ product.getlabelle() }}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="opening_hour_widgets p30 mt30">
+              <div class="wrapper">
+                <h4 class="title">Overview</h4>
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="me-auto">
+                      <div class="day">Type</div>
+                    </div>
+                    <span class="schedule">{{product.type}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="me-auto">
+                      <div class="day">labelle</div>
+                    </div>
+                    <span class="schedule">{{product.labelle}}</span>
+                  </li>
+                  <!-- Ajouter d'autres éléments de vue d'ensemble ici -->
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="listing_single_description mt30">
+              <h4 class="mb30">Description <span class="float-end body-color fz13">ID #9535</span></h4>
+              <p class="first-para">{{product.description}}</p>
+            </div>
+            <!-- Ajouter d'autres sections de description ici -->
+          </div>
+          <div class="user_profile_location">
+        <h4 class="title">Location</h4>
+        <div class="property_sp_map mb40">
+            <!-- Utilisation de l'iframe avec le lien de la localisation du produit -->
+            <iframe width="600" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ product.localisation }}"></iframe>
+        </div>
+    </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-xl-4">
+        <div class="offer_btns">
+          <div class="text-end">
+            <button class="btn btn-thm ofr_btn1 btn-block mt0 mb20"><span class="flaticon-coin mr10 fz18 vam"></span>Ajouter enchere</button>
+          <button class="btn btn-thm ofr_btn1 btn-block mt0 mb20"><span class="flaticon-coin mr10 fz18 vam"></span>Ajouter Panier</button>
+            <button class="btn ofr_btn2 btn-block mt0 mb20"><span class="flaticon-profit-report mr10 fz18 vam"></span>View VIN Report</button>
+          </div>
+        </div>
+        <div class="sidebar_seller_contact">
+          <!-- Informations du vendeur -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="col-md-12">
+                    <div class="form-group">
+                      <textarea class="form-control" rows="9" placeholder="Message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-thm">Send Your Review</button>
+                  </div>
+{% endblock %}
+
+{% block recommended %}  {% endblock %}
+{% block footer %}  {% endblock %}

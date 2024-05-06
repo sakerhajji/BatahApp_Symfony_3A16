@@ -1,0 +1,69 @@
+{% extends 'frontP.html.twig' %}
+{% block partenaires %}
+
+    <!-- Our Partners -->
+    <section class="our-partner pt0 pb100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="main-title text-center">
+                        <h2>Les partenaires</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="partner_divider">
+                <div class="row">
+                    {% for partenaire in partenaires %}
+                        <div class="col-6 col-xs-6 col-sm-4 col-xl-2 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s">
+                            <div class="partner_item">
+                                <img src="{{ asset('image/uploads/partenaires/' ~ partenaire.logo) }}" alt="Logo" style="width: 100px;">
+                                <h5> {{ partenaire.nom}}</h5>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+      <section class="our-partner pt0 pb100">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-6 offset-lg-3">
+                      <div class="main-title text-center">
+                          <h2>Avis livraisons</h2>
+                      </div>
+                  </div>
+              </div>
+              {% if avis is not null %}
+              {% for chunk in avis|batch(2) %}
+                  <div class="row">
+                      {% for avi in chunk %}
+                          <div class="col-md-6">
+                              <div class="partner_divider">
+                                  <div class="mbp_first d-flex align-items-center">
+                                      <div class="flex-shrink-0">
+                                          <img class="rounded-circle mr10"  src="{{ asset('image/uploads/user/' ~ avi.livraison.commande.idClient.avatar) }}" alt="avatar" height="80px" width="80px">
+                                      </div>
+                                      <div class="flex-grow-1 ms-4">
+                                          <h4 class="sub_title mt20">{{ avi.livraison.commande.idClient.nomutilisateur }} {{ avi.livraison.commande.idClient.prenomutilisateur }}</h4>
+                                          <div class="sspd_postdate mb15">{{ avi.livraison.dateLivraison|date('Y-m-d') }}</div>
+                                      </div>
+                                  </div>
+                                  <p class="mt15 mb30">{{ avi.commentaire }}</p>
+                                  <hr>
+                              </div>
+                          </div>
+                      {% endfor %}
+                  </div>
+              {% endfor %}
+            {% endif %}
+
+          </div>
+      </section>
+
+{% endblock %}

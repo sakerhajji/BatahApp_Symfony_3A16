@@ -1,0 +1,141 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Afficher statistiques{% endblock %}
+
+{% block pane %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques</title>
+    <!-- Inclure la bibliothèque Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        /* Définir la taille du graphe */
+        .chart-container {
+            width: 600px; /* Définir la largeur */
+            height: 400px; /* Définir la hauteur */
+            margin: auto; /* Centrer le graphe horizontalement */
+            margin-top: 20px; /* Ajouter un peu d'espace au-dessus du graphe */
+        }
+        
+        /* Bouton retour */
+        .btn-retour {
+            position: fixed; /* Positionnement fixe */
+            bottom: 20px; /* Espacement du bas */
+            right: 20px; /* Espacement de la droite */
+            z-index: 999; /* Assurer que le bouton est au-dessus des autres éléments */
+        }
+    </style>
+</head>
+<body>
+    <!-- Premier graphique: Nombre de réservations par emplacement -->
+    <div class="chart-container">
+        <canvas id="reservationsByLocationChart"></canvas>
+    </div>
+
+    <script>
+        // Récupérer les données depuis PHP (Twig)
+        const reservationsByLocation = {{ reservationsByLocation|json_encode|raw }};
+
+        // Extraire les étiquettes (descriptions d'emplacement) et les données (nombre de réservations)
+        const labels = Object.keys(reservationsByLocation);
+        const data = Object.values(reservationsByLocation);
+
+        // Créer le graphe pour les réservations par emplacement
+        const ctxReservationsByLocation = document.getElementById('reservationsByLocationChart').getContext('2d');
+        const reservationsByLocationChart = new Chart(ctxReservationsByLocation, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre de réservations par location',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Deuxième graphique: Nombre de locations par type -->
+    <div class="chart-container">
+        <canvas id="locationTypeChart"></canvas>
+    </div>
+
+    <script>
+        // Récupérer les données depuis PHP (Twig)
+        const carLocationsCount = {{ carLocationsCount }};
+        const houseLocationsCount = {{ houseLocationsCount }};
+        
+        // Calculer le total des locations
+        const totalLocations = carLocationsCount + houseLocationsCount;
+        
+        // Calculer les pourcentages
+        const carLocationsPercentage = Math.round((carLocationsCount / totalLocations) * 100);
+        const houseLocationsPercentage = Math.round((houseLocationsCount / totalLocations) * 100);
+ 
+        // Créer le graphe pour les locations par type
+        const ctxLocationType = document.getElementById('locationTypeChart').getContext('2d');
+        const locationTypeChart = new Chart(ctxLocationType, {
+            type: 'doughnut',
+            data: {
+                labels: ['Voiture', 'Maison'],
+                datasets: [{
+                    data: [carLocationsPercentage, houseLocationsPercentage],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                cutout: '70%',
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Pourcentage des locations par type'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.formattedValue + '%';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Bouton de retour -->
+    <a href="{{ path('app_location_front_affiche') }}" class="btn btn-secondary btn-retour">Retour</a>
+
+</body>
+</html>
+{% endblock %}
+
+{% block basket %}{% endblock %}
+
+{% block footer %}{% endblock %}

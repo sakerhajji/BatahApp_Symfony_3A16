@@ -1,0 +1,80 @@
+<!-- pdf_produits.html.twig -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Produits</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+    
+            h1 {
+                color: #333;
+            }
+    
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+    
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            img {
+                max-width: 100px; /* Adjust the maximum width of the image */
+                height: auto;
+            }
+        
+        
+    </style>
+</head>
+<body>
+    <h1>Liste des Produits</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Labelle</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Type</th>
+                <th>Statut</th>
+                <th>Période de Garantie</th>
+                <th>Localisation</th>
+              <!--  <th>Photo</th>  Nouvelle colonne pour l'image -->
+                <!-- Ajoutez d'autres en-têtes de colonnes selon vos besoins -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in produits %}
+                <tr>
+                    <td>{{ produit.labelle }}</td>
+                    <td>{{ produit.description }}</td>
+                    <td>{{ produit.prix }}</td>
+                    <td>{{ produit.type }}</td>
+                    <td>{{ produit.status ? 'Actif' : 'Inactif' }}</td>
+                    <td>{{ produit.periodeGarantie }}</td>
+                    <td>{{ produit.localisation }}</td>
+                  <!--  <td>
+                        {% if produit.photo %}
+                            <img src="{{ asset('uploads/' ~ produit.photo) }}" alt="{{ produit.labelle }}">
+                        {% else %}
+                            <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Image par défaut">
+                        {% endif %}
+                    </td>
+                     Ajoutez d'autres colonnes selon vos besoins -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

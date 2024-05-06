@@ -1,0 +1,16 @@
+{{ form_start(form, {'attr': {'class': 'form', 'enctype': 'multipart/form-data'}}) }}
+
+<div class="form-group">
+    {{ form_label(form.dateLivraison, 'dateLivraison', {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_widget(form.dateLivraison, {'attr': {'class': 'form-control ' ~ (form_errors(form.dateLivraison) ? 'is-invalid' : '') }}) }}
+    {% if form_errors(form.dateLivraison) %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.dateLivraison)|first }}
+        </div>
+    {% endif %}
+</div>
+
+<button type="submit" class="btn dbxshad btn-lg btn-thm3 circle">{{ button_label|default('Save') }}</button>
+
+
+{{ form_end(form) }}

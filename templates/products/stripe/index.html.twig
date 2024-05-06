@@ -1,0 +1,140 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Battah {% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Stripe Checkout
+                                            
+                                
+                    
+        </title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+        /* Custom styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        .card {
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .decorative-line {
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        .secure-icon {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .secure-icon img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+    </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        Secure Checkout
+                                                                                            
+                                                                    
+                                            
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="secure-icon">
+                        <img src="{{ asset('uploads/SecureIcon.jpg') }}" alt="Secure Icon">
+                        <p>
+                            Your payment is secure
+                                                                                                            
+                                                                                
+                                                    
+                        </p>
+                    </div>
+                    <div class="decorative-line"></div>
+                    <form id='checkout-form' method='post' action="{{ path('app_stripe_charge') }}">
+                        <input type='hidden' name='stripeToken' id='stripe-token-id'>
+                        <div class="form-group">
+                            <label for="card-element">
+                                Card Details
+                                                                                                                            
+                                                                                            
+                                                            
+                            </label>
+                            <div id="card-element" class="form-control"></div>
+                        </div>
+                        <button id='pay-btn' class="btn btn-success btn-block" type="button" onclick="createToken()">
+                            Pay Now ($
+                                                                                                                
+                                                                                    
+                                                        
+                            {{ totalPrice }}
+                            )
+                                                                                                            
+                                                                                
+                                                    
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://js.stripe.com/v3/" ></script>
+        <script>
+    var stripe = Stripe("{{ stripe_key }}");
+    var elements = stripe.elements();
+    var cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+ 
+    function createToken() {
+        document.getElementById("pay-btn").disabled = true;
+        stripe.createToken(cardElement).then(function(result) {
+            if(typeof result.error != 'undefined') {
+                document.getElementById("pay-btn").disabled = false;
+                alert(result.error.message);
+            }
+            if(typeof result.token != 'undefined') {
+                document.getElementById("stripe-token-id").value = result.token.id;
+                document.getElementById('checkout-form').submit();
+            }
+        });
+    }
+</script>
+
+    </body>
+</html>
+{% endblock %}

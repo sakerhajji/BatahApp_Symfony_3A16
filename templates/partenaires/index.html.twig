@@ -1,0 +1,178 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Partenaires index{% endblock %}
+{% block body %}
+
+        <div class="row">
+            <div class="col-lg-6">
+                <!-- Affichage de la liste des partenaires -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Liste des partenaires</h4>
+                        <div class="form-group">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom">
+                            <button onclick="startDictation()" class="btn btn-info">&#x1F3A4;</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="users">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Type</th>
+                                    <th>Email</th>
+                                    <th> <button onclick="sortTable()" class="btn btn-sm btn-outline-secondary">Points</button></th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for partenaire in partenaires %}
+                                    <tr>
+                                        <td>{{ partenaire.nom }}</td>
+                                        <td>{{ partenaire.type }}</td>
+                                        <td>{{ partenaire.email }}</td>
+                                        <td>{{ partenaire.points }}</td>
+                                        <td>
+                                            <a href="{{ path('app_partenaires_show', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Show</a>
+                                            <a href="{{ path('app_partenaires_edit', {'idpartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Edit</a>
+                                            <a href="{{ path('app_partenaire_services', {'idPartenaire': partenaire.idpartenaire}) }}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Consulter les services">Consulter</a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5">Aucun enregistrement trouvé</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="{{ path('app_partenaires_new') }}" class="btn dbxshad btn-lg btn-thm3 circle">Créer nouveau</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistique des partenaires -->
+            <div class="col-md-6">
+                <h2>Statistique des partenaires</h2>
+                <!-- Inclure Chart.js -->
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <!-- Créer un élément canvas pour le graphique -->
+                <canvas id="partnerChart" width="400" height="200" class="chartjs-render-monitor"></canvas>
+                <script>
+                    // Récupérer les données des partenaires depuis l'attribut data HTML
+                    //let partners = JSON.parse(document.getElementById('partenairesData').getAttribute('data-json'));
+                    let partners = {{ partenairesJson|raw }};
+                    // Extraire les noms et les points des partenaires
+                    let partnerNames = partners.map(partner => partner.nom);
+                    let partnerPoints = partners.map(partner => partner.points);
+                    // Créer le graphique à barres
+                    let ctx = document.getElementById('partnerChart').getContext('2d');
+                    let chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: partnerNames,
+                            datasets: [{
+                                label: 'Points',
+                                data: partnerPoints,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+
+    <script>
+        // Function to start voice recognition
+        function startDictation() {
+            if ('webkitSpeechRecognition' in window) {
+                var recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;  // Stops capturing after the first pause
+                recognition.interimResults = false;  // We only want the final result
+                recognition.lang = "fr-FR";  // Set the recognition language to French
+
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    // Remove any trailing punctuation such as periods, commas, etc.
+                    transcript = transcript.replace(/[\.,\?!]$/, '').trim();
+                    document.getElementById('searchInput').value = transcript;  // Set the cleaned text as the value of 'searchInput'
+                    recognition.stop();  // Stop the recognition
+
+                    searchTable();  // Assuming 'searchTable' is your search function that triggers the search
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    recognition.stop();
+                };
+
+                recognition.start();  // Start the speech recognition
+            } else {
+                alert('Speech recognition not supported in this browser.');
+            }
+        }
+        // Function to perform search
+        function searchTable() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("users");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.textContent.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+
+        document.getElementById("searchInput").addEventListener("input", searchTable);
+
+    </script>
+
+    <script>
+        // fonction trie
+        function sortTable() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("users");
+            switching = true;
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+
+                    x = rows[i].getElementsByTagName("td")[3];
+                    y = rows[i + 1].getElementsByTagName("td")[3];
+
+                    if (Number(x.textContent) < Number(y.textContent)) {
+
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    // Effectuer le déplacement et marquer qu'un switch a été fait
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+
+{% endblock %}

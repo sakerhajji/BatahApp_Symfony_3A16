@@ -1,0 +1,34 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Edit Livraison{% endblock %}
+
+{% block body %}
+    <h1>Edit Livraison</h1>
+
+    {{ include('livraison/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_livraison_index') }}" class="btn dbxshad btn-lg btn-thm3 circle">back to list</a>
+
+    {{ include('livraison/_delete_form.html.twig') }}
+    <script>
+        // Sélectionner tous les champs du formulaire
+        const formFields = document.querySelectorAll('.form-control');
+
+        // Écouter les événements de saisie sur chaque champ du formulaire
+        formFields.forEach(field => {
+            field.addEventListener('input', function() {
+                // Vérifier si le champ est valide
+                if (this.checkValidity()) {
+                    // Champ valide : appliquer la classe 'is-valid' et retirer la classe 'is-invalid'
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    // Champ invalide : appliquer la classe 'is-invalid' et retirer la classe 'is-valid'
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

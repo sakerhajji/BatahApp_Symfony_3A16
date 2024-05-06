@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Brand{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        #main {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .pagetitle {
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        #myChart {
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block pane %}
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <section class="section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Voiture', 'Maison', 'Terrain'],
+                datasets: [{
+                    label: 'Pourcentage %',
+                    data: [{{ voiturePercentage }}, {{ maisonPercentage }}, {{ terrainPercentage }}],
+                    backgroundColor: [
+                        '#ffcd56',
+                        '#ff6384',
+                        '#36a2eb',
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'right',
+                    labels: {
+                        fontSize: 14,
+                        fontColor: '#333'
+                    }
+                },
+                tooltips: {
+                    backgroundColor: '#fff',
+                    bodyFontColor: '#333',
+                    titleFontSize: 16,
+                    bodyFontSize: 14,
+                    displayColors: false,
+                    xPadding: 10,
+                    yPadding: 10,
+                    borderColor: '#ddd',
+                    borderWidth: 1,
+                    caretPadding: 15
+                }
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,774 @@
+{% extends 'test/indexFront.html.twig' %}
+
+{% block encheres %}
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="full">
+                        <h3>Vente aux encheres, En routes pour les bonnes affaires</h3>
+                        
+                    </div>
+                    {% for flashMessage in app.flashes('success') %}
+                        <div class="alert alert-success">{{ flashMessage }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    <form method="get" action="{{ path('app_Afficheclient_enchere') }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="dateDebut">Date de début :</label>
+                                    <input type="date" id="dateDebut" name="dateDebut" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="dateFin">Date de fin :</label>
+                                    <input type="date" id="dateFin" name="dateFin" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary mt-4">Rechercher</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des enchères -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                {% for item in encheres %}
+    {% set enchere = item.enchere %}
+    <div class="col-sm-6 col-xl-6">
+        <div class="car-listing list_style">
+            <div class="thumb">
+                <div class="tag">FEATURED</div>
+                {% set productId = enchere.getProduit().getIdProduit() %}
+                {% set images = imagesByLocation[productId] ?? [] %}
+                {% if images is not empty %}
+                    <!-- Display only the first image in the main thumbnail -->
+                    <img src="{{ asset(images[0].getUrl()) }}" class="card-img-top main-thumbnail" alt="{{ enchere.getProduit().getLabelle }}">
+                {% else %}
+                    <!-- Si aucune image n'est disponible, affichez une image par défaut -->
+                    <img src="{{ asset('uploads/defaultimage.jpg') }}" class="card-img-top" alt="Default Image">
+                {% endif %}
+                <div class="thmb_cntnt2">
+                    <ul class="mb0">
+                        <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+                    </ul>
+                </div>
+            </div>
+            <div class="listign_review">
+                <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+            </div>
+            <!-- Utilisez une balise <span> avec un attribut style pour définir la couleur du texte "Mise à enchère" -->
+            <span style="color: red;">Mise à enchère</span>
+            <p>début: {{ item.dateDebutFormatted }}</p>
+            <p>fin: {{ item.dateFinFormatted }}</p>
+
+            <!-- Bouton Réserver -->
+            <div class="reservation-button">
+                <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
+                    <button type="submit" class="btn btn-primary">Reserver</button>
+                </form>
+                <!-- Button to trigger modal -->
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_{{ loop.index }}">
+            <a href="{{ path('detailProduitFront', {idp: enchere.getProduit().getIdProduit()}) }}" style="color: white; text-decoration: none;">Voir les détails</a>
+        </button>
+        
+            </div>
+        </div>
+    </div>
+
+    <!-- Fin de la fenêtre modale -->
+{% endfor %}
+
+            </div>
+        </div>
+    </section>
+    <!-- Fin de la liste des enchères -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // JavaScript pour récupérer l'ID de l'enchère lors du clic sur le bouton Réserver
+        document.querySelectorAll('.reserve-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var enchereId = this.getAttribute('data-enchere-id');
+                var url = this.getAttribute('data-url');
+
+                // Vous pouvez effectuer des opérations supplémentaires ici, comme l'envoi de la demande Ajax
+                console.log('ID de l\'enchère:', enchereId);
+                console.log('URL de réservation:', url);
+                
+                // Exemple d'envoi de la demande Ajax
+                /*
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ enchereId: enchereId }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Erreur:', error));
+                */
+            });
+        });
+    </script>
+{% endblock %}
+{% block produits %}
+ 
+<style>
+    .slide-one {
+        background-size: cover;
+        background-position: center;
+        height: 500px; /* Adjusted height value */
+    }
+    .banner-title {
+        font-size: 80px; /* Reduced font size for better readability */
+        color: #E0115F;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Added text shadow for better contrast */
+    }
+
+    .banner_top_title {
+        font-size: 50px;
+        color: #D3D3D3;
+    }
+
+    .carousel-caption {
+        background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background for caption */
+        padding: 20px; /* Increased padding for better spacing */
+        border-radius: 10px; /* Rounded corners for caption */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.6); /* Dark background for carousel control icons */
+        border-radius: 50%; /* Rounded shape for control icons */
+    }
+
+    .carousel-control-prev-icon::before,
+    .carousel-control-next-icon::before {
+        color: #fff; /* White color for control icons */
+    }
+
+    .album {
+        padding: 30px; /* Increased padding for album section */
+    }
+
+    .sidebar-search {
+        margin-top: -27px;
+    }
+
+    .widget_input {
+        width: 100%; /* Full width for search input */
+        background: #fff; /* White background for input */
+        border: none; /* Removed border for input */
+        border-radius: 5px; /* Added border radius for input */
+        padding: 10px; /* Added padding for input */
+    }
+
+    .nav {
+        margin-top: 20px; /* Increased margin for navigation */
+    }
+
+    .nav-second-level {
+        padding-left: 20px; /* Added padding for sub-navigation */
+    }
+
+    .errorLi {
+        color: #ff0000; /* Red color for error message */
+    }
+
+    .alert {
+        position: fixed;
+        top: 65px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        margin: 10px;
+        padding: 8px 25px;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .alert-success {
+        background-color: #2ecc71; /* Green color for success alert */
+        color: #fff; /* White text color for success alert */
+    }
+
+    .ser_110_thumb {
+        position: relative; /* Added relative positioning */
+        overflow: hidden; /* Hidden overflow for thumbnail */
+    }
+
+    .ser_110_thumb img {
+        transition: transform 0.3s ease; /* Smooth transition effect */
+    }
+
+    .ser_110_thumb:hover img {
+        transform: scale(1.1); /* Increased scale on hover for thumbnail */
+    }
+    .container2 {
+        position: relative;
+        width: 100%;
+        height: 500px; /* Ajustez la hauteur selon vos besoins */
+    }
+    
+    .background-image2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80%;
+        background-image:  url('/uploads/Untitled-design.jpg'); /* Remplacez par le chemin de votre image */
+        background-size: contain;
+        background-position: center;
+    }
+    
+    
+    .blinking-text2 {
+        animation: blink 1s infinite; /* Animation de clignotement */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white; /* Couleur du texte */
+        background-color: black; /* Ajout d'un arrière-plan noir */
+        padding: 10px; /* Ajout de rembourrage pour améliorer la lisibilité */
+    }
+    
+    @keyframes blink {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+    
+
+    .comment-section {
+    margin-top: 20px;
+}
+
+.comment-section h3, .rating-section h4 {
+    margin-bottom: 10px;
+}
+
+.stars {
+    color: #ffd700; /* Couleur des étoiles */
+}
+
+.stars i {
+    font-size: 20px; /* Taille des étoiles */
+    margin-right: 5px; /* Espacement entre les étoiles */
+}
+
+.ser_title098 {
+    text-align: center; /* Centrer le texte */
+    margin-top: 15px; /* Marge supplémentaire au-dessus */
+}
+
+.ser_title098 a {
+    color: #333; /* Couleur du lien */
+    text-decoration: none; /* Supprimer la soulignement du lien */
+}
+
+.ser_title098 a:hover {
+    color: #E0115F; /* Couleur du lien au survol */
+}
+
+.product-card {
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-text {
+    color: #777;
+}
+
+.comment-section {
+    margin-top: 20px;
+}
+
+.stars {
+    color: #ffd700; /* Couleur des étoiles */
+}
+
+.stars i {
+    font-size: 20px; /* Taille des étoiles */
+    margin-right: 5px; /* Espacement entre les étoiles */
+}
+
+
+.btn-details {
+    background-color: #E0115F;
+    border-color: #E0115F;
+}
+
+.btn-details:hover {
+    background-color: #C6004D;
+    border-color: #C6004D;
+}
+
+    
+</style>
+
+<section class="min-sec">
+    <div class="container">
+        <div class="row">
+            <section>
+                <div class="album py-5 bg-light">
+                    <div class="container">
+                        <div class="sidebar-search">
+                            <div class="input-group custom-search-form" style="margin-top: -27px;">
+                                <input type="text" id="search" class="form-control widget_input" placeholder="Chercher..." style="width: 1180px;background: white">
+                            </div>
+                            <br>
+                            <ul class="nav" id="side-menu">
+                                <li>
+                                    <a href="#"> <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-second-level" id="entitiesNav">
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row d-flex" id="containerr">
+            <div id="search"></div>
+            <h5 class="card-title">({{ listArticles | length }} annonces trouvées)</h5>
+            
+            <div class="tab-content col-lg-12" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row">
+                {% for p in prod %}
+                    <div class="col-sm-6 col-xl-3">
+                            <div class="car-listing">
+                                <div class="thumb">
+                                    <div class="tag">FEATURED</div>
+                                    {% set images = imagesByLocation[p.getIdProduit()] %}
+                                    {% if images is not empty %}
+                                    <div id="carousel{{ p.getIdProduit() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                                        <div class="carousel-inner">
+                                            {% for key, image in images %}
+                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                <img src="{{ asset(image.getUrl()) }}" alt="{{ p.labelle }}">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- Carousel Controls -->
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ p.getIdProduit() }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <!-- Default Image -->
+                                    <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image">
+                                    {% endif %}
+                                </div>
+                                <div class="thmb_cntnt2">
+                                    <ul class="mb0">
+                                        <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-photo-camera mr3"></span> 22</a></li>
+                                        <li class="list-inline-item"><a class="text-white" href="#"><span class="flaticon-play-button mr3"></span> 3</a></li>
+                                    </ul>
+                                </div>
+                                <div class="thmb_cntnt3">
+                                    <ul class="mb0">
+                                        <li class="list-inline-item"><a href="#"><span class="flaticon-shuffle-arrows"></span></a></li>
+                                        <li class="list-inline-item"><a href="#"><span class="flaticon-heart"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="details">
+                                <div class="wrapper">
+                                <div class="row align-items-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="price">From <strong>{{ p.prix|number_format(0, '.', ',') }} DT</strong></h5>
+                                        <h6 class="title"><a href="#">{{ p.labelle }}</a></h6>
+                                    </div>
+                                    <div class="col">
+                                        <ul class="mb0">
+                                            {% if p.getIdProduit() in existingArticles %}
+                                            <img src="{{ asset('assets/images/basketChecked.png') }}" alt="exist in cart" width="54px">
+                                            {% else %}
+                                            <a href="{{ path('app_addToBasket', {'idp': p.getIdProduit()} ) }}">
+                                                <img src="{{ asset('assets/images/basket2.png') }}" alt="add to cart" width="52px">
+                                            </a>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                                        <div class="listign_review">
+                                            <ul class="mb0">
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li class="list-inline-item"><a href="#">4.7</a></li>
+                                                <li class="list-inline-item">(684 reviews)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="{{ path('detailProduitFront', {'idp': p.getIdProduit()}) }}" class="btn btn-primary btn-details">Voir les détails</a>
+                                        <p class="card-text">Nombre de vues: {{ p.getNombreDeVues() }}</p>
+                                        <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ p.idProduit }}">{{ p.likes }}</span></p>
+                                        <button type="button" class="btn btn-link like-button" data-reponse-id="{{ p.idProduit }}">
+                                            <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="listing_footer">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    {% for flash_message in app.session.flashbag.get('success') %}
+        <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 65px; left: 50%; transform: translateX(-50%); z-index: 9999; margin: 10px; padding: 8px 25px; border-radius: 4px; background-color: #2ecc71; color: #fff; font-size: 16px; ">
+            {{ flash_message }}
+
+        </div>
+    {% endfor %}
+
+    {% for flash_message in app.session.flashbag.get('successPaiement') %}
+        <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 105px; left: 50%; transform: translateX(-50%); z-index: 9999; margin: 10px; padding: 8px 25px; border-radius: 4px; background-color: #2ecc71; color: #fff; font-size: 16px; ">
+            {{ flash_message }}
+
+        </div>
+    {% endfor %}
+
+    {% for flash_message in app.session.flashbag.get('command_ajoute') %}
+        <div id="myAlert2" class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 65px; left: 50%; transform: translateX(-50%); z-index: 9999; margin: 10px; padding: 8px 25px; border-radius: 4px; background-color: #2ecc71; color: #fff; font-size: 16px; ">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    <script>
+        // Automatically dismiss the alert after 3 seconds
+        setTimeout(function() {
+            document.querySelector('.alert').remove();
+        }, 3000);
+    </script>
+
+    <!-- jQuery is necessary -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        
+   jQuery(document).ready(function() {
+    var searchRequest = null;
+    $("#search").keyup(function() {
+        var minlength = 3;
+        var that = this;
+        var value = $(this).val();
+        var entitySelector = $("#entitiesNav").html('');
+        if (value.length >= minlength ) {
+            if (searchRequest != null)
+                searchRequest.abort();
+            searchRequest = $.ajax({
+                type: "GET",
+                url: "{{ path('ajax_search') }}",
+                data: {
+                    'q' : value
+                },
+                dataType: "json",
+                success: function(response){
+                    if (response && response.products) {
+                        // Create a container div
+                        var container = $('<div style="display: flex; flex-wrap: wrap; justify-content: space-around;"></div>');
+                        $.each(response.products, function(id, product) {
+                            // Append each product to the container
+                            container.append('<div style="padding: 15px; text-align: center;"><span>'+product[3]+'</span><br/><a href="/detailProduit/front/'+product[0]+'">'+'<img src="/uploads/'+product[1]+'" style="width: 150px; height: 150px;"/></a></div>');
+                        });
+                        // Append the container to the entitySelector
+                        entitySelector.append(container);
+                    } else {
+                        entitySelector.append('<li class="errorLi">Aucun résultat trouvé</li>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
+});
+
+   
+   
+    </script>
+       <script>
+        $(document).ready(function(){
+            $(".btn1").click(function(){
+                $("h1").slideUp();
+            });
+            $(".btn2").click(function(){
+                $("h1").slideDown();
+            });
+            $(".btn3").click(function(){
+                $("h1").slideToggle();
+            });
+        });
+
+
+
+
+
+    </script>
+
+    
+
+  
+    <script>
+        function openForm() {
+            document.getElementById("popupForm").style.display = "block";
+        }
+    
+        function closeForm() {
+            document.getElementById("popupForm").style.display = "none";
+        }
+    </script>
+
+    
+
+
+
+
+    <script>
+        // Attacher un gestionnaire d'événement à tous les boutons de like
+        document.querySelectorAll('.like-button').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                var reponseId = button.dataset.reponseId;
+                var likeCountElement = document.querySelector('#like-count-' + reponseId);
+    
+                // Vérifier si le bouton a déjà été cliqué (déjà liké)
+                var isLiked = button.classList.contains('liked');
+    
+                // Envoyer une requête AJAX pour incrémenter ou décrémenter les likes
+                fetch('{{ path('likeReclamations', {'idProduit': '1'}) }}'.replace('1', reponseId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ isLiked: isLiked }) // Envoyer l'état actuel du like
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Mettre à jour le nombre de likes affiché dans le DOM
+                    likeCountElement.textContent = data.likesCount;
+    
+                    // Mettre à jour la classe du bouton en fonction de l'état actuel du like
+                    if (isLiked) {
+                        button.classList.remove('liked');
+                    } else {
+                        button.classList.add('liked');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            });
+        });
+    </script>
+
+
+
+
+{% endblock %}
+
+{% block location %}
+    
+<section class="featured-product pt0">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="main-title text-center">
+                <h2>Plongez dans le luxe et le confort !</h2>
+                <h4> Explorez nos maisons et voitures disponibles.</h4>
+                <div class="text-center mt-5">
+                    <h3 >Découvrez nos statistiques pour des informations exclusives !</h3>
+                    <!-- Bouton pour visualiser toutes les locations -->
+                    <a href="{{ path('app_location_client_statistiques') }}" class="btn btn-primary">Cliquez ici </a>
+                </div>
+                
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="popular_listing_sliders row">
+                <!-- Nav tabs -->
+                <div class="nav nav-tabs col-lg-12 justify-content-center" role="tablist">
+                    <!-- Add your tab buttons here -->
+                </div>
+                <!-- Tab panes -->
+                <div class="tab-content col-lg-12" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="row">
+                            {% for loca in locations %}
+                                <div class="col-sm-6 col-xl-3">
+                                    <div class="car-listing">
+                                        <div class="thumb">
+                                            {% set images = imagesByLocation[loca.getIdLocation()] %}
+                                            {% if images is not empty %}
+                                                <img src="{{ asset(images[0].getUrl()) }}" alt="Car Image">
+                                            {% else %}
+                                                <img src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="details">
+                                            <div class="wrapper">
+                                                <h5 class="price">{{ loca.prix }} TND</h5>
+                                                <h6 class="title"><a href="{{ path('app_reservation', {'locationId': loca.getIdLocation()}) }}">{{ loca.type }}</a></h6>
+                                            </div>
+
+                                            <p class="card-text"><strong>Likes:</strong> <span class="like-count" id="like-count-{{ loca.idLocation }}">{{ loca.likes }}</span></p>
+                                            <button type="button" class="btn btn-link like-button" data-reponse-id="{{ loca.idLocation }}">
+                                                <i class="fas fa-heart" style="font-size: 24px; color: red;"></i>
+                                            </button>
+                                            
+                                            <div class="listing_footer">
+                                                <ul class="mb0">
+                                                    <li class="list-inline-item"><a href="#"><span class="flaticon-road-perspective me-2"></span></a></li>
+                                                    <li class="list-inline-item"><a href="#"><span class="flaticon-gas-station me-2"></span></a></li>
+                                                    <li class="list-inline-item"><a href="#"><span class="flaticon-gear me-2"></span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Add other tabs here if needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<script>
+function validateForm() {
+    var requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+    var formIsValid = true;
+
+    requiredFields.forEach(function(field) {
+        if (!field.value.trim()) {
+            formIsValid = false;
+        }
+    });
+
+    if (!formIsValid) {
+        alert('Veuillez remplir tous les champs.');
+        return false;
+    }
+
+    return true;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.querySelector('form');
+
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+    }
+});
+
+</script>
+
+<script>
+// Attacher un gestionnaire d'événement à tous les boutons de like
+document.querySelectorAll('.like-button').forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var reponseId = button.dataset.reponseId;
+        var likeCountElement = document.querySelector('#like-count-' + reponseId);
+
+        // Vérifier si le bouton a déjà été cliqué (déjà liké)
+        var isLiked = button.classList.contains('liked');
+
+        // Envoyer une requête AJAX pour incrémenter ou décrémenter les likes
+        fetch('{{ path('likeReclamationsLocation', {'idLocation': '1'}) }}'.replace('1', reponseId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ isLiked: isLiked }) // Envoyer l'état actuel du like
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            // Mettre à jour le nombre de likes affiché dans le DOM
+            likeCountElement.textContent = data.likesCount;
+
+            // Mettre à jour la classe du bouton en fonction de l'état actuel du like
+            if (isLiked) {
+                button.classList.remove('liked');
+            } else {
+                button.classList.add('liked');
+            }
+        })
+        .catch(function(error) {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
+});
+</script>
+
+{% endblock %}

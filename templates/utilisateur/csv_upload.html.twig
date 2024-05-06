@@ -1,0 +1,97 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+
+
+{% block body %}
+    <form id="csv-upload-form" method="post" enctype="multipart/form-data">
+        <input type="file" name="csv_file" required>
+        <button type="submit">Upload CSV</button>
+    </form>
+
+    <!-- This div will be used to display the CSV data table -->
+    <div id="csv-data-display"></div>
+
+    <script>
+        document.getElementById('csv-upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('/upload-csv', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('csv-data-display').innerHTML = html;
+                    // Reinitialize checkbox toggling script to work with dynamically loaded content
+                    initializeCheckboxes();
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        function initializeCheckboxes() {
+            const checkAllBox = document.getElementById('check_all');
+            if (checkAllBox) {
+                checkAllBox.onclick = function() {
+                    const checkboxes = document.querySelectorAll('.row_checkbox');
+                    for (let checkbox of checkboxes) {
+                        checkbox.checked = this.checked;
+                    }
+                };
+            }
+        }
+        function deleteRow(rowId) {
+            let checkbox = document.querySelector(`input[data-row-id="${rowId}"]`);
+
+                let row = document.getElementById(`row-${rowId}`);
+                if (row) {
+                    row.remove();
+                }
+
+        }
+        // Delete all selected rows
+        function deleteSelectedRows() {
+            let checkboxes = document.querySelectorAll('.row_checkbox:checked');
+            checkboxes.forEach(checkbox => {
+                let rowId = checkbox.getAttribute('data-row-id');
+                let row = document.getElementById(`row-${rowId}`);
+                if (row) {
+                    row.remove();
+                }
+            });
+
+            // Optionally uncheck the master checkbox
+            document.getElementById('check_all').checked = false;
+        }
+
+        function sendSelectedRowsToController() {
+            const selectedRows = [];
+            document.querySelectorAll('.row_checkbox:checked').forEach(checkbox => {
+                selectedRows.push(JSON.parse(checkbox.getAttribute('data-row-data')));
+            });
+
+            fetch('/handle-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(selectedRows),
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.status === 'error') {
+                        alert('Erreur: ' + data.message);
+                    } else {
+                        alert('Succès: ' + data.message);
+                        deleteSelectedRows(); // Supprimer les lignes seulement en cas de succès
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Erreur: ' + data.message);
+                });
+        }
+
+    </script>
+
+{% endblock %}

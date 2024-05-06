@@ -1,0 +1,126 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}HOME{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .btn.btn-primary {
+            padding: 0.5em 1.5em; /* Ajuste la taille du bouton */
+        }
+        .mise-enchere {
+            color: red; /* Change la couleur du texte "Mise à enchère" en rouge */
+        }
+    </style>
+{% endblock %}
+
+{% block pane %}
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="full">
+                        <h3>Vente aux encheres, En routes pour les bonnes affaires</h3>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <form method="get" action="{{ path('app_Afficheclient_enchere') }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="dateDebut">Date de début :</label>
+                                    <input type="date" id="dateDebut" name="dateDebut" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="dateFin">Date de fin :</label>
+                                    <input type="date" id="dateFin" name="dateFin" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary mt-4">Rechercher</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des enchères -->
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                {% for item in encheres %}
+                    {% set enchere = item.enchere %}
+                    {# Ajouter une condition pour filtrer les enchères #}
+                    {% if enchere.idUser == 6 and enchere.confirmation == 1 %}
+                        <div class="col-sm-6 col-xl-6">
+                            <div class="car-listing list_style">
+                                <div class="thumb">
+                                    <div class="tag">FEATURED</div>
+                                    {% if enchere.getProduit().getPhoto() is not null %}
+                                        <img class="h100p" src="{{ asset('uploads/' ~ enchere.getProduit().getPhoto()) }}" alt="Image par défaut">
+                                    {% else %}
+                                        <!-- Image par défaut -->
+                                        <img class="h100p" src="{{ asset('uploads/default_image.jpg') }}" alt="Image par défaut">
+                                    {% endif %}
+                                    <div class="thmb_cntnt2">
+                                        <ul class="mb0">
+                                            <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="listign_review">
+                                    <!-- Vous pouvez ajouter d'autres éléments ici selon vos besoins -->
+                                </div>
+                                <!-- Utilisez une balise <span> avec un attribut style pour définir la couleur du texte "Mise à enchère" -->
+                                <span style="color: red;">Mise à enchère</span>
+                                <p>début: {{ item.dateDebutFormatted }}</p>
+                                <p>fin: {{ item.dateFinFormatted }}</p>
+
+                                <!-- Bouton Réserver -->
+                                <div class="reservation-button">
+                                    <button type="button" class="btn btn-primary reserve-btn" data-url="{{ path('app_reserverwala') }}" data-enchere-id="{{ enchere.idEnchere }}">Réserver</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Fin de la liste des enchères -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // JavaScript pour récupérer l'ID de l'enchère lors du clic sur le bouton Réserver
+        document.querySelectorAll('.reserve-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var enchereId = this.getAttribute('data-enchere-id');
+                var url = this.getAttribute('data-url');
+
+                // Vous pouvez effectuer des opérations supplémentaires ici, comme l'envoi de la demande Ajax
+                console.log('ID de l\'enchère:', enchereId);
+                console.log('URL de réservation:', url);
+                
+                // Exemple d'envoi de la demande Ajax
+                /*
+                fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ enchereId: enchereId }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Erreur:', error));
+                */
+            });
+        });
+    </script>
+{% endblock %}

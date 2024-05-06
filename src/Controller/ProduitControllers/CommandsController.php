@@ -1,0 +1,351 @@
+<?php
+
+namespace App\Controller\ProduitControllers;
+
+use App\Repository\CommandsRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Repository\UtilisateurRepository;
+use App\Service\BasketService;
+use App\Service\CommandService;
+use App\Entity\Commands;
+use App\Entity\CommandArticles;
+use App\Repository\CommandArticlesRepository;
+use App\Repository\ImageRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+
+class CommandsController extends AbstractController
+{
+    private $session;
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
+    #[Route('/command', name: 'app_commands')]
+    public function index(Request $request, BasketService $basketService, UtilisateurRepository $userRep, ImageRepository $imageRepository): Response
+    {
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        if ($connectedUser == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $basketData = $basketService->getCartItems($connectedUser->getId());
+        $basketItemsCount = count($basketData);
+
+        $totalPrice = array_reduce($basketData, function ($total, $product) {
+            return $total + $product->getIdProduit()->getPrix();
+        }, 0);
+
+        // Fetch images for each article in the basket
+        $imagesByLocation = [];
+        foreach ($basketData as $basketItem) {
+            $imagesByLocation[$basketItem->getIdProduit()->getIdProduit()] = $imageRepository->findBy(['produits' => $basketItem->getIdProduit()]);
+        }
+
+        return $this->render('products/commands/command.html.twig', [
+            'controller_name' => 'CommandsController',
+            'basketData' => $basketData,
+            'totalPrice' => $totalPrice,
+            'connectedUser' => $connectedUser,
+            'basketItemsCount' => $basketItemsCount,
+            'imagesByLocation' => $imagesByLocation,
+        ]);
+    }
+
+    #[Route('/confirmCommand/{livMethod}/{payMethod}', name: 'app_confirmCommand')]
+    public function ajoutCommand(
+        Request $request,
+        CommandsRepository $commandsRepository,
+        UtilisateurRepository $userRep,
+        BasketService $basketService,
+        CommandArticlesRepository $commandArticlesRep,
+        $livMethod,
+        $payMethod
+    ): Response {
+
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+
+        $command = new Commands();
+
+        $command->setDateCommande(new \DateTime());
+        $command->setIdClient($userRep->find($connectedUser->getId()));
+        $command->setEtatCommande('En Attente');
+
+        $basketData = $basketService->getCartItems($connectedUser->getId());
+
+        $totalPrice = array_reduce($basketData, function ($total, $product) {
+            return $total + $product->getIdProduit()->getPrix();
+        }, 0);
+        $command->setCoutTotale($totalPrice + 8);
+
+        $command->setAdresse('39 rue omar ibni abi safwa ');
+
+        $command->setModeLivraison($livMethod);
+
+        $command->setModePaiement($payMethod);
+
+        $commandsRepository->save($command, true);
+
+        foreach ($basketData as $basketItem) {
+            $commandArticle = new CommandArticles();
+            $commandArticle->setCommand($command);
+            $commandArticle->setArticle($basketItem->getIdProduit());
+            $commandArticlesRep->save($commandArticle, true);
+        }
+
+        // add flash message
+        $this->addFlash('success', 'Commande effectuée avec succès');
+        if ($payMethod == 'Cash') {
+            $basketService->emptyCart($connectedUser->getId());
+            return $this->redirectToRoute('display_prod_front');
+        } else {
+            return $this->redirectToRoute('app_stripe');
+        }
+    }
+
+    #[Route('/backCommand', name: 'app_backCommand')]
+    public function backCommand(CommandsRepository $rep): Response
+    {
+        $commands = $rep->findAll();
+        return $this->render('products/commands/backCommands.html.twig', [
+            'controller_name' => 'CommandsController',
+            'commands' => $commands
+        ]);
+    }
+
+    #[Route('/afficheCommandClient/{idCommand}', name: 'app_afficheCommandClient')]
+    public function afficheCommand(Request $request, CommandsRepository $rep, $idCommand, CommandArticlesRepository $commandArticlesRep, CommandService $commandServ, BasketService $basketService): Response
+    {
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        if ($connectedUser == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $numCommand = $commandServ->generateOrderNumber($idCommand);
+        $command = $rep->find($idCommand);
+
+        $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
+
+        $basketItemsCount = count($basketService->getCartItems($connectedUser->getId()));
+
+
+        return $this->render('products/commands/affichageCommand.html.twig', [
+            'controller_name' => 'CommandsController',
+            'command' => $command,
+            'numCommand' => $numCommand,
+            'commandArticles' => $commandArticles,
+            'basketItemsCount' => $basketItemsCount,
+        ]);
+    }
+
+    #[Route('/afficheCommandAdmin/{idCommand}', name: 'app_afficheCommandAdmin')]
+    public function afficheCommandAdmin(CommandsRepository $rep, $idCommand, CommandArticlesRepository $commandArticlesRep, CommandService $commandServ): Response
+    {
+        $numCommand = $commandServ->generateOrderNumber($idCommand);
+        $command = $rep->find($idCommand);
+
+        $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
+
+        return $this->render('products/commands/affichageCommandAdmin.html.twig', [
+            'controller_name' => 'CommandsController',
+            'command' => $command,
+            'numCommand' => $numCommand,
+            'commandArticles' => $commandArticles,
+        ]);
+    }
+
+
+    #[Route('/commandHistory', name: 'app_commandHistory')]
+    public function commandHistory(CommandsRepository $rep, BasketService $basketService, Request $request): Response
+    {
+        $session =  $request->getSession();
+        $connectedUser = $session->get('user');
+        if ($connectedUser == null) {
+            return $this->redirectToRoute("app_login");
+        }
+
+        $Encourslist = [];
+        $EnAttentelist = [];
+        $Livrelist = [];
+        $Annulelist = [];
+
+        // Récupère toutes les commandes du client
+        $commands = $rep->findBy(['idClient' => $connectedUser->getId()]);
+
+        // Parcourt chaque commande
+        foreach ($commands as $command) {
+            // Vérifie si la commande est en cours
+            if ($command->getEtatCommande() == "En cours") {
+                // Ajoute la commande à la liste des commandes en cours
+                $Encourslist[] = $command;
+            }
+        }
+
+        foreach ($commands as $command) {
+            // Vérifie si la commande est en attente
+            if ($command->getEtatCommande() == "En Attente") {
+                // Ajoute la commande à la liste des commandes en cours
+                $EnAttentelist[] = $command;
+            }
+        }
+
+        foreach ($commands as $command) {
+            // Vérifie si la commande est en cours
+            if ($command->getEtatCommande() == "Livré") {
+                // Ajoute la commande à la liste des commandes en cours
+                $Livrelist[] = $command;
+            }
+        }
+
+        foreach ($commands as $command) {
+            // Vérifie si la commande est en cours
+            if ($command->getEtatCommande() == "Annulé") {
+                // Ajoute la commande à la liste des commandes en cours
+                $Annulelist[] = $command;
+            }
+        }
+        $basketItemsCount = count($basketService->getCartItems($connectedUser->getId()));
+
+        return $this->render('products/commands/listCommandsClient.html.twig', [
+            'controller_name' => 'CommandsController',
+            'commands' => $commands,
+            'Encourslist' => $Encourslist,
+            'EnAttentelist' => $EnAttentelist,
+            'Livrelist' => $Livrelist,
+            'Annulelist' => $Annulelist,
+            'basketItemsCount' => $basketItemsCount
+        ]);
+    }
+
+
+    #[Route('/removeCommand/{idCommand}', name: 'app_removeCommand')]
+    public function removeCommand($idCommand, CommandsRepository $commandRep, CommandArticlesRepository $commandArticlesRep)
+    {
+        $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
+        foreach ($commandArticles as $commandArticle) {
+            $commandArticlesRep->remove($commandArticle, true);
+        }
+        $command = $commandRep->find($idCommand);
+
+        if (!$command) {
+            throw new \Exception('Article not found');
+        }
+
+        $commandRep->remove($command, true);
+
+        return $this->redirectToRoute('app_backCommand');
+    }
+
+
+    #[Route('/updateCommand/{idCommand}/{status}', name: 'app_updateCommand')]
+    public function updateCommand($idCommand, $status, CommandsRepository $commandRep, Request $request)
+    {
+        $command = new commands();
+        $command = $commandRep->find($idCommand);
+        $command->setEtatCommande($status);
+
+        $commandRep->save($command, true);
+
+        // add flash message
+        $this->addFlash('SuccessModifierCommand', 'Commande modifié avec succès');
+
+        return $this->redirectToRoute('app_backCommand');
+    }
+
+    #[Route('/facture/{idCommand}', name: 'app_facture')]
+    public function facture($idCommand, CommandsRepository $rep, CommandArticlesRepository $commandArticlesRep, CommandService $commandServ, BasketService $basketService): Response
+    {
+
+        $numCommand = $commandServ->generateOrderNumber($idCommand);
+        $command = $rep->find($idCommand);
+        $commandArticles = $commandArticlesRep->findBy(['command' => $idCommand]);
+
+        return $this->render('products/facture/facture.html.twig', [
+            'controller_name' => 'CommandsController',
+            'command' => $command,
+            'commandArticles' => $commandArticles,
+            'numCommand' => $numCommand,
+        ]);
+    }
+
+    #[Route('/chart', name: 'app_chart')]
+    public function commandsChart(CommandService $commandServ, \App\Repository\ProduitsRepository $repo, EntityManagerInterface $em, CommandsRepository $comRep,  UtilisateurRepository  $userRep)
+    {
+        $listUsers = $userRep->findAll();
+        $listArticles = $repo->findAll();
+
+        $months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+
+        $chartData = [];
+        $totale = 0;
+        $commands = $comRep->findAll();
+        for ($i = 1; $i < 13; $i++) {
+            for ($j = 0; $j < count($commands); $j++) {
+                if ($commands[$j]->getDateCommande()->format('m') == $i) {
+                    $totale += $commands[$j]->getCoutTotale();
+                }
+            }
+            $chartData[$months[$i - 1]] = $totale;
+            $totale = 0;
+        }
+
+        $totalThisMonth = $comRep->getTotalPriceOfCurrentMonth();
+        $list = $comRep->findAll();
+
+
+
+        $total = $repo->countByType('personnes') +
+            $repo->countByType('classique') +
+            $repo->countByType('paysages');
+
+
+        $BMWCount = $repo->countByType('personnes');
+        $MercedesCount = $repo->countByType('classique');
+        $AudiCount = $repo->countByType('paysages');
+
+
+        if ($total != 0) {
+            $BmwPercentage = round(($BMWCount / $total) * 100);
+            $MercedesPercentage = round(($MercedesCount / $total) * 100);
+            $AudiPercentage = round(($AudiCount / $total) * 100);
+        } else {
+            // Gérer le cas où le total est zéro (éviter la division par zéro)
+            $BmwPercentage = 0;
+            $MercedesPercentage = 0;
+            $AudiPercentage = 0;
+        }
+        return $this->render('products/chart/index.html.twig', [
+            'chartData' =>  $chartData,
+            'totalThisMonth' => $totalThisMonth,
+            'list' => $list,
+            'listUsers' => $listUsers,
+            'BMWPercentage' => $BmwPercentage,
+            'MercedesPercentage' => $MercedesPercentage,
+            'AudiPercentage' => $AudiPercentage,
+            'listArticles' => $listArticles
+        ]);
+    }
+}

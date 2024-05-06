@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update Reservation{% endblock %}
+
+{% block pane %}
+<div>
+    <h4 class="mb-4">Update Reservation</h4>
+    <form action="{{ path('submit_update_reservation', { 'id': reservationLocation.getId() }) }}" method="post">
+        <div class="row mb-3">
+            <label for="date_debut" class="col-sm-2 col-form-label">Date Début</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" id="date_debut" name="date_debut" value="{{ reservationLocation.getDateDebut()|date('Y-m-d') }}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="date_fin" class="col-sm-2 col-form-label">Date Fin</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" id="date_fin" name="date_fin" value="{{ reservationLocation.getDateFin()|date('Y-m-d') }}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="user" class="col-sm-2 col-form-label">User</label>
+            <div class="col-sm-10">
+                <select class="form-select" id="user" name="user">
+                    {% for user in users %}
+                    <option value="{{ user.getId() }}" {% if user.getId() == reservationLocation.getUser().getId() %} selected {% endif %}>
+                        {{ user.getNomUtilisateur() }} {{ user.getPrenomUtilisateur() }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+       
+        </div>
+        <div class="row mb-3">
+            <label for="notes" class="col-sm-2 col-form-label">Notes</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="notes" name="notes" value="{{ reservationLocation.getNotes() }}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

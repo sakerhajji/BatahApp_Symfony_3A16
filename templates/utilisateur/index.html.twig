@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur index{% endblock %}
+
+
+
+
+
+
+
+
+{% block profileBlock %}
+
+
+
+
+
+    <li class="user_setting">
+        <div class="dropdown">
+            <a class="btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                {% if app.session.get('user').getAvatar() is not null %}
+                    <img class="rounded-circle mr10" src="{{ asset('/image/uploads/' ~ app.session.get('user').getAvatar()) }}" height="40px" width="40px" alt="{{ app.session.get('user').getAvatar() }}">
+                {% else %}
+                    <img class="rounded-circle mr10" src="{{ asset('/image/uploads/upload_photo.png') }}" height="40px" width="40px" alt="Default Avatar">
+                {% endif %}
+                <span class="dn-1366">{{ app.session.get('user').getNomutilisateur() ~ " " ~ app.session.get('user').getPrenomutilisateur() }} <span class="fas fa-angle-down ml5"></span></span>
+            </a>
+
+            <div class="dropdown-menu">
+                <div class="user_set_header">
+                    {% if app.session.get('user').getAvatar() is not null %}
+                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/' ~ app.session.get('user').getAvatar()) }}" alt="{{ app.session.get('user').getAvatar() }}" height="40px" width="40px">
+                    {% else %}
+                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/upload_photo.png') }}" alt="Default Avatar" height="40px" width="40px">
+                    {% endif %}
+                    <p>{{ app.session.get('user').getNomutilisateur() ~ " " ~ app.session.get('user').getPrenomutilisateur() }} <br><span class="address">{{ app.session.get('user').getAdresseemail() }}</span></p>
+                </div>
+                <div class="user_setting_content">
+                    <a class="dropdown-item active" href="{{ path('profile') }}">My Profile</a>
+                    <a class="dropdown-item" href="#">Messages</a>
+                    <a class="dropdown-item" href="#">My Listing</a>
+                    <a class="dropdown-item" href="#">Help</a>
+                    <a class="dropdown-item" href="#">Log out</a>
+                </div>
+            </div>
+        </div>
+    </li>
+{% endblock %}
+
+
+{% block body %}
+    <h1>Utilisateur index</h1>
+
+{#    <input type="text" id="searchInput" placeholder="Search...">#}
+
+    <div class="input-group">
+    <span class="input-group-text border-0 bg-white" id="search-addon">
+        <i class="fas fa-search"></i>
+    </span>
+        <input class="form-control border rounded-pill" type="search" placeholder="Search..." id="searchInput" aria-label="Search" aria-describedby="search-addon" style="transition: box-shadow 0.3s ease;">
+    </div>
+"
+
+
+    <div class="shortcode_widget_table">
+                <div class="ui_kit_table">
+                    <table class="table" id="users" >
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col" >profile</th>
+                            <th scope="col" >Nom</th>
+                            <th scope="col" >Prenom</th>
+                            <th scope="col" >Addresse email</th>
+                            <th scope="col" >Sexe</th>
+                            <th scope="col" >Datedenaissance</th>
+                            <th scope="col" >Actions</th> <!-- Added column for actions -->
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for utilisateur in utilisateurs %}
+                            <tr>
+                                <td class="body-color" >
+                                    {% if utilisateur.avatar is not null %}
+                                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/' ~ utilisateur.avatar) }}" alt="{{ utilisateur.avatar }}" height="40px" width="40px">
+                                    {% else %}
+                                        <img class="float-start rounded-circle" src="{{ asset('/image/uploads/upload_photo.png') }}" alt="Default Image" height="40px" width="40px">
+                                    {% endif %}
+                                </td>
+
+                                <td class="body-color" >{{ utilisateur.nomutilisateur }}</td>
+                                <td class="body-color" >{{ utilisateur.prenomutilisateur }}</td>
+                                <td class="body-color" >{{ utilisateur.adresseemail }}</td>
+                                <td class="body-color" >{{ utilisateur.sexe }}</td>
+                                <td class="body-color" >{{ utilisateur.datedenaissance ? utilisateur.datedenaissance|date('Y-m-d') : '' }}</td>
+                                <td class="body-color" >
+                                    <a href="{{ path('app_utilisateur_show', {'id': utilisateur.id}) }}" class="btn btn-primary btn-sm">Show</a>
+                                    <a href="{{ path('app_utilisateur_edit', {'id': utilisateur.id}) }}" class="btn btn-warning btn-sm">Edit</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7">No records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+    <a href="{{ path('app_utilisateur_new') }}" class="btn btn-primary btn-sm">Create new</a>
+
+    <script>
+        // Function to perform search
+        function searchTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("users");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                for (var j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break; // Break the inner loop when a match is found
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add event listener for input change
+        document.getElementById("searchInput").addEventListener("input", searchTable);
+    </script>
+
+{% endblock %}
+

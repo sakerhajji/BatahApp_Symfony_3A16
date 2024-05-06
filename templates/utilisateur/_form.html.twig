@@ -1,0 +1,41 @@
+{# templates/form/utilisateur_form.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur Form{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Utilisateur Form</h1>
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.idgoogle, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.nomutilisateur, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.prenomutilisateur, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.sexe, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.datedenaissance, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.adresseemail, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.motdepasse, {'attr': {'class': 'form-control mb-3'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.adressepostale, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.numerotelephone, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.numerocin, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.pays, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.nbrproduitachat, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.nbrproduitvendu, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.nbrproduit, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.nbrpoint, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.languepreferree, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.evaluationutilisateur, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.statutverificationcompte, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.avatar, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.dateinscription, {'attr': {'class': 'form-control mb-3'}}) }}
+                {{ form_row(form.role, {'attr': {'class': 'form-control mb-3'}}) }}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
