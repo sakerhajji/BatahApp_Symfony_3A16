@@ -24,6 +24,7 @@ class LoginController extends AbstractController
     #[Route('/loginPage', name: 'app_login', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
     {
+        $this->session->clear();
         $errorMsg = $request->get('errorMsg');
         return $this->render('login/loginPage.html.twig', [
             'errorMsg' => $errorMsg,

@@ -254,22 +254,16 @@ class LocationController extends AbstractController
     {
 
         $loca = $lr->find($idl);
-        if (!$loca) {
-            // Handle not found scenario, for example:
-            throw $this->createNotFoundException('Location not found');
-        }
-        // Find images associated with the location
-        $images = $imageRepository->findByLocation($loca);
 
-        // Delete each associated image
-
-        // Optionally, delete the image from the database
         $em = $em->getManager();
-        $em->remove($images);
-
-
         $em->remove($loca);
         $em->flush();
+        // Ajouter un message flash pour informer l'utilisateur que l'article a été supprimé
+        $this->addFlash(
+            'noticedelete',
+            'L\'article a été supprimé avec succès.'
+        );
+
         return $this->redirectToRoute('app_location_back_affiche');
     }
 

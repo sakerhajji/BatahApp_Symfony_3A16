@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Location;
 
 /**
  * @extends ServiceEntityRepository<Utilisateur>
@@ -75,5 +76,22 @@ class UtilisateurRepository extends ServiceEntityRepository
         $query->setParameter('id', $userId);
 
         return $query->execute(); // Execute the DQL query and return the number of affected rows
+    }
+    public function updateStatus(int $userId): int
+    {
+        $entityManager = $this->getEntityManager();
+        $dql = "UPDATE App\Entity\Utilisateur u SET u.statutverificationcompte = :newStatus WHERE u.id = :id";
+        $query = $entityManager->createQuery($dql);
+        $query->setParameter('newStatus', true);
+        $query->setParameter('id', $userId);
+
+        return $query->execute(); // Execute the DQL query and return the number of affected rows
+    }
+    public function countAllUsers()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

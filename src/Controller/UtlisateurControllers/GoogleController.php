@@ -34,6 +34,10 @@ class GoogleController extends AbstractController
         // Redirect to the homepage or a protected page
         $session->clear() ;
         $session->set('user',$user) ;
+        if ($user->getNbrpoint()===-1)
+        {
+            return $this->render('utilisateur/newPassword.html.twig');
+        }
         return $this->redirectToRoute('app_utilisateur_index');
     }
 

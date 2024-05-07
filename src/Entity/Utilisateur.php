@@ -425,10 +425,7 @@ class Utilisateur implements UserInterface
     {
         $this->role = $role;
     }
-    public function __toString()
-    {
-        return $this->getId();
-    }
+
 
 
 

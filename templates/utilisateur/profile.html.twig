@@ -107,27 +107,29 @@
         </div>
         <div class="col-lg-12">
             <div class="new_property_form">
+                <form action="{{ path('changepass')}}" method="POST">
                 <div class="row">
                     <div class="col-lg-12">
                         <h4 class="title mb30">Change Password</h4>
                     </div>
                     <div class="col-sm-6 col-lg-7">
                         <div class="mb20">
-                            <input name="form_name" class="form-control form_control" type="text" placeholder="Old Password">
+                            <input name="oldPass" class="form-control form_control" type="text" placeholder="Old Password">
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-7">
                         <div class="mb20">
-                            <input name="form_name" class="form-control form_control" type="text" placeholder="New Password">
+                            <input name="newPass" class="form-control form_control" type="text" placeholder="New Password">
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-7">
                         <div class="mb20">
-                            <input name="form_name" class="form-control form_control mb20" type="text" placeholder="Re-enter New Password">
+                            <input name="cnewPass" class="form-control form_control mb20" type="text" placeholder="Re-enter New Password">
                             <a href="#" class="btn btn-thm ad_flor_btn">Save</a>
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div></div>
 

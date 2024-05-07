@@ -9,9 +9,11 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
+use phpDocumentor\Reflection\Types\False_;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -43,7 +45,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
         return $request->attributes->get('_route') === 'connect_google_check';
     }
 
-    public function authenticate(Request $request): Utilisateur
+    public function authenticate(Request $request  ): Utilisateur
     {
 
         $client = $this->clientRegistry->getClient('google');
@@ -59,8 +61,17 @@ class GoogleAuthenticator extends OAuth2Authenticator
         $existingUser = $this->entityManager->getRepository(Utilisateur::class)->findOneBy(['adresseemail' => $user->getAdresseemail()]);
          if (!$existingUser)
          {
+
              $this->entityManager->persist($user);
              $this->entityManager->flush();
+             $user->setNbrpoint(-1);
+
+
+
+
+
+
+
          }
         $existingUser = $this->entityManager->getRepository(Utilisateur::class)->findOneBy(['adresseemail' => $user->getAdresseemail()]);
 

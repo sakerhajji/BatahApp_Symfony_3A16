@@ -1,0 +1,136 @@
+{% extends 'utilisateur/index.html.twig' %}
+
+{% block title %}Utilisateur index{% endblock %}
+
+
+
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="new_property_form mb30">
+                <h4 class="title mb30">Account Details</h4>
+
+                <form class="contact_form" name="contact_form" action="{{ path('MisAjour') }}" method="post" novalidate enctype="multipart/form-data">
+                    <div class="dp_user_thumb_content">
+                        <div class="wrap-custom-file mb25">
+                            <input type="file" name="image" id="image1" accept=".gif, .jpg, .png">
+                            {% if user.getAvatar() is not null %}
+
+                                <label for="image1" class="file-ok" style="background-image: url('{{ asset('/image/uploads/' ~ user.getAvatar()) }}');">
+
+                                <span>&nbsp;&nbsp;Browse</span>
+                                </label>
+                            {% else %}
+                                <label for="image1">
+                                    <span>&nbsp;&nbsp;Browse</span>
+                                </label>
+                            {% endif %}
+
+                            <small class="file_title">Max file size is 1MB, Minimum dimension: 330x300 And Suitable files are .jpg & .png</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb20">
+                                        <input name="form_name" class="form-control form_control" type="text" placeholder="Name" id="name" value="{{ user.getNomutilisateur() }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb20">
+                                        <input name="form_prenom" class="form-control form_control" type="text" placeholder="Prenom" id value="{{user.getPrenomutilisateur()  }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb20">
+                                        <input name="form_tlf" class="form-control form_control" type="tel" placeholder="Phone" pattern="[0-9]{2}-[0-9]{3}-[0-9]{3}" value="{% if user.getNumerotelephone() is defined %}{{ user.getNumerotelephone() }}{% endif %}">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb20">
+                                        <input name="form_Cin" class="form-control form_control" type="tel" placeholder="carte d'identité"  pattern="[0-9]{8}" value="{% if user.getNumerocin() is defined %}{{ user.getNumerocin() }}{% endif %}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="ui_kit_select_search add_new_property mb20">
+                                        <select class="selectpicker" data-live-search="true" data-width="100%"  name="pays">
+                                            <option {% if user.getPays() is defined %}selected{% endif %}>{{ user.getPays() }}</option>
+
+                                            <option>Ariana</option>
+                                            <option>Béja</option>
+                                            <option>Ben Arous</option>
+                                            <option>Bizerte</option>
+                                            <option>Gabès</option>
+                                            <option>Gafsa</option>
+                                            <option>Jendouba</option>
+                                            <option>Kairouan</option>
+                                            <option>Kasserine</option>
+                                            <option>Kébili</option>
+                                            <option>Le Kef</option>
+                                            <option>Mahdia</option>
+                                            <option>La Manouba</option>
+                                            <option>Médenine</option>
+                                            <option>Monastir</option>
+                                            <option>Nabeul</option>
+                                            <option>Sfax</option>
+                                            <option>Sidi Bouzid</option>
+                                            <option>Siliana</option>
+                                            <option>Sousse</option>
+                                            <option>Tataouine</option>
+                                            <option>Tozeur</option>
+                                            <option>Tunis</option>
+                                            <option>Zaghouan</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="mb20">
+                                        <input name="form_date" class="form-control form_control" type="date" value="{% if user.getDatedenaissance() is defined %}{{ user.getDatedenaissance()|date('Y-m-d') }}{% endif %}">
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="new_propertyform_btn">
+                                        <button class="btn btn-thm ad_flor_btn" type="submit">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="new_property_form">
+                <form action="{{ path('changepass')}}" method="POST">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="title mb30">Change Password</h4>
+                    </div>
+                    <div class="col-sm-6 col-lg-7">
+                        <div class="mb20">
+                            <input name="oldPass" class="form-control form_control" type="text" placeholder="Old Password">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-7">
+                        <div class="mb20">
+                            <input name="newPass" class="form-control form_control" type="text" placeholder="New Password">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-7">
+                        <div class="mb20">
+                            <input name="cnewPass" class="form-control form_control mb20" type="text" placeholder="Re-enter New Password">
+                            <button class="btn btn-thm ad_flor_btn" type="submit">save</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div></div>
+
+{% endblock %}

@@ -49,9 +49,126 @@
 
 
 {% block body %}
-    <h1>Utilisateur index</h1>
 
-{#    <input type="text" id="searchInput" placeholder="Search...">#}
+
+    <div class="row">
+
+        <div class="col-xl-8">
+            <div class="breadcrumb_content mb50">
+                <h2 class="breadcrumb_title"> hello ! , {{ app.session.get('user').getNomutilisateur() ~ " " ~ app.session.get('user').getPrenomutilisateur() }}</h2>
+                <p>Ready to jump back in!</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 ">
+            <div class="ff_one">
+                <div class="icon"><span class="fa-brands fa-product-hunt"></span></div>
+                <div class="detais text-end">
+                    <div class="timer">{{ nbproduit }}</div>
+                    <p class="para">NB° Produits</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 ">
+            <div class="ff_one style2">
+                <div class="icon"><span class="fa-duotone fa-car"></span></div>
+                <div class="detais text-end">
+                    <div class="timer">{{ nblocation }}</div>
+                    <p class="para">NB° Locations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 ">
+            <div class="ff_one">
+                <div class="icon"><span class="fa-solid fa-scale-balanced"></span></div>
+                <div class="detais text-end">
+                    <div class="timer">{{ nbencher }}</div>
+                    <p class="para">NB° Encheres</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 ">
+            <div class="ff_one style3">
+                <div class="icon"><span class="fa-solid fa-user"></span></div>              <div class="detais text-end">
+                    <div class="timer">{{ nbuser }}</div>
+                    <p class="para">NB° Utilisateurs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#<div class="row">
+
+
+            <div class="application_statics">
+                <h4>Your Profile Views</h4>
+                <div class="c_container"></div>
+            </div>
+
+
+    </div>#}
+    <!----------->
+
+                <!--stat livraison-->
+                <div class="row"  higth="300px">
+                    <h2>Statistique des livraisons</h2>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <canvas id="livraisonChart" width="400" height="200"></canvas>
+                    <script>
+                        let statuts = [];
+                        let nbLivraisons = [];
+                        let backgroundColors = [];
+
+                        {% for livraisonStat in livraisonsStats %}
+                        statuts.push('{{ livraisonStat.statut }}');
+                        nbLivraisons.push('{{ livraisonStat.nbLivraisons }}');
+
+                        // Assigner des couleurs en fonction du statut
+                        switch ('{{ livraisonStat.statut }}'.toLowerCase()) {
+                            case 'en cours':
+                                backgroundColors.push('rgba(255, 206, 86, 0.2)');
+                                break;
+                            case 'en attente':
+                                backgroundColors.push('rgba(255, 99, 132, 0.2)');
+                                break;
+                            case 'Récupéré':
+                                backgroundColors.push('rgba(75, 192, 192, 0.2)');
+                                break;
+                            default:
+                                backgroundColors.push('rgba(201, 203, 207, 0.2)');
+                                break;
+                        }
+                        {% endfor %}
+
+                        let ctx = document.getElementById('livraisonChart').getContext('2d');
+                        let chart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: statuts,
+                                datasets: [{
+                                    label: 'Nombre de livraisons',
+                                    data: nbLivraisons,
+                                    backgroundColor: backgroundColors,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+
+                </div>
+
+
+    <!------>
+
 
     <div class="input-group">
     <span class="input-group-text border-0 bg-white" id="search-addon">
@@ -140,6 +257,9 @@
         // Add event listener for input change
         document.getElementById("searchInput").addEventListener("input", searchTable);
     </script>
+
+
+
 
 {% endblock %}
 

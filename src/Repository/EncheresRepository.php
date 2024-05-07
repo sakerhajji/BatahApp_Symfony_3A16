@@ -131,4 +131,12 @@ public function searchEvents($searchQuery, $limit, $offset)
 
         return $query->getResult();
     }
+
+    public function countAllenchers()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('COUNT(r.idEnchere)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

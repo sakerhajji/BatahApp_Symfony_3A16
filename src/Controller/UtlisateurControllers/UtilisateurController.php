@@ -4,6 +4,11 @@ namespace App\Controller\UtlisateurControllers;
 
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
+use App\Repository\EncheresRepository;
+use App\Repository\LivraisonRepository;
+use App\Repository\LocationRepository;
+use App\Repository\PartenairesRepository;
+use App\Repository\ProduitsRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\EmailSender;
 use Doctrine\ORM\EntityManagerInterface;
@@ -97,17 +102,7 @@ class UtilisateurController extends AbstractController
         return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/profile', name: 'profile')]
-    public function profile(UtilisateurRepository $repository)
-    {
-        $user = new Utilisateur();
-        $user = $this->session->get("user");
-        $user = $repository->find($user->getID());
-        return $this->render(
-            'utilisateur/profile.html.twig',
-            ['user' => $user]
-        );
-    }
+
 
     #[Route('/update-password', name: 'update_password', methods: ['POST'])]
     public function updatePassword(Request $request, UtilisateurRepository $repository, SessionInterface $session): Response
@@ -249,13 +244,32 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/', name: 'app_utilisateur_index', methods: ['GET'])]
-    public function index(UtilisateurRepository $utilisateurRepository): Response
+    public function index(UtilisateurRepository $utilisateurRepository,PartenairesRepository $partenairesRepository,LivraisonRepository $livraisonRepository , ProduitsRepository $produitsRepository ,LocationRepository  $locationRepository , EncheresRepository $encheresRepository ): Response
     {
+
+        //partenaire
+        $partenaires = $partenairesRepository->findAll();
+        $dataP = [];
+        foreach ($partenaires as $partenaire) {
+            $dataP[] = [
+                'nom' => $partenaire->getNom(),
+                'points' => $partenaire->getPoints(),
+            ];
+        }
+        //livraison
+        $livraisonsStats = $livraisonRepository->countDeliveriesByStatus();
+
         $data = $this->session->get('user');
 
         return $this->render('utilisateur/index.html.twig', [
             'utilisateurs' => $utilisateurRepository->findAll(),
             'user' => $data,
+            'partenairesJson' => json_encode($dataP),
+            'livraisonsStats' => $livraisonsStats,
+            'nbproduit'=>$produitsRepository->countAllProducts() ,
+            'nblocation'=>$locationRepository->countAllProducts(),
+            'nbuser'=>$utilisateurRepository->countAllUsers() ,
+            'nbencher'=>$encheresRepository->countAllenchers() ,
         ]);
     }
 
@@ -310,9 +324,10 @@ class UtilisateurController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_utilisateur_delete', methods: ['POST'])]
-    public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager ,UtilisateurRepository $repository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $utilisateur->getId(), $request->request->get('_token'))) {
+            $repository->deleteUserAndRelatedData($utilisateur->getId());
             $entityManager->remove($utilisateur);
             $entityManager->flush();
         }

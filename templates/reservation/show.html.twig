@@ -4,13 +4,13 @@
 
 {% block pane %}
 
-<div class="row">
-    <div class="col-md-10 col-lg-10">
-        <div class="shortcode_widget_table">
-            <h4 class="short_code_title">Reservations</h4>
-            <div class="ui_kit_table">
-                <table class="table">
-                    <thead class="thead-light">
+    <div class="row">
+        <div class="col-md-10 col-lg-10">
+            <div class="shortcode_widget_table">
+                <h4 class="short_code_title">Reservations</h4>
+                <div class="ui_kit_table">
+                    <table class="table">
+                        <thead class="thead-light">
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Date Début</th>
@@ -20,39 +20,39 @@
                             <th scope="col">Notes</th>
                             <th scope="col">actions</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         {% for reservationLocation in reservationLocations %}
-                        <tr>
-                            <td>{{ reservationLocation.getId() }}</td>
-                            <td>{{ reservationLocation.getDateDebut()|date('Y-m-d') }}</td>
-                            <td>{{ reservationLocation.getDateFin()|date('Y-m-d') }}</td>
-                            <td>{{ reservationLocation.getUser().getNomUtilisateur() ~ ' ' ~ reservationLocation.getUser().getPrenomUtilisateur() }}</td>
-                            <td>{{ reservationLocation.getLocation().getType() }}</td>
-                            <td>{{ reservationLocation.getNotes() }}</td>
-                            <td>
-                                <div class="d-flex"> <!-- Use flexbox for alignment -->
-                                    <form action="{{ path('delete_reservation', { 'id': reservationLocation.getId() }) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this reservation?');">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger btn-sm me-2">Delete</button>
-                                    </form>
-                                    <a href="{{ path('update_reservation', { 'id': reservationLocation.getId() }) }}" class="btn btn-primary btn-sm">Update</a>
-                                </div>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{ reservationLocation.getId() }}</td>
+                                <td>{{ reservationLocation.getDateDebut()|date('Y-m-d') }}</td>
+                                <td>{{ reservationLocation.getDateFin()|date('Y-m-d') }}</td>
+                                <td>{{ reservationLocation.getUser().getNomUtilisateur() ~ ' ' ~ reservationLocation.getUser().getPrenomUtilisateur() }}</td>
+                                <td>{{ reservationLocation.getLocation().getType() }}</td>
+                                <td>{{ reservationLocation.getNotes() }}</td>
+                                <td>
+                                    <div class="d-flex"> <!-- Use flexbox for alignment -->
+                                        <form action="{{ path('delete_reservation', { 'id': reservationLocation.getId() }) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this reservation?');">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger btn-sm me-2">Delete</button>
+                                        </form>
+                                        <a href="{{ path('update_reservation', { 'id': reservationLocation.getId() }) }}" class="btn btn-primary btn-sm">Update</a>
+                                    </div>
+                                </td>
+                            </tr>
                         {% endfor %}
-                    </tbody>
-                </table> 
-                <!-- Bouton de retour -->
-    <a href="{{ path('app_location_front_affiche') }}" class="btn btn-secondary btn-retour">Retour</a>
-</div>
+                        </tbody>
+                    </table>
+                    <!-- Bouton de retour -->
+                    <a href="{{ path('app_Afficheclient_enchere') }}" class="btn btn-secondary btn-retour">Retour</a>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-6">
         <!-- Additional content for the second column -->
     </div>
-   
+
 
 
 {% endblock %}

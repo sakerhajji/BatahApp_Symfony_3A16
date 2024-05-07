@@ -164,4 +164,12 @@ class LocationRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function countAllProducts()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('COUNT(r.idLocation)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

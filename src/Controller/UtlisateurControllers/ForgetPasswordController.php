@@ -26,7 +26,7 @@ class ForgetPasswordController extends AbstractController
         $data = $request->request->all();
         $code = $data['code'] ?? null;
         $codeSession=$session->get('code') ;
-dd($code == $codeSession) ;
+
         if ($code == $codeSession) {
             return $this->render('utilisateur/newPassword.html.twig');
         } else {
@@ -81,7 +81,7 @@ dd($code == $codeSession) ;
         if ($newPassword !== $newPasswordConfirmation) {
             return $this->redirectToRoute('update_password');
         }
-
+$repository=
         $affectedRows = $repository->updatePasswor($user->getId(), $newPassword);
 
         return $this->redirectToRoute('app_login');

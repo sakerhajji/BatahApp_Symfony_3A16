@@ -67,8 +67,12 @@ class LocationClientController extends AbstractController
     #[Route('/locationfrontAdd', name: 'app_location_front_add')]
     public function addLocation(Request $request, ValidatorInterface $validator): Response
     {
+
+        $connectedUser = $request->getSession()->get('user');
+
         $entityManager = $this->getDoctrine()->getManager();
         $location = new Location();
+        $location->setId($connectedUser);
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
 
@@ -116,7 +120,7 @@ class LocationClientController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Location added successfully.');
-            return $this->redirectToRoute('app_location_client_affiche');
+            return $this->redirectToRoute('app_Afficheclient_enchere');
         }
 
         return $this->render('location_client/page-dashboard-add-front.html.twig', [
