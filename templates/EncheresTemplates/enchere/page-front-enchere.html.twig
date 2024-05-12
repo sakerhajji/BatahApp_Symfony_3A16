@@ -229,7 +229,7 @@
             left: 0;
             width: 100%;
             height: 80%;
-            background-image:  url('/uploads/Untitled-design.jpg'); /* Remplacez par le chemin de votre image */
+            background-image:  url('/image/uploads/Untitled-design.jpg'); /* Remplacez par le chemin de votre image */
             background-size: contain;
             background-position: center;
         }
@@ -424,7 +424,7 @@
                                                 </div>
                                             {% else %}
                                                 <!-- Default Image -->
-                                                <img src="{{ asset('uploads/defaultimage.jpg') }}" alt="Default Image">
+                                                <img src="{{ asset('/image/uploads/defaultimage.jpg') }}" alt="Default Image">
                                             {% endif %}
                                         </div>
                                         <div class="thmb_cntnt2">
@@ -695,7 +695,7 @@
                                                     {% if images is not empty %}
                                                         <img src="{{ asset(images[0].getUrl()) }}" alt="Car Image">
                                                     {% else %}
-                                                        <img src="{{ asset('uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
+                                                        <img src="{{ asset('/image/uploads/boh-1-66033d12ed4e0.jpg') }}" alt="Placeholder Image">
                                                     {% endif %}
                                                 </div>
 

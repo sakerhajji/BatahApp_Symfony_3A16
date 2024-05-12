@@ -59,7 +59,7 @@
                                         <td>{{p.labelle}}</td>
                                         <td>{{p.type}}</td>
                                         <td>{{ p.status }}</td>
-                                        <td><img  style="width: 75px; height: 55px; padding: 5px;" src="{{ asset('uploads/'~p.photo) }}"/></td>
+                                        <td><img  style="width: 75px; height: 55px; padding: 5px;" src="{{ asset('/image/uploads/'~p.photo) }}"/></td>
                                         <td>{{ p.prix | number_format(0, '.', ',') }} TND</td>
                                         <td>{{p.periodegarantie}}</td>
                                         <td>
