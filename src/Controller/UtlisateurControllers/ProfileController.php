@@ -50,7 +50,7 @@ class ProfileController extends AbstractController
         $user = $session->get('user');
         $errorMsg=null;
 
-        if (password_verify($oldpass, $user->getMotdepasse())) {
+        if ($oldpass === $user->getMotdepasse() ) {
 
             if ($newPassword !== $cnewPassword) {
             $errorMsg = 'comfier votre mots de pass svp ';

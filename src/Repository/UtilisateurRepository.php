@@ -72,7 +72,7 @@ class UtilisateurRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         $dql = "UPDATE App\Entity\Utilisateur u SET u.motdepasse = :newPassword WHERE u.id = :id";
         $query = $entityManager->createQuery($dql);
-        $query->setParameter('newPassword', password_hash($newPassword, PASSWORD_BCRYPT));
+        $query->setParameter('newPassword', $newPassword);
         $query->setParameter('id', $userId);
 
         return $query->execute(); // Execute the DQL query and return the number of affected rows

@@ -42,34 +42,16 @@ class LoginController extends AbstractController
     #[Route('/Login', name: 'Login', methods: ['POST'])]
     public function login(Request $request, EntityManagerInterface $entityManager, UtilisateurRepository $repository): Response
     {
+        $this->session->clear();
         $email = $request->request->get('email');
         $password = $request->request->get('password');
         $recaptchaResponse = $request->request->get('g-recaptcha-response');
         $remoteIp = $request->getClientIp();
-        $secret = $this->getParameter('recaptcha_secret_key');
-
-        if (!$recaptchaResponse) {
-            return $this->redirectToRoute('app_login', ['errorMsg' => 'reCAPTCHA response not found.']);
-        }
-
-        $response = $this->client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
-            'body' => [
-                'secret' => $secret,
-                'response' => $recaptchaResponse,
-                'remoteip' => $remoteIp
-            ]
-        ]);
-
-        $result = $response->toArray();
-        if (!($result['success'] ?? false)) {
-            return $this->redirectToRoute('app_login', ['errorMsg' => 'Invalid reCAPTCHA.']);
-        }
-
 
         $user = $repository->findOneBy(['adresseemail' => $email]);
 
 
-        if ($user && password_verify($password, $user->getMotdepasse())) {
+        if ($user && $password == $user->getMotdepasse() ) {
             $this->session->set('user', $user);
             return $this->redirectToRoute('app_utilisateur_index');
         }

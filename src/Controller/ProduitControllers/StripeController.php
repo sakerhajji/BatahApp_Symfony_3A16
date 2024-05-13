@@ -91,7 +91,7 @@ class StripeController extends AbstractController
                 'Error processing payment!',
             );
 
-            return $this->redirectToRoute('app_afficahge_produits');
+            return $this->redirectToRoute('app_Affiche_enchere');
         }
     }
 }

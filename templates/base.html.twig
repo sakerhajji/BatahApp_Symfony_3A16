@@ -481,82 +481,29 @@
                             <div class="col-lg-12">
                                 <div class="extra-dashboard-menu dn-lg">
                                     <div class="ed_menu_list">
-                                        <ul>
 
-
-                                            {% block bouton %}
-
-                                                <li><a href="{{ path('app_utilisateur_index') }}"><span
-                                                                class="flaticon-dashboard"></span>Dashboard</a></li>
-                                                <li><a href="{{ path('profile') }}"><span
-                                                                class="flaticon-user-2"></span>Profile</a></li>
-
-
-                                                <li><a href="{{ path('csvFile') }}"><span
-                                                                class="flaticon-message"></span>csv import</a></li>
-
-                                                <li><a href="{{ path('app_partenaires_index') }}"><span
-                                                                class="fa-solid fa-handshake"></span>Partenaires</a>
-                                                </li>
-                                                <li><a href="{{ path('app_back_affiche') }}"><span
-                                                                class="fa-solid fa-handshake"></span>produits</a></li>
-
-                                                <li><a href="{{ path('app_location_back_affiche') }}"><span
-                                                                class="fa-solid fa-handshake"></span>locations</a></li>
-
-                                                <li><a href="{{ path('app_service_apres_vente_index') }}"><span
-                                                                class="fa-solid fa-badge-check"></span>Apres Vente</a>
-                                                </li>
-
-                                                <li><a href="{{ path('liste_commandes') }}"><span
-                                                                class="fa-regular fa-bags-shopping"></span>Liste
-                                                        commandes</a></li>
-
-                                                <li><a href="{{ path('app_livraison_index') }}"><span
-                                                                class="fa-solid fa-truck-fast"></span>Liste
-                                                        Livraisons</a></li>
-
-                                                <li><a href="{{ path('app_avis_livraison_index') }}"><span
-                                                                class="fa-solid fa-comment"></span>Avis Livraisons</a>
-                                                </li>
-
-                                                <li><a href="{{ path('app_forum_index') }}"><span
-                                                                class="fa-solid fa-heart"></span>Forum</a></li>
-
-                                                <li><a href="{{ path('app_Affiche_enchere') }}"><span
-                                                                class="fa-solid fa-scale-balanced"></span>Encheres</a>
-                                                </li>
-
-                                                <li><a href="{{ path('app_affiche_reservations') }}"><span
-                                                                class="fa-solid fa-calendar-clock"></span>Reservation
-                                                        Encheres</a></li>
-
-                                                <li><a href="{{ path('app_encheret_statistics') }}"><span
-                                                                class="fa-sharp fa-solid fa-chart-simple"></span>Statistique
-                                                        Enchere</a></li>
-
-
-                                            {% endblock %}
-
-
-                                            {% block utilisateur %}
-                                                <li><a href="{{ path('liste_livraisons_utilisateur') }}"><span
-                                                                class="fa-solid fa-truck-fast"></span>mes Livraisons</a>
-                                                </li>
-
-                                                <li><a href="{{ path('app_service_apres_vente_new') }}"><span
-                                                                class="fa-solid fa-lightbulb-exclamation-on"></span>Ajouter
-                                                        reclamation</a></li>
-                                                <li><a href="{{ path('app_forum_new') }}"><span
-                                                                class="fa-solid fa-circle-xmark"></span>Ajouter Avis</a>
-                                                </li>
-                                            {% endblock %}
-
-
-                                            <li><a href="{{ path('app_login') }}"><span
-                                                            class="flaticon-logout"></span>Logout</a></li>
-
-                                        </ul>
+                                        {% block bouton %}
+                                            <ul>
+                                                <li><a href="{{ path('app_utilisateur_index') }}"><span class="flaticon-dashboard"></span>Dashboard</a></li>
+                                                <li><a href="{{ path('csvFile') }}"><span class="flaticon-message"></span>CSV Import</a></li>
+                                                <li><a href="{{ path('app_partenaires_index') }}"><span class="fa-solid fa-handshake"></span>Partenaires</a></li>
+                                                <li><a href="{{ path('app_back_affiche') }}"><span class="fa-solid fa-handshake"></span>Produits</a></li>
+                                                <li><a href="{{ path('app_location_back_affiche') }}"><span class="fa-solid fa-handshake"></span>Locations</a></li>
+                                                <li><a href="{{ path('app_service_apres_vente_index') }}"><span class="fa-solid fa-badge-check"></span>Après Vente</a></li>
+                                                <li><a href="{{ path('liste_commandes') }}"><span class="fa-regular fa-bags-shopping"></span>Liste Commandes</a></li>
+                                                <li><a href="{{ path('app_livraison_index') }}"><span class="fa-solid fa-truck-fast"></span>Liste Livraisons</a></li>
+                                                <li><a href="{{ path('app_avis_livraison_index') }}"><span class="fa-solid fa-comment"></span>Avis Livraisons</a></li>
+                                                <li><a href="{{ path('app_forum_index') }}"><span class="fa-solid fa-heart"></span>Forum</a></li>
+                                                <li><a href="{{ path('app_Affiche_enchere') }}"><span class="fa-solid fa-scale-balanced"></span>Enchères</a></li>
+                                                <li><a href="{{ path('app_affiche_reservations') }}"><span class="fa-solid fa-calendar-clock"></span>Reservation Enchères</a></li>
+                                                <li><a href="{{ path('app_encheret_statistics') }}"><span class="fa-sharp fa-solid fa-chart-simple"></span>Statistiques Enchère</a></li>
+                                                <li><a href="{{ path('liste_livraisons_utilisateur') }}"><span class="fa-solid fa-truck-fast"></span>Mes Livraisons</a></li>
+                                                <li><a href="{{ path('app_service_apres_vente_new') }}"><span class="fa-solid fa-lightbulb-exclamation-on"></span>Ajouter Réclamation</a></li>
+                                                <li><a href="{{ path('app_forum_new') }}"><span class="fa-solid fa-circle-xmark"></span>Ajouter Avis</a></li>
+                                                <li><a href="{{ path('profile') }}"><span class="flaticon-user-2"></span>Profile</a></li>
+                                                <li><a href="{{ path('app_login') }}"><span class="flaticon-logout"></span>Logout</a></li>
+                                            </ul>
+{% endblock %}
                                     </div>
                                 </div>
                             </div>

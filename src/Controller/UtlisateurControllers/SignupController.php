@@ -36,26 +36,6 @@ class SignupController extends AbstractController
     #[Route('/Iscription', name: 'Iscription', methods: ['POST'])]
     public function Iscription(Request $request, EntityManagerInterface $entityManager ,UtilisateurRepository $repository , SessionInterface $session): Response
     {
-        $recaptchaResponse = $request->request->get('g-recaptcha-response');
-        $remoteIp = $request->getClientIp();
-        $secret = $this->getParameter('recaptcha_secret_key');
-
-        if (!$recaptchaResponse) {
-            return $this->redirectToRoute('app_signup', ['errorMsg' => 'reCAPTCHA response not found.']);
-        }
-
-        $response = $this->client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
-            'body' => [
-                'secret' => $secret,
-                'response' => $recaptchaResponse,
-                'remoteip' => $remoteIp
-            ]
-        ]);
-
-        $result = $response->toArray();
-        if (!($result['success'] ?? false)) {
-            return $this->redirectToRoute('app_signup', ['errorMsg' => 'Invalid reCAPTCHA.']);
-        }
 
 
 
@@ -81,7 +61,6 @@ class SignupController extends AbstractController
             empty($checkMail)
 
         ) {
-            $utilisateur->setMotdepasse( password_hash($utilisateur->getMotdepasse(), PASSWORD_BCRYPT));
             $entityManager->persist($utilisateur);
             $entityManager->flush();
             $session->set('user',$utilisateur) ;
