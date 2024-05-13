@@ -55,14 +55,7 @@
     {% endif %}
 </div>
 
-{% if partenaire.logo %}
-    <div class="form-group">
-        <label for="form_logo" class="control-label">Current Logo</label>
-        <div>
-            <img src="{{ asset('image/uploads/partenaires/' ~ partenaire.logo) }}" alt="Current Logo" style="max-height: 100px;">
-        </div>
-    </div>
-{% endif %}
+
 
 <div class="form-group">
     {{ form_label(form.logo, 'Logo', {'label_attr': {'class': 'control-label'}}) }}

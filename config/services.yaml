@@ -8,6 +8,7 @@ parameters:
     twilio_auth_token: '%env(TWILIO_AUTH_TOKEN)%'
     twilio_phone_number: '%env(TWILIO_PHONE_NUMBER)%'
     images_directory: '%kernel.project_dir%/public/image/uploads/'
+    images_directory_partenaire: '%kernel.project_dir%/public/image/uploads/partenaires'
     recaptcha_site_key: '%env(RECAPTCHA_SITE_KEY)%'
     recaptcha_secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
     # zeineb sms id
