@@ -73,9 +73,15 @@
 
                             <!-- Bouton Réserver -->
                             <div class="reservation-button">
-                                <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
-                                    <button type="submit" class="btn btn-primary">Reserver</button>
-                                </form>
+                                {% if user != null %}
+                                    <form method="post" action="{{ path('app_reserverwala', {'idp': enchere.getIdEnchere(), 'iduser': user.id}) }}">
+                                        <button type="submit" class="btn btn-primary">Réserver</button>
+                                    </form>
+
+                                {% elseif  user == null%}
+                                    <a href="/loginPage" class="btn btn-primary">Se connecter pour reserver</a>
+
+                                {% endif %}
                                 <!-- Button to trigger modal -->
                                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_{{ loop.index }}">
                                     <a href="{{ path('detailProduitFront', {idp: enchere.getProduit().getIdProduit()}) }}" style="color: white; text-decoration: none;">Voir les détails</a>
