@@ -26,7 +26,7 @@ class ReservationLocation
 
 
     
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, cascade: ["persist"])]
     #[ORM\JoinColumn(name: "idUtilisateur", referencedColumnName: "id")]
     private ?Utilisateur $user = null;
 
@@ -53,6 +53,7 @@ class ReservationLocation
         $this->dateDebut = $dateDebut;
         return $this;
     }
+    
 
     public function getDateFin(): ?\DateTimeInterface
     {
@@ -88,11 +89,12 @@ class ReservationLocation
         return $this;
     }
 
-    public function setUser(?Utilisateur $user): static
+    public function setUser(?Utilisateur $user): self
     {
         $this->user = $user;
         return $this;
     }    
+   
         
         
 

@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'front.html.twig' %}
 
-{% block title %}Update Reservation{% endblock %}
+{% block title %}Battah {% endblock %}
 
-{% block pane %}
+{% block main %}
 <div>
     <h4 class="mb-4">Update Reservation</h4>
     <form action="{{ path('submit_update_reservation', { 'id': reservationLocation.getId() }) }}" method="post">
@@ -18,18 +18,7 @@
                 <input type="date" class="form-control" id="date_fin" name="date_fin" value="{{ reservationLocation.getDateFin()|date('Y-m-d') }}">
             </div>
         </div>
-        <div class="row mb-3">
-            <label for="user" class="col-sm-2 col-form-label">User</label>
-            <div class="col-sm-10">
-                <select class="form-select" id="user" name="user">
-                    {% for user in users %}
-                    <option value="{{ user.getId() }}" {% if user.getId() == reservationLocation.getUser().getId() %} selected {% endif %}>
-                        {{ user.getNomUtilisateur() }} {{ user.getPrenomUtilisateur() }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
+    
        
         </div>
         <div class="row mb-3">

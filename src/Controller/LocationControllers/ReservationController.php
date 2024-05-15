@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\twilioo;
+use App\Service\zaza\twilioo;
 use Twilio\Rest\Client;
 
 
@@ -61,15 +61,19 @@ class ReservationController extends AbstractController
 
 
     #[Route('/reservation/submit', name: 'app_reservation_submit', methods: ['POST'])]
-    public function submitReservation(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator,): Response
+    public function submitReservation(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator,EntityManagerInterface $em): Response
     {
         // Get form data from the request
         // Get the location ID from the query parameters
 
         // Fetch the list of users
+        $reservation = new ReservationLocation();
+        $connectedUser = $request->getSession()->get('user');
+        $user = $em->getRepository(Utilisateur::class)->find($connectedUser);
+        $reservation->setUser($user);
         $users = $this->getDoctrine()->getRepository(Utilisateur::class)->findAll();
         $locationId = $request->request->get('locationId');
-        $userId = $request->request->get('user');
+        
         $dateDebut = new \DateTime($request->request->get('date_debut'));
         $dateFin = new \DateTime($request->request->get('date_fin'));
         $note = $request->request->get('note');
@@ -80,14 +84,15 @@ class ReservationController extends AbstractController
         $location = $entityManager->getRepository(Location::class)->find($locationId);
 
         // Get the User entity for the selected user ID
-        $user = $entityManager->getRepository(Utilisateur::class)->find($userId);
+   
+     
 
 
 
         // Create a new ReservationLocation entity
-        $reservation = new ReservationLocation();
+        
         $reservation->setLocation2($location); // Assuming you have a setter method for locationId in ReservationLocation entity
-        $reservation->setUser($user); // Set the user
+        // Set the user
         $reservation->setDateDebut($dateDebut);
         $reservation->setDateFin($dateFin);
         $reservation->setNotes($note);
@@ -108,11 +113,13 @@ class ReservationController extends AbstractController
                 'errors' => $errorMessages,
                 'locationId' => $locationId,
                 'users' => $users,
+                'connectedUser' => $connectedUser,
             ]);
         }
 
 
         // Persist the reservation entity
+       
         $entityManager->persist($reservation);
         $entityManager->flush();
 
@@ -148,13 +155,13 @@ class ReservationController extends AbstractController
             throw $this->createNotFoundException('Reservation not found.');
         }
         // Fetch the list of users and locations from the database
-        $users = $this->getDoctrine()->getRepository(Utilisateur::class)->findAll();
+       
         $locations = $this->getDoctrine()->getRepository(Location::class)->findAll();
 
         // Render the update reservation form, passing the reservationLocation object to the template
         return $this->render('reservation/update.html.twig', [
             'reservationLocation' => $reservationLocation,
-            'users' => $users,
+          
             'locations' => $locations,
         ]);
     }
@@ -165,14 +172,14 @@ class ReservationController extends AbstractController
         // Retrieve data from the form submission
         $dateDebut = new \DateTime($request->request->get('date_debut'));
         $dateFin = new \DateTime($request->request->get('date_fin'));
-        $userId = $request->request->get('user');
+      
 
 
         $notes = $request->request->get('notes');
 
         // Get the User and Location entities from the provided IDs
         $entityManager = $this->getDoctrine()->getManager();
-        $user = $entityManager->getRepository(Utilisateur::class)->find($userId);
+        
 
 
 
@@ -180,7 +187,7 @@ class ReservationController extends AbstractController
         // Update the reservation location entity with the new data
         $reservationLocation->setDateDebut($dateDebut);
         $reservationLocation->setDateFin($dateFin);
-        $reservationLocation->setUser($user);
+       
 
         $reservationLocation->setNotes($notes);
 
@@ -194,9 +201,10 @@ class ReservationController extends AbstractController
 
 
     #[Route('/reservationshow', name: 'reservation')]
-    public function showReservations(): Response
+    public function showReservations(Request $request): Response
     {
-        $reservationLocations = $this->getDoctrine()->getRepository(ReservationLocation::class)->findAll();
+        $user = $request->getSession()->get('user');
+        $reservationLocations = $this->getDoctrine()->getRepository(ReservationLocation::class)->findBy(['user' => $user]);
 
         return $this->render('reservation/show.html.twig', [
             'reservationLocations' => $reservationLocations,
@@ -215,15 +223,22 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/reservationClientshow', name: 'reservationClient')]
-    public function showReservationClient(LocationRepository $lr, ReservationLocationRepository $reservationLocationRepository): Response
+    public function showReservationClient(LocationRepository $lr,EntityManagerInterface $em, Request $request,ReservationLocationRepository $reservationLocationRepository): Response
     {
         // Récupérer l'ID de l'utilisateur
-        $userId = 2;
+        $userId = $request->getSession()->get('user');
 
+  
+        $user = $em->getRepository(Utilisateur::class)->find($userId);
+
+        $x = $user->getId();
+        
+
+    
         // Fetch locations related to the user
         $availability = true; // Set the availability status you want to filter
 
-        $locations = $lr->findByUserIdAndAvailability($userId, $availability);
+        $locations = $lr->findByUserIdAndAvailability($x, $availability);
 
 
         // Extract location IDs
